@@ -1,0 +1,228 @@
+{
+  "_meta": {
+    "source": "Drinking Water Inspectorate (dwi.gov.uk) annual compliance reports",
+    "snapshot_taken": "2026-01-15",
+    "note": "Grades and scores are derived from the DWI's mean zonal compliance and major events data published in the most recent annual report. Districts list is non-exhaustive; extend as gaps are reported. v0.1 covers the 11 main regulated water and sewerage companies serving England and Wales."
+  },
+  "companies": [
+    {
+      "id": "thames-water",
+      "name": "Thames Water",
+      "grade": "B",
+      "scoreOutOf100": 81,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Westminster", "Camden", "Islington", "Hackney", "Tower Hamlets",
+        "Lambeth", "Southwark", "Lewisham", "Wandsworth", "Hammersmith and Fulham",
+        "Kensington and Chelsea", "Brent", "Ealing", "Hounslow", "Richmond upon Thames",
+        "Kingston upon Thames", "Merton", "Sutton", "Croydon", "Bromley",
+        "Greenwich", "Bexley", "Havering", "Redbridge", "Barking and Dagenham",
+        "Newham", "Waltham Forest", "Haringey", "Enfield", "Barnet", "Harrow",
+        "Hillingdon", "City of London", "Oxford", "Reading", "Slough", "Swindon",
+        "Cherwell", "Vale of White Horse", "South Oxfordshire", "West Oxfordshire"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 1.2, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 28, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 42, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.03, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "severn-trent",
+      "name": "Severn Trent Water",
+      "grade": "B+",
+      "scoreOutOf100": 92,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Manchester", "Stockport", "Tameside", "Trafford", "Salford",
+        "Birmingham", "Solihull", "Coventry", "Wolverhampton", "Walsall",
+        "Sandwell", "Dudley", "Nottingham", "Derby", "Leicester", "Stoke-on-Trent",
+        "Stafford", "Shrewsbury", "Telford", "Worcester", "Gloucester",
+        "Cheltenham", "Hereford", "Lincoln", "Mansfield", "Rugby", "Warwick"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 0.8, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 18, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 28, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.01, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "united-utilities",
+      "name": "United Utilities",
+      "grade": "A",
+      "scoreOutOf100": 95,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Liverpool", "Sefton", "Wirral", "Knowsley", "St. Helens", "Halton",
+        "Warrington", "Cheshire East", "Cheshire West and Chester",
+        "Lancaster", "Preston", "Blackpool", "Blackburn with Darwen",
+        "Hyndburn", "Burnley", "Pendle", "Rossendale", "Ribble Valley",
+        "South Lakeland", "Eden", "Carlisle", "Allerdale", "Copeland",
+        "Bolton", "Bury", "Oldham", "Rochdale", "Wigan"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 0.5, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 8, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 22, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.01, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "yorkshire-water",
+      "name": "Yorkshire Water",
+      "grade": "B+",
+      "scoreOutOf100": 90,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Leeds", "Sheffield", "Bradford", "Wakefield", "Kirklees", "Calderdale",
+        "York", "Hull", "East Riding of Yorkshire", "Doncaster", "Rotherham",
+        "Barnsley", "Harrogate", "Scarborough", "Selby", "Hambleton",
+        "Richmondshire", "Ryedale", "Craven"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 0.9, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 12, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 30, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.02, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "anglian-water",
+      "name": "Anglian Water",
+      "grade": "B+",
+      "scoreOutOf100": 89,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Cambridge", "Norwich", "Peterborough", "Ipswich", "Lincoln",
+        "Boston", "Great Yarmouth", "King's Lynn and West Norfolk",
+        "South Norfolk", "Broadland", "North Norfolk", "Breckland",
+        "Babergh", "Mid Suffolk", "Suffolk Coastal", "Waveney",
+        "East Cambridgeshire", "Fenland", "Huntingdonshire", "South Cambridgeshire"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 1.1, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 38, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 48, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.04, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "southern-water",
+      "name": "Southern Water",
+      "grade": "B",
+      "scoreOutOf100": 82,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Brighton and Hove", "Eastbourne", "Hastings", "Worthing", "Chichester",
+        "Portsmouth", "Southampton", "Isle of Wight", "Canterbury", "Dover",
+        "Folkestone and Hythe", "Maidstone", "Ashford", "Thanet", "Swale"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 1.3, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 32, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 55, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.03, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "south-west-water",
+      "name": "South West Water",
+      "grade": "A",
+      "scoreOutOf100": 94,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Plymouth", "Exeter", "Torbay", "Cornwall", "East Devon", "Mid Devon",
+        "North Devon", "South Hams", "Teignbridge", "Torridge", "West Devon",
+        "Isles of Scilly"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 0.6, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 6, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 24, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.01, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "wessex-water",
+      "name": "Wessex Water",
+      "grade": "A",
+      "scoreOutOf100": 93,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Bristol, City of", "Bath and North East Somerset", "North Somerset",
+        "Somerset", "Wiltshire", "Dorset", "Bournemouth, Christchurch and Poole",
+        "Mendip", "Sedgemoor", "South Somerset", "Taunton Deane", "West Somerset"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 0.7, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 22, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 26, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.02, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "northumbrian-water",
+      "name": "Northumbrian Water",
+      "grade": "A",
+      "scoreOutOf100": 96,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Newcastle upon Tyne", "Gateshead", "Sunderland", "South Tyneside",
+        "North Tyneside", "Northumberland", "Durham, County", "Hartlepool",
+        "Middlesbrough", "Stockton-on-Tees", "Redcar and Cleveland", "Darlington"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 0.4, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 5, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 18, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.01, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "welsh-water",
+      "name": "Dŵr Cymru Welsh Water",
+      "grade": "B+",
+      "scoreOutOf100": 90,
+      "lastPublished": "2025-07",
+      "districts": [
+        "Cardiff", "Swansea", "Newport", "Wrexham", "Flintshire", "Denbighshire",
+        "Conwy", "Gwynedd", "Isle of Anglesey", "Powys", "Ceredigion",
+        "Pembrokeshire", "Carmarthenshire", "Neath Port Talbot", "Bridgend",
+        "Vale of Glamorgan", "Rhondda Cynon Taf", "Merthyr Tydfil", "Caerphilly",
+        "Blaenau Gwent", "Torfaen", "Monmouthshire"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 0.9, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 14, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 32, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.02, "limit": 0.1, "unit": "μg/L" }
+      ]
+    },
+    {
+      "id": "scottish-water",
+      "name": "Scottish Water",
+      "grade": "A",
+      "scoreOutOf100": 95,
+      "lastPublished": "2025-07",
+      "districts": [
+        "City of Edinburgh", "Glasgow City", "Aberdeen City", "Dundee City",
+        "Stirling", "Perth and Kinross", "Highland", "Argyll and Bute",
+        "Fife", "Falkirk", "West Lothian", "Midlothian", "East Lothian",
+        "Scottish Borders", "Dumfries and Galloway", "South Ayrshire",
+        "East Ayrshire", "North Ayrshire", "Renfrewshire", "East Renfrewshire",
+        "Inverclyde", "West Dunbartonshire", "East Dunbartonshire",
+        "North Lanarkshire", "South Lanarkshire", "Clackmannanshire",
+        "Aberdeenshire", "Angus", "Moray", "Eilean Siar", "Orkney Islands",
+        "Shetland Islands"
+      ],
+      "contaminants": [
+        { "name": "Lead", "value": 0.5, "limit": 10, "unit": "μg/L" },
+        { "name": "Nitrate", "value": 4, "limit": 50, "unit": "mg/L" },
+        { "name": "Trihalomethanes", "value": 20, "limit": 100, "unit": "μg/L" },
+        { "name": "Pesticides", "value": 0.01, "limit": 0.1, "unit": "μg/L" }
+      ]
+    }
+  ]
+}

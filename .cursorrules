@@ -1,0 +1,17 @@
+You are helping build Trace, a React Native + Expo app for tracing UK food and water back to the source.
+
+Stack: Expo (managed) + TypeScript strict + Expo Router + NativeWind + Supabase (data/auth) + Cloudflare R2 (image storage) + TanStack Query + Zustand.
+
+Rules:
+- TypeScript strict mode. Never use `any`.
+- Functional components and hooks only.
+- Style with NativeWind classes, not StyleSheet or inline styles.
+- All data fetching via TanStack Query.
+- Components stay under 150 lines. Split if longer.
+- Never invent library APIs. If unsure, ask me to verify.
+- Never modify .env or hardcode secrets.
+- R2 secret keys are SERVER-SIDE ONLY — never reference them from client code.
+- All image URLs in the database point to R2 public URLs, never to Supabase storage.
+- Match Apple Health's visual language: neutral surfaces, category colours only on data, Inter typography, no gradients, no shadows on cards.
+- Prefer simple solutions over clever ones.
+- If a request is ambiguous, ask one clarifying question before coding.
