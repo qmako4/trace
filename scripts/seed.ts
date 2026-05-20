@@ -23,7 +23,6 @@ import "dotenv/config";
 import sharp from "sharp";
 import { createClient } from "@supabase/supabase-js";
 import { uploadImage } from "../services/r2";
-import { producerImageUrl } from "../services/imageCache";
 import { SEED_PRODUCERS, type ProducerSeed } from "../data/seed-producers";
 
 function requireEnv(name: string): string {
@@ -59,8 +58,7 @@ async function processAndUpload(seed: ProducerSeed): Promise<string> {
     .jpeg({ quality: 82, mozjpeg: true })
     .toBuffer();
   const key = `producers/${seed.slug}/hero.jpg`;
-  await uploadImage(key, jpeg, "image/jpeg");
-  return producerImageUrl(seed.slug);
+  return uploadImage(key, jpeg, "image/jpeg");
 }
 
 async function upsertProducer(seed: ProducerSeed, photoUrl: string) {

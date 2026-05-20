@@ -25,9 +25,23 @@ R2 has **zero egress fees**. S3 and Supabase storage both charge $0.09/GB for ou
 ```bash
 git clone <repo>
 cd trace
-cp .env.example .env       # fill in the values
+cp .env.example .env       # fill in real values, or leave blank for demo mode
 npm install
+npm run ios                # or `npm start` and scan with Expo Go
 ```
+
+### Demo mode (no backend required)
+
+If `EXPO_PUBLIC_SUPABASE_URL` is empty, the app boots in **demo mode**: it serves
+canned data (12 seed producers, sample scan history, Manchester AQI 32) and
+fakes auth so the welcome → onboarding → sign-up → home flow works end-to-end
+without any external services. A small "Demo data" pill appears at the top of
+the home screen so it's visually obvious you're not on live data. Fill in the
+Supabase keys to switch over — the demo branches vanish.
+
+Open Food Facts (the barcode scanner) is keyless so scanning real products
+works in demo mode too. Without a Google Air Quality key the Air card shows
+the demo AQI; without R2 the producer photos fall back to a placeholder.
 
 ### 1. Supabase
 
@@ -82,9 +96,10 @@ This:
 ```bash
 npm run ios     # iOS simulator
 npm run android # Android emulator
+npm start       # Then scan the QR code with Expo Go on a real device
 ```
 
-For barcode scanning and maps on a device, you'll want a development build (`eas build --profile development`) — Expo Go is fine for everything else.
+For barcode scanning on a real device you'll likely need a development build (`eas build --profile development`) since the camera native module isn't always available in Expo Go. Maps work in Expo Go on iOS via Apple Maps.
 
 ## Architecture
 

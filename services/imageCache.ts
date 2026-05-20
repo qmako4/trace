@@ -13,11 +13,9 @@
 const PRODUCT_KEY_PREFIX = "products";
 const PRODUCER_KEY_PREFIX = "producers";
 
-function r2PublicBase(): string {
+function r2PublicBase(): string | null {
   const base = process.env.EXPO_PUBLIC_R2_PUBLIC_URL;
-  if (!base) {
-    throw new Error("Missing EXPO_PUBLIC_R2_PUBLIC_URL");
-  }
+  if (!base) return null;
   return base.replace(/\/$/, "");
 }
 
@@ -25,16 +23,18 @@ export function productImageKey(barcode: string): string {
   return `${PRODUCT_KEY_PREFIX}/${barcode}.jpg`;
 }
 
-export function productImageUrl(barcode: string): string {
-  return `${r2PublicBase()}/${productImageKey(barcode)}`;
+export function productImageUrl(barcode: string): string | null {
+  const base = r2PublicBase();
+  return base ? `${base}/${productImageKey(barcode)}` : null;
 }
 
 export function producerImageKey(slug: string, name = "hero.jpg"): string {
   return `${PRODUCER_KEY_PREFIX}/${slug}/${name}`;
 }
 
-export function producerImageUrl(slug: string, name = "hero.jpg"): string {
-  return `${r2PublicBase()}/${producerImageKey(slug, name)}`;
+export function producerImageUrl(slug: string, name = "hero.jpg"): string | null {
+  const base = r2PublicBase();
+  return base ? `${base}/${producerImageKey(slug, name)}` : null;
 }
 
 // Fire-and-forget — when a barcode is scanned, ask a server function to

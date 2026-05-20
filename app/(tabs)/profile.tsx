@@ -2,6 +2,7 @@ import { Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { supabase } from "@/services/supabase";
+import { isDemoMode } from "@/services/demoMode";
 import { useAuth } from "@/store/auth";
 import { usePreferences } from "@/store/preferences";
 import { AppText } from "@/components/ui/Text";
@@ -17,8 +18,13 @@ export default function Profile() {
 
   const initial = (user?.email ?? "?").charAt(0).toUpperCase();
 
+  const setSession = useAuth((s) => s.setSession);
   async function onSignOut() {
-    await supabase.auth.signOut();
+    if (isDemoMode) {
+      setSession(null);
+    } else {
+      await supabase.auth.signOut();
+    }
     router.replace("/(onboarding)/welcome");
   }
 

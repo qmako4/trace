@@ -3,6 +3,9 @@ import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { supabase } from "@/services/supabase";
+import { isDemoMode } from "@/services/demoMode";
+import { useAuth } from "@/store/auth";
+import { makeDemoSession } from "@/hooks/useSession";
 import { AppText } from "@/components/ui/Text";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -10,6 +13,7 @@ import { FormField } from "@/components/ui/FormField";
 
 export default function SignIn() {
   const router = useRouter();
+  const setSession = useAuth((s) => s.setSession);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,6 +22,12 @@ export default function SignIn() {
   async function onSubmit() {
     setError(null);
     setLoading(true);
+    if (isDemoMode) {
+      setSession(makeDemoSession());
+      setLoading(false);
+      router.replace("/(tabs)/trace");
+      return;
+    }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {

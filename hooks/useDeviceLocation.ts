@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { useLocation } from "@/store/location";
 import { lookupPostcode } from "@/services/waterQuality";
+import { DEMO_LOCATION, isDemoMode } from "@/services/demoMode";
 
 interface ReverseGeocode {
   postcode: string;
@@ -11,7 +12,6 @@ interface ReverseGeocode {
 }
 
 async function reverseToPostcode(lat: number, lng: number): Promise<ReverseGeocode | null> {
-  // Use postcodes.io reverse — it's free, UK-only, and we're a UK app.
   const res = await fetch(
     `https://api.postcodes.io/postcodes?lon=${lng}&lat=${lat}&limit=1&radius=2000`,
   );
@@ -49,18 +49,20 @@ export function useDeviceLocation(): { status: LocationStatus; error: string | n
       try {
         const { status: permStatus } = await Location.requestForegroundPermissionsAsync();
         if (permStatus !== "granted") {
-          if (!cancelled) setStatus("denied");
+          if (cancelled) return;
+          if (isDemoMode) {
+            setCurrent(DEMO_LOCATION);
+            setStatus("ready");
+          } else {
+            setStatus("denied");
+          }
           return;
         }
         const pos = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
         });
         const rev = await reverseToPostcode(pos.coords.latitude, pos.coords.longitude);
-        if (!rev) {
-          // Fall back to postcodes.io forward lookup with a default UK postcode.
-          throw new Error("Couldn't resolve postcode from coordinates.");
-        }
-        // Re-look up to get the canonical region naming.
+        if (!rev) throw new Error("Couldn't resolve postcode from coordinates.");
         const canonical = await lookupPostcode(rev.postcode);
         if (cancelled) return;
         setCurrent({
@@ -72,10 +74,16 @@ export function useDeviceLocation(): { status: LocationStatus; error: string | n
         });
         setStatus("ready");
       } catch (e) {
-        if (!cancelled) {
-          setError(e instanceof Error ? e.message : String(e));
-          setStatus("error");
+        if (cancelled) return;
+        // In demo mode, fall back to Manchester so the home screen has
+        // something to render.
+        if (isDemoMode) {
+          setCurrent(DEMO_LOCATION);
+          setStatus("ready");
+          return;
         }
+        setError(e instanceof Error ? e.message : String(e));
+        setStatus("error");
       }
     }
     run();

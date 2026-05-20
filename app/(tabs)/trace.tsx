@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { LocationPill } from "@/components/ui/LocationPill";
 import { AppText } from "@/components/ui/Text";
+import { DemoBanner } from "@/components/ui/DemoBanner";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { EnvGrid } from "@/components/env/EnvGrid";
 import { CheckAnotherPlace } from "@/components/history/CheckAnotherPlace";
@@ -45,6 +46,8 @@ export default function TraceHome() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 110 }}
       >
+        <DemoBanner />
+
         <View className="px-5 pt-3 flex-row items-center justify-between">
           <LocationPill
             city={city ?? "Set location"}
