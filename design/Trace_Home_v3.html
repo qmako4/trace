@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Trace — Home (v4 native typography)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#171717;
+    --cream:#f5f1e3;
+    --cream-warm:#f9ecc8;
+    --bone:#faf6e9;
+    --bone-2:#f1ead3;
+    --glass-edge: rgba(255,255,255,.7);
+
+    --forest:#0d2614;
+    --forest-2:#11321a;
+    --ink:#0f1a12;
+    --graphite:#2a3a26;
+    --slate:#5a6a55;
+    --mist:#8a9484;
+
+    --matcha:#9ec832;
+    --matcha-deep:#7aa226;
+    --matcha-soft:#c8e288;
+
+    --honey:#f0b03e;
+    --honey-deep:#cf8e1e;
+
+    --spring:#7eb8c8;
+    --spring-deep:#4f93a8;
+    --spring-soft:#b3d5de;
+
+    --berry:#d4583e;
+    --berry-deep:#a83a22;
+    --berry-soft:#eea089;
+
+    --sh-matcha: 0 22px 36px -18px rgba(122,162,38,.40), 0 6px 14px -10px rgba(122,162,38,.22);
+    --sh-honey:  0 22px 36px -18px rgba(207,142,30,.40), 0 6px 14px -10px rgba(207,142,30,.22);
+    --sh-spring: 0 22px 36px -18px rgba( 79,147,168,.40), 0 6px 14px -10px rgba(79,147,168,.22);
+    --sh-soft:   0 18px 30px -22px rgba(13,38,20,.22), 0 4px 10px -8px rgba(13,38,20,.10);
+    --sh-glass:  0 24px 48px -24px rgba(13,38,20,.20), 0 -1px 0 rgba(255,255,255,.65) inset, 0 1px 0 rgba(255,255,255,.9) inset;
+    --sh-card:   0 24px 44px -24px rgba(13,38,20,.18), 0 8px 16px -12px rgba(13,38,20,.10), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--canvas);color:#dadada;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:'cv11','ss01'}
+  body{min-height:100vh;padding:56px 48px 96px;display:flex;flex-direction:column;align-items:center;gap:48px;
+    background:radial-gradient(60% 40% at 20% 0%, rgba(158,200,50,.07), transparent 60%),
+               radial-gradient(50% 40% at 90% 100%, rgba(126,184,200,.06), transparent 60%),
+               var(--canvas)}
+
+  /* ─── Header */
+  .header{width:100%;max-width:1080px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+  .header .brand{margin:0;font-family:'Source Serif 4',Georgia,serif;font-weight:500;font-style:italic;font-size:36px;letter-spacing:-.02em;color:#ecebe7;line-height:1}
+  .header .brand .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-left:6px;vertical-align:middle;
+    background:radial-gradient(circle at 30% 30%, #d4eb7a, #9ec832 70%);
+    box-shadow:0 0 0 5px rgba(158,200,50,.16), 0 4px 10px -2px rgba(158,200,50,.5)}
+  .header .meta{font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#6e6e68}
+  .header .meta b{color:#c0c0bc;font-weight:600}
+
+  .stagewrap{display:flex;flex-direction:column;gap:14px;align-items:center}
+  .frame-label{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:#6e6e68;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:baseline;gap:10px}
+  .frame-label b{color:#c0c0bc;font-weight:600;letter-spacing:-.005em;text-transform:none;font-family:'Inter',sans-serif;font-size:13px}
+
+  /* ─── Device chrome */
+  .device{position:relative;width:393px;height:852px;border-radius:54px;background:#0c0c0a;padding:10px;
+    box-shadow:0 2px 0 rgba(255,255,255,.06) inset, 0 36px 70px -22px rgba(0,0,0,.65), 0 0 0 1px #2a2a26}
+  .screen{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;font-family:inherit;color:var(--ink);
+    background:
+      radial-gradient(80% 50% at 88% 6%, rgba(240,176,62,.12), transparent 55%),
+      radial-gradient(70% 50% at 10% 100%, rgba(158,200,50,.10), transparent 55%),
+      linear-gradient(180deg, var(--cream) 0%, #efe9d6 100%)}
+  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:30}
+  .status{position:absolute;top:0;left:0;right:0;height:54px;padding:18px 32px 0;display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:600;z-index:25;pointer-events:none;color:var(--ink);letter-spacing:-.01em}
+  .status .right{display:flex;align-items:center;gap:6px}
+
+  .grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.04;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+
+  /* ─── Scroll area */
+  .scroll{position:absolute;inset:0;overflow-y:auto;padding:54px 0 110px;scrollbar-width:none}
+  .scroll::-webkit-scrollbar{display:none}
+
+  /* ─── iOS-style typography utilities */
+  .t-largeTitle{font-size:34px;font-weight:700;letter-spacing:-.022em;line-height:1.05;color:var(--ink)}
+  .t-title2{font-size:22px;font-weight:700;letter-spacing:-.015em;line-height:1.1;color:var(--ink)}
+  .t-headline{font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1.2;color:var(--ink)}
+  .t-body{font-size:17px;font-weight:400;letter-spacing:-.005em;line-height:1.35;color:var(--ink)}
+  .t-sub{font-size:15px;font-weight:400;letter-spacing:-.005em;line-height:1.35;color:var(--slate)}
+  .t-cap{font-size:13px;font-weight:500;letter-spacing:.0em;color:var(--slate)}
+  .t-foot{font-size:11px;font-weight:500;letter-spacing:.01em;color:var(--mist)}
+  .t-mono{font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;font-weight:500;letter-spacing:.05em;color:var(--slate)}
+  .t-monoUp{font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--slate)}
+
+  /* ─── Section header (Inter 22 700) — leading the eye, iOS-style */
+  .sec-h{padding:22px 20px 10px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .sec-h .title{font-size:22px;font-weight:700;letter-spacing:-.015em;color:var(--ink)}
+  .sec-h .more{font-size:14px;font-weight:600;color:var(--matcha-deep);letter-spacing:-.005em;display:flex;align-items:center;gap:2px}
+
+  /* ─── Atoms */
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:13px;font-weight:500;color:var(--ink);
+    background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.55));
+    border:1px solid var(--glass-edge);
+    box-shadow:0 2px 0 rgba(255,255,255,.7) inset, 0 4px 10px -6px rgba(13,38,20,.12)}
+  .pill .d{width:6px;height:6px;border-radius:50%}
+  .d.matcha{background:radial-gradient(circle at 30% 30%, #d4eb7a, #9ec832);box-shadow:0 0 0 3px rgba(158,200,50,.22)}
+  .d.honey{background:radial-gradient(circle at 30% 30%, #f7d488, #f0b03e);box-shadow:0 0 0 3px rgba(240,176,62,.22)}
+  .d.spring{background:radial-gradient(circle at 30% 30%, #b3d5de, #7eb8c8);box-shadow:0 0 0 3px rgba(126,184,200,.24)}
+  .d.berry{background:radial-gradient(circle at 30% 30%, #eea089, #d4583e);box-shadow:0 0 0 3px rgba(212,88,62,.24)}
+
+  /* ─── 1. Location header */
+  .lochead{padding:14px 20px 0;display:flex;align-items:center;justify-content:space-between;gap:14px}
+  .locpill{display:inline-flex;align-items:center;gap:9px;padding:10px 14px 10px 12px;border-radius:999px;
+    background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.65));
+    backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);
+    border:1px solid var(--glass-edge);
+    box-shadow:0 6px 14px -8px rgba(13,38,20,.2), inset 0 1px 0 rgba(255,255,255,.9);
+    color:var(--ink);font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .locpill svg.pin{width:16px;height:16px;stroke-width:1.8;color:var(--graphite)}
+  .locpill .pulse{width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #d4eb7a, #9ec832);box-shadow:0 0 0 3px rgba(158,200,50,.22);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 3px rgba(158,200,50,.22)}70%{box-shadow:0 0 0 7px rgba(158,200,50,0)}100%{box-shadow:0 0 0 3px rgba(158,200,50,0)}}
+  .locpill .chev{width:14px;height:14px;color:var(--slate);stroke-width:2}
+  .locpill .sep{color:var(--mist);opacity:.5}
+  .locpill .post{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:var(--slate);letter-spacing:.04em}
+  .avatar{width:40px;height:40px;border-radius:50%;flex:0 0 auto;
+    background:radial-gradient(circle at 30% 28%, #4a7a44, #0d2614 75%);color:var(--matcha-soft);
+    display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-weight:600;font-size:15px;letter-spacing:-.01em;
+    box-shadow:0 6px 14px -4px rgba(13,38,20,.4), inset 0 1px 0 rgba(255,255,255,.18), 0 0 0 2px rgba(245,241,227,.6)}
+
+  /* Env strip — 3 segments */
+  .envstrip{margin:14px 20px 0;display:grid;grid-template-columns:1fr 1fr 1fr;border-radius:18px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.55));
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--glass-edge);
+    box-shadow:0 8px 18px -10px rgba(13,38,20,.16), inset 0 1px 0 rgba(255,255,255,.85)}
+  .envstrip .seg{padding:10px 12px;display:flex;flex-direction:column;gap:3px;position:relative}
+  .envstrip .seg + .seg{border-left:1px solid rgba(13,38,20,.06)}
+  .envstrip .seg .top{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--graphite);letter-spacing:-.005em}
+  .envstrip .seg .val{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);line-height:1.1}
+  .envstrip .seg .sub{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;color:var(--slate);letter-spacing:.02em}
+
+  /* ─── Greeting */
+  .greet{padding:18px 20px 4px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+  .greet .h{font-size:30px;font-weight:700;letter-spacing:-.022em;line-height:1.05;color:var(--ink)}
+  .greet .h .light{font-weight:400;color:var(--slate)}
+  .greet .date{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.05em;color:var(--slate);text-align:right;line-height:1.45;text-transform:uppercase}
+
+  /* ─── 2. Today's environment (2+1 grid) */
+  .grid21{padding:0 18px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .envcard{position:relative;overflow:hidden;border-radius:30px;padding:18px 16px;
+    backdrop-filter:blur(20px) saturate(1.15);-webkit-backdrop-filter:blur(20px) saturate(1.15);
+    border:1px solid var(--glass-edge)}
+  .envcard::before{content:"";position:absolute;left:14px;right:14px;top:0;height:1px;background:linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent);pointer-events:none}
+  .envcard.air{background:
+    linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.4) 70%),
+    radial-gradient(100% 80% at 20% 20%, rgba(126,184,200,.55), transparent 60%),
+    radial-gradient(80% 70% at 90% 100%, rgba(126,184,200,.32), transparent 55%),
+    var(--bone);
+    box-shadow:var(--sh-spring)}
+  .envcard.water{background:
+    linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.4) 70%),
+    radial-gradient(100% 80% at 20% 20%, rgba(158,200,50,.55), transparent 60%),
+    radial-gradient(80% 70% at 90% 100%, rgba(158,200,50,.32), transparent 55%),
+    var(--bone);
+    box-shadow:var(--sh-matcha)}
+  .envcard.food{background:
+    linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.38) 70%),
+    radial-gradient(110% 80% at 15% 25%, rgba(240,176,62,.55), transparent 60%),
+    radial-gradient(80% 70% at 95% 100%, rgba(240,176,62,.30), transparent 55%),
+    var(--bone);
+    box-shadow:var(--sh-honey)}
+  .envcard .kicker{font-size:13px;font-weight:600;letter-spacing:-.005em;display:flex;align-items:center;gap:6px}
+  .envcard.air .kicker{color:#1f4754}
+  .envcard.water .kicker{color:#3e5a18}
+  .envcard.food .kicker{color:#5a3e0c}
+
+  /* Orb — number Inter 56 700 + uppercase verdict */
+  .orb{margin:10px auto 6px;position:relative;width:128px;height:128px;display:flex;align-items:center;justify-content:center}
+  .orb .halo{position:absolute;inset:-14%;border-radius:50%;filter:blur(2px);pointer-events:none}
+  .orb.air .halo{background:radial-gradient(circle, rgba(126,184,200,.36), transparent 60%)}
+  .orb.water .halo{background:radial-gradient(circle, rgba(158,200,50,.36), transparent 60%)}
+  .orb .sphere{position:absolute;inset:14px;border-radius:50%}
+  .orb.air .sphere{background:
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,.75), rgba(255,255,255,0) 38%),
+    radial-gradient(circle at 50% 55%, #e3f0f4 0%, #b3d5de 30%, #7eb8c8 65%, #3d7c8e 100%);
+    box-shadow:
+      inset 0 -14px 22px rgba(31,71,84,.38),
+      inset 0 14px 18px rgba(255,255,255,.5),
+      0 16px 22px -8px rgba(79,147,168,.55),
+      0 -2px 0 rgba(255,255,255,.5) inset}
+  .orb.water .sphere{background:
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,.7), rgba(255,255,255,0) 38%),
+    radial-gradient(circle at 50% 55%, #e7f1c6 0%, #c4e08c 30%, #9ec832 65%, #5a7a18 100%);
+    box-shadow:
+      inset 0 -14px 22px rgba(48,72,16,.35),
+      inset 0 14px 18px rgba(255,255,255,.45),
+      0 16px 22px -8px rgba(122,162,38,.55),
+      0 -2px 0 rgba(255,255,255,.5) inset}
+  .orb svg.ring{position:absolute;inset:0;z-index:2}
+  .orb .center{position:relative;z-index:3;text-align:center;color:var(--ink)}
+  .orb .center .num{font-size:46px;font-weight:700;line-height:.92;letter-spacing:-.025em;font-feature-settings:'tnum';text-shadow:0 2px 0 rgba(255,255,255,.4)}
+  .orb .center .lbl{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+  .orb.air .center .lbl{color:#1f4754}
+  .orb.water .center .lbl{color:#3e5a18}
+
+  .envcard .verdict{margin-top:6px;font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1.2;text-align:center}
+  .envcard.air .verdict{color:#1f4754}
+  .envcard.water .verdict{color:#365a1b}
+  .envcard .sub{margin-top:4px;font-size:12px;font-weight:500;color:var(--slate);letter-spacing:-.005em;line-height:1.4;text-align:center}
+
+  /* Food — full-width */
+  .envcard.food{grid-column:1 / -1;display:flex;gap:14px;align-items:stretch;padding:18px}
+  .envcard.food .body{flex:1;min-width:0;display:flex;flex-direction:column}
+  .envcard.food .big{font-size:56px;font-weight:700;letter-spacing:-.028em;color:var(--ink);line-height:.95;margin-top:6px;font-feature-settings:'tnum'}
+  .envcard.food .lbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#5a3e0c;margin-top:6px}
+  .envcard.food .sub-l{margin-top:8px;font-size:13px;font-weight:500;color:var(--slate);letter-spacing:-.005em;line-height:1.4;text-align:left}
+  .envcard.food .mapprev{flex:0 0 130px;height:130px;border-radius:20px;position:relative;overflow:hidden;
+    background:
+      radial-gradient(60% 80% at 30% 50%, rgba(255,255,255,.65), transparent 60%),
+      radial-gradient(60% 80% at 80% 30%, rgba(240,176,62,.30), transparent 60%),
+      linear-gradient(180deg, #e8e2cf 0%, #d5cdb1 100%);
+    border:1px solid rgba(255,255,255,.7);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.85), inset 0 -10px 22px rgba(13,38,20,.06)}
+  .envcard.food .mapprev .road{position:absolute;height:2px;background:rgba(255,255,255,.85);border-radius:2px}
+  .envcard.food .mapprev .pin-orb{position:absolute;width:14px;height:14px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #fae0a8, #f0b03e 50%, #b8782a 100%);
+    box-shadow:0 3px 6px -1px rgba(13,38,20,.4), 0 0 0 2px rgba(255,255,255,.7)}
+  .envcard.food .mapprev .you-orb{position:absolute;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff, #5a8ef0 45%, #2c5cd3 100%);box-shadow:0 0 0 4px rgba(59,108,246,.22)}
+  .envcard.food .cow{position:absolute;right:-8px;bottom:-12px;width:72px;height:72px;filter:drop-shadow(0 6px 10px rgba(90,40,12,.28))}
+
+  /* ─── 3. CTA — Check another place */
+  .ctawrap{padding:18px 18px 0}
+  .cta-check{height:56px;border-radius:999px;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 22px;gap:10px;
+    background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.62));
+    backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);
+    border:1px solid var(--glass-edge);
+    box-shadow:0 12px 22px -14px rgba(13,38,20,.2), inset 0 1px 0 rgba(255,255,255,.9);
+    color:var(--ink);font-size:17px;font-weight:600;letter-spacing:-.01em}
+  .cta-check .lead{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+  .cta-check svg.pin{width:18px;height:18px;stroke-width:1.8;color:var(--graphite)}
+  .cta-check .secondary{font-weight:400;color:var(--slate)}
+  .cta-check .arrow{width:40px;height:40px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #c4e08c, #7aa226 70%);color:#0d2614;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 14px -4px rgba(122,162,38,.55), inset 0 1px 0 rgba(255,255,255,.4), inset 0 -1px 0 rgba(13,38,20,.1)}
+  .cta-check .arrow svg{width:14px;height:14px;stroke-width:2.4}
+
+  /* ─── 4. Recent places */
+  .hscroll{display:flex;gap:10px;padding:0 20px 4px;overflow-x:auto;scrollbar-width:none}
+  .hscroll::-webkit-scrollbar{display:none}
+  .placechip{flex:0 0 auto;border-radius:20px;padding:14px 16px;min-width:184px;
+    background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.65));
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--glass-edge);
+    box-shadow:0 10px 20px -14px rgba(13,38,20,.18), inset 0 1px 0 rgba(255,255,255,.9)}
+  .placechip .place{font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--ink);line-height:1.1}
+  .placechip .post{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:var(--mist);letter-spacing:.04em;margin-top:3px}
+  .placechip .summary{margin-top:10px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--graphite);letter-spacing:-.005em}
+  .placechip .summary .d{width:8px;height:8px;border-radius:50%}
+  .placechip .summary b{font-weight:700;color:var(--ink)}
+
+  /* ─── 5. Traced to source */
+  .pstrip{display:flex;gap:12px;padding:0 20px 4px;overflow-x:auto;scrollbar-width:none}
+  .pstrip::-webkit-scrollbar{display:none}
+  .pcard{flex:0 0 auto;width:174px;border-radius:24px;padding:10px;display:flex;flex-direction:column;gap:10px;
+    background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.7));
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--glass-edge);
+    box-shadow: var(--sh-card)}
+  .pcard .photo{width:100%;aspect-ratio:1/1;border-radius:16px;position:relative;overflow:hidden;
+    background:
+      radial-gradient(circle at 30% 28%, rgba(255,255,255,.5), transparent 55%),
+      linear-gradient(165deg, #f1c473 0%, #cf8e1e 100%);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+  .pcard .photo.matcha{background:radial-gradient(circle at 30% 28%, rgba(255,255,255,.45), transparent 55%), linear-gradient(165deg, #c4e08c, #7aa226)}
+  .pcard .photo.bone{background:radial-gradient(circle at 30% 28%, rgba(255,255,255,.55), transparent 55%), linear-gradient(165deg, #f0e2c0, #c8b079)}
+  .pcard .photo .ph{position:absolute;left:8px;bottom:8px;font-family:'Geist Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.1em;color:rgba(13,38,20,.6);text-transform:uppercase;background:rgba(255,255,255,.7);padding:3px 6px;border-radius:5px}
+  .pcard .photo .scoremini{position:absolute;right:8px;top:8px;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.7), rgba(255,255,255,0) 38%), radial-gradient(circle at 50% 55%, #e7f1c6, #c4e08c 35%, #9ec832 70%, #5a7a18 100%);
+    box-shadow:0 6px 10px -4px rgba(122,162,38,.5), inset 0 -3px 6px rgba(48,72,16,.32), inset 0 3px 4px rgba(255,255,255,.45);
+    font-size:18px;font-weight:700;letter-spacing:-.015em;color:var(--ink);font-feature-settings:'tnum'}
+  .pcard .badge{position:absolute;left:8px;top:8px;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:.04em;color:#0d2614;
+    background:linear-gradient(180deg, #dff09a, #b8d662);box-shadow:0 4px 8px -3px rgba(122,162,38,.45);border:1px solid rgba(255,255,255,.5)}
+  .pcard .badge svg{width:10px;height:10px;stroke-width:3;color:#0d2614}
+  .pcard .pinfo{padding:2px 4px 4px}
+  .pcard .pinfo .brand{font-size:12px;font-weight:600;color:var(--slate);letter-spacing:-.005em}
+  .pcard .pinfo .name{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin-top:2px;line-height:1.2}
+  .pcard .pinfo .meta{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;color:var(--mist);letter-spacing:.04em;margin-top:4px}
+
+  /* ─── 6. History */
+  .histlist{margin:0 18px;border-radius:24px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.68));
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border:1px solid var(--glass-edge);
+    box-shadow: var(--sh-soft)}
+  .histitem{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid rgba(13,38,20,.06)}
+  .histitem:last-child{border-bottom:0}
+  .histitem .thumb{width:48px;height:48px;border-radius:14px;flex:0 0 auto;position:relative;overflow:hidden;
+    background:radial-gradient(circle at 30% 28%, rgba(255,255,255,.55), transparent 55%), linear-gradient(165deg, #f1c473, #cf8e1e);
+    border:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+  .histitem .thumb.bread{background:radial-gradient(circle at 30% 28%, rgba(255,255,255,.5), transparent 55%), linear-gradient(165deg, #ddc78a, #a8862e)}
+  .histitem .thumb.smoothie{background:radial-gradient(circle at 30% 28%, rgba(255,255,255,.5), transparent 55%), linear-gradient(165deg, #eea089, #b03f28)}
+  .histitem .thumb.eggs{background:radial-gradient(circle at 30% 28%, rgba(255,255,255,.55), transparent 55%), linear-gradient(165deg, #faf6e9, #c8b079)}
+  .histitem .info{flex:1;min-width:0}
+  .histitem .info .n{font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.01em;line-height:1.15}
+  .histitem .info .meta{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;color:var(--slate);letter-spacing:.04em;margin-top:4px}
+  .histitem .info .verdict{margin-top:4px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+  .histitem .info .verdict.ok{color:var(--matcha-deep)}
+  .histitem .info .verdict.warn{color:var(--honey-deep)}
+  .histitem .info .verdict.bad{color:var(--berry-deep)}
+  .histitem .score{width:56px;height:56px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;position:relative;
+    font-size:22px;font-weight:700;letter-spacing:-.018em;color:var(--ink);font-feature-settings:'tnum';
+    background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.7), rgba(255,255,255,0) 38%), radial-gradient(circle at 50% 55%, #e7f1c6 0%, #c4e08c 35%, #9ec832 70%, #5a7a18 100%);
+    box-shadow:0 8px 14px -6px rgba(122,162,38,.5), inset 0 -4px 8px rgba(48,72,16,.32), inset 0 3px 5px rgba(255,255,255,.45)}
+  .histitem .score.warn{background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.7), rgba(255,255,255,0) 38%), radial-gradient(circle at 50% 55%, #fbeac6 0%, #f3c46c 35%, #cf8e1e 70%, #7a4f10 100%);box-shadow:0 8px 14px -6px rgba(207,142,30,.5), inset 0 -4px 8px rgba(90,55,10,.32), inset 0 3px 5px rgba(255,255,255,.45)}
+  .histitem .score.bad{background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.7), rgba(255,255,255,0) 38%), radial-gradient(circle at 50% 55%, #f4cab9 0%, #e08e76 35%, #d4583e 70%, #7a2110 100%);box-shadow:0 8px 14px -6px rgba(212,88,62,.5), inset 0 -4px 8px rgba(90,30,15,.32), inset 0 3px 5px rgba(255,255,255,.45);color:#fff}
+
+  /* ─── 7. Tab bar */
+  .tabbar{position:absolute;left:14px;right:14px;bottom:18px;height:76px;border-radius:34px;
+    background:linear-gradient(180deg, rgba(250,246,233,.82), rgba(250,246,233,.6));
+    backdrop-filter:blur(28px) saturate(1.2);-webkit-backdrop-filter:blur(28px) saturate(1.2);
+    border:1px solid var(--glass-edge);
+    display:grid;grid-template-columns:repeat(5,1fr);align-items:center;justify-items:center;padding:0 10px;color:var(--graphite);z-index:5;
+    box-shadow: var(--sh-glass)}
+  .tabbar .tab{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:600;letter-spacing:.02em;color:var(--slate)}
+  .tabbar .tab.active{color:var(--forest)}
+  .tabbar .tab svg{width:22px;height:22px;stroke-width:1.8}
+  .tabbar .tab.scan{width:58px;height:58px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #1a3b22, #0d2614 70%);color:var(--matcha-soft);
+    display:flex;align-items:center;justify-content:center;margin-top:-22px;
+    box-shadow:0 12px 26px -8px rgba(13,38,20,.55), 0 0 0 4px rgba(158,200,50,.22), inset 0 1px 0 rgba(255,255,255,.12)}
+  .tabbar .tab.scan svg{width:24px;height:24px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- COW -->
+    <symbol id="i-cow" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="86" rx="32" ry="5" fill="rgba(13,38,20,.18)"/>
+      <defs>
+        <radialGradient id="cb" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#f5efe0"/><stop offset="1" stop-color="#c8b78e"/></radialGradient>
+        <radialGradient id="cs" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#5a4a36"/><stop offset="1" stop-color="#2a2014"/></radialGradient>
+        <radialGradient id="cn" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#fce0e0"/><stop offset="1" stop-color="#d99a9a"/></radialGradient>
+      </defs>
+      <ellipse cx="50" cy="56" rx="34" ry="26" fill="url(#cb)"/>
+      <ellipse cx="38" cy="48" rx="9" ry="6" fill="url(#cs)" opacity=".82"/>
+      <ellipse cx="62" cy="62" rx="7" ry="5" fill="url(#cs)" opacity=".82"/>
+      <ellipse cx="72" cy="44" rx="4" ry="3" fill="url(#cs)" opacity=".72"/>
+      <rect x="34" y="74" width="6" height="11" rx="3" fill="#5a4a36"/>
+      <rect x="60" y="74" width="6" height="11" rx="3" fill="#5a4a36"/>
+      <ellipse cx="50" cy="34" rx="20" ry="18" fill="url(#cb)"/>
+      <ellipse cx="32" cy="28" rx="6" ry="9" fill="url(#cb)" transform="rotate(-20 32 28)"/>
+      <ellipse cx="68" cy="28" rx="6" ry="9" fill="url(#cb)" transform="rotate(20 68 28)"/>
+      <ellipse cx="32" cy="29" rx="3" ry="5" fill="#d99a9a" transform="rotate(-20 32 29)"/>
+      <ellipse cx="68" cy="29" rx="3" ry="5" fill="#d99a9a" transform="rotate(20 68 29)"/>
+      <path d="M40 18 C 38 12 42 10 44 14" stroke="#c8a86e" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M60 18 C 62 12 58 10 56 14" stroke="#c8a86e" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <ellipse cx="50" cy="42" rx="11" ry="8" fill="url(#cn)"/>
+      <ellipse cx="46" cy="42" rx="1.3" ry="1.8" fill="#7a4a4a"/>
+      <ellipse cx="54" cy="42" rx="1.3" ry="1.8" fill="#7a4a4a"/>
+      <ellipse cx="42" cy="30" rx="2.4" ry="2.8" fill="#1a1410"/>
+      <ellipse cx="58" cy="30" rx="2.4" ry="2.8" fill="#1a1410"/>
+      <circle cx="42.8" cy="29" r=".9" fill="#fff"/>
+      <circle cx="58.8" cy="29" r=".9" fill="#fff"/>
+      <ellipse cx="44" cy="22" rx="10" ry="3" fill="#fff" opacity=".25"/>
+    </symbol>
+
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-chev-r" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chev-d" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow-r" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><polyline points="12 5 19 12 12 19" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 12 12 4l9 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v10h14V10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><polygon points="1 6 8 3 16 6 23 3 23 18 16 21 8 18 1 21 1 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><line x1="8" y1="3" x2="8" y2="18" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="6" x2="16" y2="21" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="header">
+  <h1 class="brand">Trace<span class="dot"></span></h1>
+  <div class="meta"><b>Home · v4</b> &nbsp;·&nbsp; iPhone 15 Pro &nbsp;·&nbsp; 393×852 &nbsp;·&nbsp; <span style="font-style:italic">native typography — Inter</span></div>
+</div>
+
+<div class="stagewrap">
+  <div class="frame-label"><span>01</span><b>Home</b> &nbsp;·&nbsp; <span style="font-style:italic">scroll for full layout</span></div>
+
+  <div class="device"><div class="screen grain">
+
+    <div class="island"></div>
+    <div class="status">
+      <span>9:41</span>
+      <span class="right">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="1" y="8.5" width="3" height="3" rx="1"/><rect x="6" y="6" width="3" height="5.5" rx="1"/><rect x="11" y="3" width="3" height="8.5" rx="1"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 5C3 3 6 2 8 2s5 1 7 3"/><path d="M3.5 7.5C5 6 6.5 5.5 8 5.5s3 .5 4.5 2"/><circle cx="8" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg>
+        <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="1.5" width="22" height="9" rx="2.5" stroke="currentColor" opacity=".5"/><rect x="2" y="3" width="17" height="6" rx="1.2" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor" opacity=".6"/></svg>
+      </span>
+    </div>
+
+    <div class="scroll">
+
+      <!-- 1. LOCATION HEADER -->
+      <div class="lochead">
+        <div class="locpill">
+          <span class="pulse"></span>
+          <svg class="pin" viewBox="0 0 24 24"><use href="#i-pin"/></svg>
+          <span>Manchester, UK</span>
+          <span class="sep">·</span>
+          <span class="post">M21 7BX</span>
+          <svg class="chev" viewBox="0 0 24 24"><use href="#i-chev-d"/></svg>
+        </div>
+        <div class="avatar">S</div>
+      </div>
+
+      <!-- Env indicator strip -->
+      <div class="envstrip">
+        <div class="seg">
+          <div class="top"><span class="d spring"></span><span>Air</span></div>
+          <div class="val">Good · 32</div>
+          <div class="sub">PM2.5 elevated PM</div>
+        </div>
+        <div class="seg">
+          <div class="top"><span class="d matcha"></span><span>Water</span></div>
+          <div class="val">B+ Grade</div>
+          <div class="sub">Severn Trent</div>
+        </div>
+        <div class="seg">
+          <div class="top"><span class="d honey"></span><span>Food</span></div>
+          <div class="val">12 nearby</div>
+          <div class="sub">Within 30 mi</div>
+        </div>
+      </div>
+
+      <!-- Greeting -->
+      <div class="greet">
+        <div class="h"><span class="light">Good morning,</span><br>Sam.</div>
+        <div class="date">Wed · 14 May<br>Week 20</div>
+      </div>
+
+      <!-- 2. Today's environment -->
+      <div class="sec-h">
+        <div class="title">Around you today</div>
+        <div class="more">Last 60 min</div>
+      </div>
+
+      <div class="grid21">
+
+        <!-- AIR -->
+        <div class="envcard air">
+          <div class="kicker"><span class="d spring"></span>Air · Manchester</div>
+          <div class="orb air">
+            <span class="halo"></span>
+            <div class="sphere"></div>
+            <svg class="ring" viewBox="0 0 128 128">
+              <circle cx="64" cy="64" r="56" stroke="rgba(13,38,20,.1)" stroke-width="2.5" fill="none"/>
+              <circle cx="64" cy="64" r="56" stroke="#1f4754" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="260" transform="rotate(-90 64 64)" opacity=".7"/>
+            </svg>
+            <div class="center">
+              <div class="num">32</div>
+              <div class="lbl">AQI · Good</div>
+            </div>
+          </div>
+          <div class="verdict">Breathing easy.</div>
+          <div class="sub">PM2.5 elevated this afternoon</div>
+        </div>
+
+        <!-- WATER -->
+        <div class="envcard water">
+          <div class="kicker"><span class="d matcha"></span>Water · House supply</div>
+          <div class="orb water">
+            <span class="halo"></span>
+            <div class="sphere"></div>
+            <svg class="ring" viewBox="0 0 128 128">
+              <circle cx="64" cy="64" r="56" stroke="rgba(13,38,20,.1)" stroke-width="2.5" fill="none"/>
+              <circle cx="64" cy="64" r="56" stroke="#3e5a18" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="28" transform="rotate(-90 64 64)" opacity=".7"/>
+            </svg>
+            <div class="center">
+              <div class="num">92</div>
+              <div class="lbl">Grade B+</div>
+            </div>
+          </div>
+          <div class="verdict">Soft, clean &amp; steady.</div>
+          <div class="sub">Severn Trent · Tested 14 d ago</div>
+        </div>
+
+        <!-- FOOD -->
+        <div class="envcard food">
+          <div class="body">
+            <div class="kicker"><span class="d honey"></span>Producers within 30 mi</div>
+            <div class="big">12</div>
+            <div class="lbl">Farms within reach</div>
+            <div class="sub-l">Raw milk, cheesemakers, market gardens. Nearest 2.4 mi.</div>
+          </div>
+          <div class="mapprev">
+            <div class="road" style="left:-10%;right:-10%;top:42%;height:2px;transform:rotate(-8deg)"></div>
+            <div class="road" style="left:-10%;right:-10%;top:74%;height:2px;transform:rotate(5deg)"></div>
+            <div class="you-orb" style="left:42%;top:48%"></div>
+            <div class="pin-orb" style="left:22%;top:24%"></div>
+            <div class="pin-orb" style="left:62%;top:30%"></div>
+            <div class="pin-orb" style="left:74%;top:60%"></div>
+            <div class="pin-orb" style="left:18%;top:74%"></div>
+            <svg class="cow" viewBox="0 0 100 100"><use href="#i-cow"/></svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3. CTA -->
+      <div class="ctawrap">
+        <div class="cta-check">
+          <div class="lead">
+            <svg class="pin" viewBox="0 0 24 24"><use href="#i-pin"/></svg>
+            <span>Check <span class="secondary">another place</span></span>
+          </div>
+          <div class="arrow"><svg viewBox="0 0 24 24"><use href="#i-arrow-r"/></svg></div>
+        </div>
+      </div>
+
+      <!-- 4. Recent places -->
+      <div class="sec-h">
+        <div class="title">Recently checked</div>
+        <div class="more">See all</div>
+      </div>
+      <div class="hscroll">
+        <div class="placechip">
+          <div class="place">London SW1</div>
+          <div class="post">Westminster · 215 mi</div>
+          <div class="summary"><span class="d berry"></span>Air <b>poor</b> · 84 AQI</div>
+        </div>
+        <div class="placechip">
+          <div class="place">Cornwall PL10</div>
+          <div class="post">Coast · 354 mi</div>
+          <div class="summary"><span class="d matcha"></span>Water <b>excellent</b> · A</div>
+        </div>
+        <div class="placechip">
+          <div class="place">Bristol BS1</div>
+          <div class="post">Harbourside · 168 mi</div>
+          <div class="summary"><span class="d honey"></span><b>8</b> producers · 30 mi</div>
+        </div>
+        <div class="placechip">
+          <div class="place">Sheffield S1</div>
+          <div class="post">Centre · 38 mi</div>
+          <div class="summary"><span class="d spring"></span>Air <b>moderate</b> · 56</div>
+        </div>
+      </div>
+
+      <!-- 5. Traced to source -->
+      <div class="sec-h">
+        <div class="title">Traced to source</div>
+        <div class="more">See all</div>
+      </div>
+      <div class="pstrip">
+        <div class="pcard">
+          <div class="photo">
+            <span class="badge"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Traced</span>
+            <span class="scoremini">95</span>
+            <span class="ph">Raw Milk · Photo</span>
+          </div>
+          <div class="pinfo">
+            <div class="brand">Hartley Farm</div>
+            <div class="name">Whole raw milk</div>
+            <div class="meta">Wiltshire · 38 mi · 1 L</div>
+          </div>
+        </div>
+        <div class="pcard">
+          <div class="photo bone">
+            <span class="badge"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Traced</span>
+            <span class="scoremini">92</span>
+            <span class="ph">Cheddar · Photo</span>
+          </div>
+          <div class="pinfo">
+            <div class="brand">Westcombe Dairy</div>
+            <div class="name">Cheddar truckle</div>
+            <div class="meta">Evercreech · 220 mi · 200 g</div>
+          </div>
+        </div>
+        <div class="pcard">
+          <div class="photo matcha">
+            <span class="badge"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Traced</span>
+            <span class="scoremini">88</span>
+            <span class="ph">Loaf · Photo</span>
+          </div>
+          <div class="pinfo">
+            <div class="brand">Trove Bakery</div>
+            <div class="name">Sourdough loaf</div>
+            <div class="meta">Levenshulme · 1.6 mi · 800 g</div>
+          </div>
+        </div>
+        <div class="pcard">
+          <div class="photo">
+            <span class="badge"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Traced</span>
+            <span class="scoremini">90</span>
+            <span class="ph">Honey · Photo</span>
+          </div>
+          <div class="pinfo">
+            <div class="brand">Black Bee Honey</div>
+            <div class="name">Spring blossom</div>
+            <div class="meta">Somerset · 200 mi · 227 g</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. History -->
+      <div class="sec-h">
+        <div class="title">Recently scanned</div>
+        <div class="more">All scans</div>
+      </div>
+      <div class="histlist">
+        <div class="histitem">
+          <div class="thumb"></div>
+          <div class="info">
+            <div class="n">Country Life Cheddar</div>
+            <div class="meta">9:41 today · Tesco</div>
+            <div class="verdict warn">Processed food</div>
+          </div>
+          <div class="score">84</div>
+        </div>
+        <div class="histitem">
+          <div class="thumb bread"></div>
+          <div class="info">
+            <div class="n">Hovis Soft White</div>
+            <div class="meta">Yesterday 18:20 · Tesco</div>
+            <div class="verdict bad">Ultra-processed</div>
+          </div>
+          <div class="score bad">36</div>
+        </div>
+        <div class="histitem">
+          <div class="thumb smoothie"></div>
+          <div class="info">
+            <div class="n">Innocent Smoothie</div>
+            <div class="meta">Yesterday 12:08 · Sainsbury's</div>
+            <div class="verdict warn">Decent</div>
+          </div>
+          <div class="score warn">68</div>
+        </div>
+        <div class="histitem">
+          <div class="thumb eggs"></div>
+          <div class="info">
+            <div class="n">Clarence Court Burford Browns</div>
+            <div class="meta">Mon 09:14 · Waitrose</div>
+            <div class="verdict ok">Real food</div>
+          </div>
+          <div class="score">91</div>
+        </div>
+      </div>
+
+      <div style="height:120px"></div>
+    </div>
+
+    <!-- 7. Tab bar -->
+    <div class="tabbar">
+      <div class="tab active"><svg viewBox="0 0 24 24"><use href="#i-home"/></svg>Trace</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><use href="#i-map"/></svg>Map</div>
+      <div class="tab scan"><svg viewBox="0 0 24 24"><use href="#i-scan"/></svg></div>
+      <div class="tab"><svg viewBox="0 0 24 24"><use href="#i-bookmark"/></svg>Saved</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><use href="#i-user"/></svg>Profile</div>
+    </div>
+
+  </div></div>
+</div>
+
+</body>
+</html>

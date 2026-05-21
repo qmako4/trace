@@ -1,0 +1,1316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Trace — 6 screens · v5 Apple Health</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* iOS / Apple Health neutrals */
+    --canvas:#171717;
+    --white:#ffffff;
+    --grey6:#f2f2f7;
+    --grey5:#e5e5ea;
+    --grey4:#d1d1d6;
+    --grey3:#c7c7cc;
+    --divider:rgba(60,60,67,.18);
+    --separator:rgba(60,60,67,.36);
+    --text-1:#000000;
+    --text-2:rgba(60,60,67,.6);
+    --text-3:rgba(60,60,67,.3);
+
+    /* Data category colours (iOS system) */
+    --food:#34c759;
+    --water:#007aff;
+    --air:#64d2ff;
+    --producer:#ff9500;
+    --honey:#ffcc00;
+    --alert:#ff3b30;
+    --action:#007aff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--canvas);color:#dadada;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:'cv11','ss01'}
+  body{min-height:100vh;padding:56px 48px 96px;background:var(--canvas)}
+  em{font-style:normal;font-weight:600}
+
+  /* ─── Header */
+  .header{margin:0 0 44px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;color:#9a9a96}
+  .header h1{font-family:'Source Serif 4',Georgia,serif;font-weight:500;font-style:italic;font-size:42px;letter-spacing:-.02em;margin:0;color:#ecebe7;line-height:1}
+  .header h1 .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-left:6px;vertical-align:middle;background:var(--food);box-shadow:0 0 0 5px rgba(52,199,89,.18)}
+  .header .meta{font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#6e6e68}
+  .header .meta b{color:#c0c0bc;font-weight:600}
+  .header .swatches{display:flex;gap:8px;margin-top:8px}
+  .header .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(255,255,255,.08)}
+
+  /* ─── Stage */
+  .stage{display:flex;flex-wrap:nowrap;gap:36px;overflow-x:auto;padding-bottom:24px;scrollbar-color:#3a3a36 transparent}
+  .frame{flex:0 0 auto;display:flex;flex-direction:column;gap:14px}
+  .frame .label{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:#6e6e68;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:baseline;gap:10px}
+  .frame .label b{color:#c0c0bc;font-weight:600;letter-spacing:-.005em;text-transform:none;font-family:'Inter',sans-serif;font-size:13px}
+  .frame .label em{font-family:'Geist Mono',monospace;color:#9a9a96;font-weight:500}
+
+  /* ─── Device chrome */
+  .device{position:relative;width:393px;height:852px;border-radius:54px;background:#0c0c0a;padding:10px;
+    box-shadow:0 2px 0 rgba(255,255,255,.06) inset, 0 36px 70px -22px rgba(0,0,0,.65), 0 0 0 1px #2a2a26}
+  .screen{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;font-family:inherit;color:var(--text-1);background:var(--white)}
+  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:30}
+  .status{position:absolute;top:0;left:0;right:0;height:54px;padding:18px 32px 0;display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:600;z-index:25;pointer-events:none;color:var(--text-1);letter-spacing:-.01em}
+  .status .right{display:flex;align-items:center;gap:6px}
+
+  /* ─── iOS typography utilities */
+  .t-large{font-size:34px;font-weight:700;letter-spacing:-.022em;line-height:1.05;color:var(--text-1)}
+  .t-title1{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.1;color:var(--text-1)}
+  .t-title2{font-size:22px;font-weight:700;letter-spacing:-.015em;line-height:1.15;color:var(--text-1)}
+  .t-title3{font-size:20px;font-weight:600;letter-spacing:-.012em;line-height:1.2;color:var(--text-1)}
+  .t-headline{font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1.25;color:var(--text-1)}
+  .t-body{font-size:17px;font-weight:400;letter-spacing:-.005em;line-height:1.35;color:var(--text-1)}
+  .t-sub{font-size:15px;font-weight:400;letter-spacing:-.005em;line-height:1.35;color:var(--text-2)}
+  .t-cap{font-size:13px;font-weight:500;letter-spacing:0;color:var(--text-2)}
+  .t-foot{font-size:11px;font-weight:500;letter-spacing:.01em;color:var(--text-3)}
+  .t-mono{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--text-2)}
+  .t-monoCaps{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+
+  /* ─── Section header */
+  .sec-h{padding:24px 20px 8px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .sec-h .title{font-size:22px;font-weight:700;letter-spacing:-.015em;color:var(--text-1)}
+  .sec-h .more{font-size:15px;font-weight:500;color:var(--action);letter-spacing:-.005em;display:flex;align-items:center;gap:2px}
+  .sec-h .more svg{width:12px;height:12px;stroke-width:2.4}
+
+  /* ─── Atoms */
+  .row-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:13px;font-weight:500;color:var(--text-1);background:var(--grey6)}
+  .row-pill .d{width:7px;height:7px;border-radius:50%}
+  .row-pill.alert{color:var(--alert);background:rgba(255,59,48,.10)}
+  .row-pill.good{color:#1e8e3e;background:rgba(52,199,89,.12)}
+
+  /* Grouped list (Apple Health style cells inside grey6 container) */
+  .group{margin:0 16px;border-radius:16px;background:var(--grey6);overflow:hidden}
+  .group .cell{display:flex;align-items:center;gap:12px;padding:14px 16px;background:transparent;position:relative}
+  .group .cell + .cell::before{content:"";position:absolute;left:54px;right:0;top:0;height:1px;background:var(--divider)}
+  .group .cell .lead{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .group .cell .lead svg{width:18px;height:18px;stroke-width:1.7}
+  .group .cell .body{flex:1;min-width:0}
+  .group .cell .body .ttl{font-size:16px;font-weight:600;letter-spacing:-.01em;color:var(--text-1);line-height:1.2}
+  .group .cell .body .sub{font-size:13px;font-weight:400;color:var(--text-2);margin-top:2px;letter-spacing:-.005em}
+  .group .cell .tail{font-size:14px;font-weight:500;color:var(--text-2);display:flex;align-items:center;gap:6px;letter-spacing:-.005em}
+  .group .cell .tail .chev{width:12px;height:12px;color:var(--text-3);stroke-width:2.4}
+
+  /* Pilled CTA (system blue rounded rect) */
+  .cta-btn{height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--action);color:#fff;font-size:17px;font-weight:600;letter-spacing:-.005em}
+
+  /* Bottom tab bar (Apple Health style — flat, white, top border) */
+  .tabbar{position:absolute;left:0;right:0;bottom:0;height:84px;background:rgba(249,249,251,.92);
+    backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
+    border-top:1px solid var(--divider);
+    display:grid;grid-template-columns:repeat(5,1fr);align-items:flex-start;justify-items:center;padding:10px 0 0;z-index:5}
+  .tabbar .tab{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:500;letter-spacing:.01em;color:var(--text-3)}
+  .tabbar .tab.active{color:var(--action)}
+  .tabbar .tab svg{width:26px;height:26px;stroke-width:1.5}
+  .tabbar .tab.scan{position:relative}
+  .tabbar .tab.scan svg{stroke-width:1.8}
+
+  /* ─── RING (Apple-style activity ring) */
+  .ring{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+  .ring .center{position:relative;text-align:center;line-height:1}
+  .ring .center .num{font-weight:700;color:var(--text-1);font-feature-settings:'tnum';letter-spacing:-.025em}
+  .ring .center .lbl{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);margin-top:3px}
+
+  /* ============ S1 — Onboarding ============ */
+  .s1{background:var(--white);color:var(--text-1)}
+  .s1 .small-mark{position:absolute;top:78px;left:0;right:0;text-align:center;font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--text-2)}
+  .s1 .illo{position:absolute;top:148px;left:0;right:0;display:flex;justify-content:center}
+  .s1 .illo svg{width:200px;height:200px;color:var(--food)}
+  .s1 .lockup{position:absolute;top:400px;left:0;right:0;padding:0 28px;text-align:center}
+  .s1 .wordmark{font-family:'Source Serif 4',Georgia,serif;font-style:italic;font-weight:500;font-size:54px;letter-spacing:-.025em;color:var(--text-1);line-height:1;margin-bottom:18px}
+  .s1 .wordmark .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--food);margin-left:2px;vertical-align:middle;box-shadow:0 0 0 4px rgba(52,199,89,.18)}
+  .s1 .title{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.15;color:var(--text-1);text-wrap:pretty}
+  .s1 .sub{margin-top:14px;font-size:16px;font-weight:400;color:var(--text-2);letter-spacing:-.005em;line-height:1.45;text-wrap:pretty}
+  .s1 .ctas{position:absolute;left:20px;right:20px;bottom:54px;display:flex;flex-direction:column;gap:14px}
+  .s1 .ctas .cta-btn{height:52px}
+  .s1 .ctas .signin{text-align:center;font-size:15px;font-weight:500;color:var(--action);letter-spacing:-.005em}
+
+  /* ============ S2 — Home / Today ============ */
+  .s2{background:var(--white);color:var(--text-1);overflow:hidden}
+  .s2 .scroll{position:absolute;inset:0;overflow-y:auto;padding-top:54px;padding-bottom:100px;scrollbar-width:none}
+  .s2 .scroll::-webkit-scrollbar{display:none}
+
+  .s2 .topbar{padding:14px 20px 0;display:flex;align-items:center;justify-content:space-between;gap:14px}
+  .s2 .locpill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px 8px 12px;border-radius:999px;background:var(--grey6);color:var(--text-1);font-size:14px;font-weight:600;letter-spacing:-.005em}
+  .s2 .locpill svg.pin{width:14px;height:14px;stroke-width:1.8;color:var(--text-2)}
+  .s2 .locpill .pulse{width:6px;height:6px;border-radius:50%;background:var(--food);box-shadow:0 0 0 3px rgba(52,199,89,.22);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 3px rgba(52,199,89,.22)}70%{box-shadow:0 0 0 7px rgba(52,199,89,0)}100%{box-shadow:0 0 0 3px rgba(52,199,89,0)}}
+  .s2 .locpill .chev{width:12px;height:12px;color:var(--text-3);stroke-width:2.4}
+  .s2 .locpill .post{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.04em}
+  .s2 .avatar{width:36px;height:36px;border-radius:50%;background:var(--grey4);color:var(--text-1);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;letter-spacing:-.01em}
+
+  .s2 .pagehead{padding:14px 20px 0}
+  .s2 .pagehead .date{font-size:13px;font-weight:500;letter-spacing:0;color:var(--text-2);text-transform:none}
+  .s2 .pagehead .title{margin-top:4px;font-size:34px;font-weight:700;letter-spacing:-.022em;color:var(--text-1);line-height:1.05}
+
+  /* Today's environment cards */
+  .s2 .envgrid{padding:14px 16px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .s2 .envcard{background:var(--grey6);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:8px;position:relative;min-height:130px}
+  .s2 .envcard .top{display:flex;align-items:center;gap:8px}
+  .s2 .envcard .top .icon{width:22px;height:22px;flex:0 0 auto}
+  .s2 .envcard .top .icon svg{width:22px;height:22px;stroke-width:1.8}
+  .s2 .envcard .top .lbl{font-size:13px;font-weight:600;letter-spacing:-.005em;color:var(--text-1)}
+  .s2 .envcard .row{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:auto}
+  .s2 .envcard .row .num{font-size:34px;font-weight:700;letter-spacing:-.02em;color:var(--text-1);line-height:.95;font-feature-settings:'tnum'}
+  .s2 .envcard .row .verdict{font-size:13px;font-weight:600;letter-spacing:-.005em;color:var(--text-2);margin-top:2px}
+  .s2 .envcard .row .verdict.good{color:var(--food)}
+  .s2 .envcard .row .verdict.warn{color:var(--producer)}
+  .s2 .envcard .row .verdict.bad{color:var(--alert)}
+  .s2 .envcard .ring{width:54px;height:54px}
+  .s2 .envcard .ring .center .num{font-size:16px;font-weight:700;letter-spacing:-.012em}
+  .s2 .envcard .meta{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.04em;color:var(--text-3)}
+  .s2 .envcard.span2{grid-column:1/-1;min-height:120px;display:flex;flex-direction:row;align-items:center;gap:14px}
+  .s2 .envcard.span2 .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;align-self:stretch;justify-content:space-between}
+  .s2 .envcard.span2 .preview{width:120px;height:96px;border-radius:14px;background:var(--white);position:relative;overflow:hidden;flex:0 0 auto}
+  .s2 .envcard.span2 .preview .road{position:absolute;height:2px;background:var(--grey4);border-radius:1px}
+  .s2 .envcard.span2 .preview .pin{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--producer);box-shadow:0 0 0 2px var(--white)}
+  .s2 .envcard.span2 .preview .you{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--action);box-shadow:0 0 0 3px rgba(0,122,255,.2), 0 0 0 5px var(--white)}
+
+  /* Action row */
+  .s2 .actionrow{margin:14px 16px 0;background:var(--grey6);border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .s2 .actionrow .lead{display:flex;align-items:center;gap:10px;color:var(--action);font-size:16px;font-weight:600;letter-spacing:-.005em}
+  .s2 .actionrow .lead svg{width:18px;height:18px;stroke-width:2;color:var(--action)}
+  .s2 .actionrow .chev{width:14px;height:14px;color:var(--text-3);stroke-width:2.4}
+
+  /* Recent places horiz */
+  .s2 .hscroll{display:flex;gap:10px;padding:0 16px 4px;overflow-x:auto;scrollbar-width:none}
+  .s2 .hscroll::-webkit-scrollbar{display:none}
+  .s2 .pchip{flex:0 0 auto;width:172px;border-radius:16px;padding:14px;background:var(--grey6)}
+  .s2 .pchip .name{font-size:15px;font-weight:600;color:var(--text-1);letter-spacing:-.008em}
+  .s2 .pchip .post{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;color:var(--text-3);letter-spacing:.04em;margin-top:2px}
+  .s2 .pchip .row{margin-top:10px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text-2);letter-spacing:-.005em}
+  .s2 .pchip .row .d{width:8px;height:8px;border-radius:50%}
+  .s2 .pchip .row b{font-weight:700;color:var(--text-1)}
+
+  /* Traced product strip */
+  .s2 .pstrip{display:flex;gap:10px;padding:0 16px 4px;overflow-x:auto;scrollbar-width:none}
+  .s2 .pstrip::-webkit-scrollbar{display:none}
+  .s2 .prodcard{flex:0 0 auto;width:154px;background:var(--grey6);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:10px}
+  .s2 .prodcard .photo{aspect-ratio:1/1;border-radius:12px;background:var(--white);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .s2 .prodcard .photo svg{width:48px;height:48px;stroke-width:1.5;opacity:.4;color:var(--text-2)}
+  .s2 .prodcard .photo .badge{position:absolute;left:8px;top:8px;display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:0;color:var(--food);background:rgba(52,199,89,.12)}
+  .s2 .prodcard .photo .badge svg{width:9px;height:9px;stroke-width:3.4;opacity:1;color:var(--food)}
+  .s2 .prodcard .photo .score{position:absolute;right:8px;top:8px;width:36px;height:36px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--text-1);letter-spacing:-.012em;font-feature-settings:'tnum';box-shadow:0 0 0 1px var(--divider)}
+  .s2 .prodcard .pinfo{padding:0 2px 2px}
+  .s2 .prodcard .brand{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:-.005em}
+  .s2 .prodcard .pname{font-size:14px;font-weight:600;color:var(--text-1);letter-spacing:-.008em;margin-top:1px;line-height:1.2}
+  .s2 .prodcard .meta{font-family:'Geist Mono',monospace;font-size:9px;font-weight:500;color:var(--text-3);letter-spacing:.04em;margin-top:3px}
+
+  /* History list */
+  .s2 .histgroup{margin:0 16px;border-radius:16px;background:var(--grey6);overflow:hidden}
+  .s2 .histitem{display:flex;align-items:center;gap:12px;padding:12px 14px;position:relative}
+  .s2 .histitem + .histitem::before{content:"";position:absolute;left:62px;right:0;top:0;height:1px;background:var(--divider)}
+  .s2 .histitem .thumb{width:40px;height:40px;border-radius:10px;background:var(--white);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .s2 .histitem .thumb svg{width:24px;height:24px;stroke-width:1.6;opacity:.5}
+  .s2 .histitem .info{flex:1;min-width:0}
+  .s2 .histitem .info .n{font-size:15px;font-weight:600;color:var(--text-1);letter-spacing:-.008em;line-height:1.2}
+  .s2 .histitem .info .m{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;color:var(--text-3);letter-spacing:.04em;margin-top:3px}
+  .s2 .histitem .score{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--text-1);letter-spacing:-.012em;font-feature-settings:'tnum';flex:0 0 auto;position:relative;background:var(--white)}
+  .s2 .histitem .score svg{position:absolute;inset:0;transform:rotate(-90deg)}
+
+  /* ============ S3 — Map ============ */
+  .s3{background:var(--white);color:var(--text-1);overflow:hidden}
+  .s3 .map{position:absolute;inset:0;background:#f5f5f7}
+  .s3 .map .land{position:absolute;background:#ebebef}
+  .s3 .map .park{position:absolute;background:rgba(52,199,89,.10);border-radius:60%}
+  .s3 .map .river{position:absolute;background:rgba(0,122,255,.18);border-radius:20px}
+  .s3 .map .road{position:absolute;background:#fff;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.04)}
+
+  .s3 .searchpill{position:absolute;left:14px;right:14px;top:64px;height:48px;border-radius:14px;background:rgba(255,255,255,.92);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid rgba(0,0,0,.04);display:flex;align-items:center;padding:0 14px;gap:10px;z-index:8;box-shadow:0 4px 12px -4px rgba(0,0,0,.08)}
+  .s3 .searchpill svg{width:18px;height:18px;color:var(--text-3);stroke-width:1.8}
+  .s3 .searchpill input{flex:1;border:0;background:transparent;outline:none;font-size:15px;color:var(--text-1);font-weight:400;letter-spacing:-.005em}
+  .s3 .searchpill input::placeholder{color:var(--text-3);font-weight:400}
+  .s3 .searchpill .mic{width:30px;height:30px;border-radius:50%;background:var(--grey6);display:flex;align-items:center;justify-content:center}
+  .s3 .searchpill .mic svg{width:14px;height:14px;color:var(--text-2)}
+
+  .s3 .filterrow{position:absolute;left:14px;right:14px;top:124px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;z-index:7}
+  .s3 .filterrow::-webkit-scrollbar{display:none}
+  .s3 .fchip{flex:0 0 auto;height:32px;padding:0 13px;border-radius:999px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.04);display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--text-1);letter-spacing:-.005em;box-shadow:0 2px 6px -2px rgba(0,0,0,.06)}
+  .s3 .fchip.on{background:var(--text-1);color:#fff;border-color:transparent}
+  .s3 .fchip .d{width:7px;height:7px;border-radius:50%}
+
+  .s3 .pin{position:absolute;display:flex;flex-direction:column;align-items:center;z-index:6}
+  .s3 .pin .dot{width:30px;height:30px;border-radius:50%;background:var(--producer);display:flex;align-items:center;justify-content:center;color:#fff;border:2.5px solid #fff;box-shadow:0 4px 10px -2px rgba(0,0,0,.25)}
+  .s3 .pin .dot svg{width:16px;height:16px;stroke-width:1.8;color:#fff}
+  .s3 .pin.food .dot{background:var(--food)}
+  .s3 .pin.water .dot{background:var(--water)}
+  .s3 .pin.honey .dot{background:var(--honey);color:#3a2710}
+  .s3 .pin.honey .dot svg{color:#3a2710}
+  .s3 .pin.alert .dot{background:var(--alert)}
+  .s3 .pin.sel .dot{width:42px;height:42px;outline:4px solid rgba(255,149,0,.25)}
+  .s3 .pin.sel .dot svg{width:22px;height:22px}
+  .s3 .pin.cluster .dot{width:40px;height:40px;background:var(--text-1);font-size:13px;font-weight:700;letter-spacing:-.012em}
+  .s3 .pin.cluster .dot svg{display:none}
+  .s3 .pin .lbl{margin-top:6px;font-size:10px;font-weight:600;letter-spacing:0;color:var(--text-1);background:#fff;padding:3px 7px;border-radius:6px;border:1px solid rgba(0,0,0,.04);box-shadow:0 2px 6px -2px rgba(0,0,0,.1);white-space:nowrap}
+
+  .s3 .you{position:absolute;left:48%;top:46%;width:18px;height:18px;border-radius:50%;background:var(--action);border:3px solid #fff;box-shadow:0 0 0 8px rgba(0,122,255,.18), 0 4px 10px -2px rgba(0,122,255,.4);z-index:6}
+
+  .s3 .zoom{position:absolute;right:14px;top:174px;display:flex;flex-direction:column;gap:8px;z-index:8}
+  .s3 .zoom .b{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.04);display:flex;align-items:center;justify-content:center;color:var(--text-1);box-shadow:0 2px 8px -2px rgba(0,0,0,.08)}
+  .s3 .zoom .b svg{width:18px;height:18px;stroke-width:1.8}
+
+  .s3 .sheet{position:absolute;left:0;right:0;bottom:0;height:340px;border-radius:24px 24px 0 0;background:rgba(255,255,255,.96);backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);border-top:1px solid var(--divider);padding:10px 16px 24px;z-index:9;box-shadow:0 -8px 28px -10px rgba(0,0,0,.12)}
+  .s3 .sheet .grab{width:36px;height:5px;background:var(--grey4);border-radius:3px;margin:4px auto 14px}
+  .s3 .sheet .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;padding:0 4px}
+  .s3 .sheet .head .ttl{font-size:20px;font-weight:700;letter-spacing:-.015em;color:var(--text-1)}
+  .s3 .sheet .head .ct{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.06em;text-transform:uppercase}
+  .s3 .sheet .list{}
+  .s3 .pitem{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--divider)}
+  .s3 .pitem:last-child{border-bottom:0}
+  .s3 .pitem .iconwrap{width:42px;height:42px;border-radius:12px;background:var(--grey6);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .s3 .pitem .iconwrap svg{width:24px;height:24px;stroke-width:1.7}
+  .s3 .pitem .body{flex:1;min-width:0}
+  .s3 .pitem .name{font-size:16px;font-weight:600;color:var(--text-1);letter-spacing:-.008em;line-height:1.2}
+  .s3 .pitem .meta{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;align-items:center}
+  .s3 .pitem .tg{font-size:12px;font-weight:500;color:var(--text-2);letter-spacing:-.005em}
+  .s3 .pitem .dist{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.04em;background:var(--grey6);padding:3px 8px;border-radius:8px}
+
+  /* ============ S4 — Producer detail ============ */
+  .s4{background:var(--white);color:var(--text-1);overflow:hidden}
+  .s4 .scroll{position:absolute;inset:0;overflow-y:auto;scrollbar-width:none}
+  .s4 .scroll::-webkit-scrollbar{display:none}
+  .s4 .hero{position:relative;height:300px;background:#3a3a3c;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .s4 .hero::after{content:"FARM · PHOTO 4:5";font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.18em;color:rgba(255,255,255,.4)}
+  .s4 .hero-stripe{position:absolute;inset:0;background:repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 18px, transparent 18px 36px);pointer-events:none}
+  .s4 .heroactions{position:absolute;top:64px;left:14px;right:14px;display:flex;justify-content:space-between;z-index:6}
+  .s4 .heroactions .b{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;color:var(--text-1)}
+  .s4 .heroactions .b svg{width:16px;height:16px;stroke-width:1.8}
+
+  .s4 .body-wrap{padding:0 0 110px}
+  .s4 .body-top{padding:20px 20px 0}
+  .s4 .name{font-size:32px;font-weight:700;letter-spacing:-.022em;line-height:1.05;color:var(--text-1)}
+  .s4 .typerow{margin-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .s4 .typerow .row-pill{font-size:13px}
+  .s4 .typerow .row-pill.honey{color:#6b4e0c;background:rgba(255,204,0,.18)}
+  .s4 .typerow .row-pill.honey .d{background:var(--honey)}
+  .s4 .typerow .dist{margin-left:auto;font-size:13px;font-weight:500;color:var(--text-2);display:flex;align-items:center;gap:5px;letter-spacing:-.005em}
+  .s4 .typerow .dist .d{width:6px;height:6px;border-radius:50%;background:var(--producer)}
+
+  .s4 .secl{margin:24px 20px 8px;font-size:13px;font-weight:600;letter-spacing:0;color:var(--text-2);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+  .s4 .secl::after{content:"";flex:1;height:1px;background:var(--divider)}
+
+  .s4 .hours{padding:0 16px;display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .s4 .hours .d{aspect-ratio:1/1.25;border-radius:12px;background:var(--grey6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+  .s4 .hours .d .lbl{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:-.005em}
+  .s4 .hours .d .hrs{font-size:13px;font-weight:600;color:var(--text-1);letter-spacing:-.005em}
+  .s4 .hours .d.today{background:var(--producer);color:#fff}
+  .s4 .hours .d.today .lbl,.s4 .hours .d.today .hrs{color:#fff}
+  .s4 .hours .d.closed .hrs{color:var(--text-3);font-weight:500}
+
+  .s4 .sells{padding:0 20px;display:flex;flex-wrap:wrap;gap:6px}
+  .s4 .sells .row-pill{background:var(--grey6);color:var(--text-1);font-weight:500}
+
+  .s4 .stats{padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .s4 .stats .stat{background:var(--grey6);border-radius:14px;padding:14px 10px;text-align:center}
+  .s4 .stats .stat .v{font-size:24px;font-weight:700;color:var(--text-1);letter-spacing:-.018em;font-feature-settings:'tnum'}
+  .s4 .stats .stat .l{font-size:11px;font-weight:500;color:var(--text-2);margin-top:4px;letter-spacing:-.005em}
+  .s4 .stats .stat .icon{width:24px;height:24px;margin:0 auto 6px;color:var(--producer)}
+  .s4 .stats .stat .icon svg{width:24px;height:24px;stroke-width:1.7}
+
+  .s4 .ctawrap{position:absolute;left:14px;right:14px;bottom:24px;z-index:6}
+  .s4 .ctawrap .cta-btn{height:54px;font-size:17px}
+
+  /* ============ S5 — Scan result ============ */
+  .s5{background:var(--white);color:var(--text-1);overflow:hidden}
+  .s5 .scroll{position:absolute;inset:0;overflow-y:auto;padding:54px 0 100px;scrollbar-width:none}
+  .s5 .scroll::-webkit-scrollbar{display:none}
+
+  .s5 .nav{padding:12px 16px 0;display:flex;align-items:center;justify-content:space-between}
+  .s5 .nav .b{width:36px;height:36px;border-radius:50%;background:var(--grey6);display:flex;align-items:center;justify-content:center;color:var(--text-1)}
+  .s5 .nav .b svg{width:16px;height:16px;stroke-width:2}
+  .s5 .nav .crumb{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+  .s5 .nav .crumb .d{width:6px;height:6px;border-radius:50%;background:var(--food)}
+
+  .s5 .heroblock{padding:28px 20px 0;text-align:center}
+  .s5 .heroblock .kicker{font-size:13px;font-weight:600;letter-spacing:0;text-transform:uppercase;color:var(--text-2)}
+  .s5 .heroblock .verdict{margin-top:10px;font-size:34px;font-weight:700;letter-spacing:-.022em;line-height:1.05;color:var(--text-1)}
+
+  .s5 .heroring{margin:22px auto 14px;width:220px;height:220px;display:flex;align-items:center;justify-content:center;position:relative}
+  .s5 .heroring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+  .s5 .heroring .center{position:relative;z-index:2;text-align:center}
+  .s5 .heroring .center .num{font-size:80px;font-weight:700;letter-spacing:-.028em;color:var(--text-1);line-height:.95;font-feature-settings:'tnum'}
+  .s5 .heroring .center .num .of{font-size:18px;font-weight:600;color:var(--text-3);letter-spacing:-.005em;margin-left:2px}
+  .s5 .heroring .center .lbl{margin-top:6px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--food)}
+  .s5 .heroring .center .lbl.warn{color:var(--producer)}
+
+  .s5 .source{margin:14px 16px 0;padding:14px 16px;border-radius:14px;background:var(--grey6);font-size:14px;font-weight:400;color:var(--text-1);letter-spacing:-.005em;line-height:1.45}
+  .s5 .source b{font-weight:600}
+  .s5 .source .num{font-weight:700;color:var(--food)}
+  .s5 .source a{color:var(--action);text-decoration:none;font-weight:600}
+
+  .s5 .plain{margin:18px 20px 0;font-size:17px;font-weight:500;color:var(--text-1);letter-spacing:-.01em;line-height:1.35}
+  .s5 .plain .ok{color:var(--food);font-weight:600}
+  .s5 .plain .warn{color:var(--alert);font-weight:600}
+
+  .s5 .pcard{margin:16px 16px 0;background:var(--grey6);border-radius:14px;padding:12px;display:flex;gap:12px;align-items:center}
+  .s5 .pcard .thumb{width:52px;height:52px;border-radius:10px;background:var(--white);display:flex;align-items:center;justify-content:center}
+  .s5 .pcard .thumb svg{width:30px;height:30px;color:var(--text-3);stroke-width:1.6}
+  .s5 .pcard .pinfo .brand{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:0;text-transform:uppercase}
+  .s5 .pcard .pinfo .pname{font-size:16px;font-weight:600;color:var(--text-1);letter-spacing:-.008em;margin-top:1px;line-height:1.2}
+  .s5 .pcard .pinfo .barcode{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;color:var(--text-3);letter-spacing:.04em;margin-top:3px}
+
+  .s5 .secl{margin:24px 20px 8px;font-size:13px;font-weight:600;letter-spacing:0;color:var(--text-2);text-transform:uppercase}
+
+  .s5 .attrs{margin:0 16px;border-radius:14px;background:var(--grey6);overflow:hidden}
+  .s5 .attr{display:flex;align-items:center;gap:12px;padding:12px 14px;position:relative}
+  .s5 .attr + .attr::before{content:"";position:absolute;left:54px;right:0;top:0;height:1px;background:var(--divider)}
+  .s5 .attr .ic{width:28px;height:28px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .s5 .attr .ic svg{width:16px;height:16px;stroke-width:2.4}
+  .s5 .attr .ic.ok{color:var(--food)}
+  .s5 .attr .ic.warn{color:var(--producer)}
+  .s5 .attr .ic.bad{color:var(--alert)}
+  .s5 .attr .body{flex:1;min-width:0}
+  .s5 .attr .body .cat{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:0;text-transform:uppercase}
+  .s5 .attr .body .vd{font-size:14px;font-weight:500;color:var(--text-1);line-height:1.25;margin-top:2px;letter-spacing:-.005em}
+  .s5 .attr .tail{font-size:13px;font-weight:600;letter-spacing:-.005em;flex:0 0 auto}
+  .s5 .attr .tail.ok{color:var(--food)}
+  .s5 .attr .tail.warn{color:var(--producer)}
+  .s5 .attr .tail.bad{color:var(--alert)}
+
+  .s5 .traceback{margin:0 16px;border-radius:14px;background:var(--grey6);padding:12px;display:flex;gap:12px;align-items:center}
+  .s5 .traceback .icon{width:42px;height:42px;border-radius:12px;background:var(--white);display:flex;align-items:center;justify-content:center;color:var(--producer);flex:0 0 auto}
+  .s5 .traceback .icon svg{width:26px;height:26px;stroke-width:1.6}
+  .s5 .traceback .body{flex:1;min-width:0}
+  .s5 .traceback .body .kicker{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:0;text-transform:uppercase}
+  .s5 .traceback .body .name{font-size:17px;font-weight:600;color:var(--text-1);letter-spacing:-.01em;margin-top:1px;line-height:1.2}
+  .s5 .traceback .body .meta{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.04em;margin-top:3px}
+  .s5 .traceback .body .meta .num{font-weight:700;color:var(--food)}
+  .s5 .traceback .arrow{width:32px;height:32px;border-radius:50%;background:var(--text-1);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .s5 .traceback .arrow svg{width:14px;height:14px;stroke-width:2.4}
+
+  .s5 .alts{margin:0 16px;border-radius:14px;background:var(--grey6);overflow:hidden}
+  .s5 .alt{display:flex;align-items:center;gap:12px;padding:12px;position:relative}
+  .s5 .alt + .alt::before{content:"";position:absolute;left:60px;right:0;top:0;height:1px;background:var(--divider)}
+  .s5 .alt .th{width:40px;height:40px;border-radius:10px;background:var(--white);display:flex;align-items:center;justify-content:center}
+  .s5 .alt .th svg{width:24px;height:24px;color:var(--text-3);stroke-width:1.6}
+  .s5 .alt .info{flex:1;min-width:0}
+  .s5 .alt .info .brand{font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:0;text-transform:uppercase}
+  .s5 .alt .info .n{font-size:15px;font-weight:600;color:var(--text-1);letter-spacing:-.008em;margin-top:1px;line-height:1.2}
+  .s5 .alt .info .m{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;color:var(--text-3);letter-spacing:.04em;margin-top:2px}
+  .s5 .alt .sc{font-size:22px;font-weight:700;letter-spacing:-.018em;color:var(--food);font-feature-settings:'tnum'}
+
+  .s5 .actionbar{position:absolute;left:14px;right:14px;bottom:18px;display:flex;gap:8px;z-index:9}
+  .s5 .actionbar .a{flex:1;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:600;letter-spacing:-.005em}
+  .s5 .actionbar .a.save{background:var(--grey6);color:var(--text-1)}
+  .s5 .actionbar .a.share{background:var(--action);color:#fff}
+  .s5 .actionbar .a svg{width:18px;height:18px;stroke-width:2}
+
+  /* ============ S6 — Water quality ============ */
+  .s6{background:var(--white);color:var(--text-1);overflow:hidden}
+  .s6 .nav{position:absolute;top:64px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;z-index:5}
+  .s6 .nav .b{width:36px;height:36px;border-radius:50%;background:var(--grey6);display:flex;align-items:center;justify-content:center;color:var(--text-1)}
+  .s6 .nav .b svg{width:16px;height:16px;stroke-width:2}
+  .s6 .nav .title{font-size:13px;font-weight:600;letter-spacing:0;color:var(--text-2);text-transform:uppercase}
+
+  .s6 .intro{padding:120px 20px 0;text-align:center}
+  .s6 .intro .kicker{font-size:13px;font-weight:600;letter-spacing:0;text-transform:uppercase;color:var(--water)}
+  .s6 .intro .h{margin-top:8px;font-size:32px;font-weight:700;letter-spacing:-.02em;line-height:1.08;color:var(--text-1)}
+
+  .s6 .heroring{margin:24px auto 12px;width:240px;height:240px;display:flex;align-items:center;justify-content:center;position:relative}
+  .s6 .heroring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+  .s6 .heroring .center{position:relative;z-index:2;text-align:center}
+  .s6 .heroring .center .big{font-size:84px;font-weight:700;letter-spacing:-.028em;color:var(--text-1);line-height:.95;font-feature-settings:'tnum'}
+  .s6 .heroring .center .big .of{font-size:18px;font-weight:600;color:var(--text-3);letter-spacing:-.005em;margin-left:2px}
+  .s6 .heroring .center .lbl{margin-top:8px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--water)}
+  .s6 .heroring .center .grade{margin-top:10px;display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(0,122,255,.12);color:var(--water);font-size:12px;font-weight:600;letter-spacing:0}
+
+  .s6 .auth{text-align:center;margin-top:10px}
+  .s6 .auth .who{font-size:17px;font-weight:600;color:var(--text-1);letter-spacing:-.01em}
+  .s6 .auth .where{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+
+  .s6 .panel{position:absolute;left:14px;right:14px;bottom:28px;border-radius:18px;background:var(--grey6);padding:16px}
+  .s6 .panel .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .s6 .panel .head .t{font-size:17px;font-weight:600;color:var(--text-1);letter-spacing:-.01em}
+  .s6 .panel .head .ct{font-size:12px;font-weight:500;color:var(--text-2);letter-spacing:-.005em}
+  .s6 .cont{display:flex;flex-direction:column;gap:12px}
+  .s6 .row{display:flex;align-items:center;gap:10px}
+  .s6 .row .ic{width:26px;height:26px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;color:var(--water);flex:0 0 auto}
+  .s6 .row .ic svg{width:14px;height:14px;stroke-width:1.8}
+  .s6 .row .meta{flex:0 0 90px;min-width:0}
+  .s6 .row .meta .t{font-size:14px;font-weight:600;color:var(--text-1);letter-spacing:-.005em;line-height:1.1}
+  .s6 .row .meta .val{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;color:var(--text-2);letter-spacing:.04em;margin-top:2px}
+  .s6 .row .meta .val b{color:var(--text-1);font-weight:700}
+  .s6 .row .meta .val b.warn{color:var(--producer)}
+  .s6 .barwrap{flex:1;min-width:0;position:relative}
+  .s6 .bar{height:6px;border-radius:999px;background:var(--white);position:relative;overflow:hidden}
+  .s6 .bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:var(--water)}
+  .s6 .bar .fill.warn{background:var(--producer)}
+  .s6 .bar .fill.bad{background:var(--alert)}
+  .s6 .foot{margin-top:14px;font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;color:var(--text-3);letter-spacing:.06em;text-align:center;text-transform:uppercase}
+
+</style>
+</head>
+<body>
+
+<!-- ============= Reusable defs ============= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Flat outline illustrations — single color, no fill (matched to category in usage) -->
+    <symbol id="i-cow" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="32" cy="38" rx="20" ry="14"/>
+        <ellipse cx="32" cy="22" rx="12" ry="10"/>
+        <ellipse cx="20" cy="16" rx="3.5" ry="5" transform="rotate(-20 20 16)"/>
+        <ellipse cx="44" cy="16" rx="3.5" ry="5" transform="rotate(20 44 16)"/>
+        <path d="M24 10c-1-3 2-4 3-2"/>
+        <path d="M40 10c1-3-2-4-3-2"/>
+        <ellipse cx="32" cy="26" rx="6" ry="4"/>
+        <circle cx="29" cy="26" r=".7" fill="currentColor"/>
+        <circle cx="35" cy="26" r=".7" fill="currentColor"/>
+        <circle cx="27" cy="19" r="1" fill="currentColor"/>
+        <circle cx="37" cy="19" r="1" fill="currentColor"/>
+        <path d="M24 36c-1 1-1 3 0 4M40 36c1 1 1 3 0 4"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-hive" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 50V40c-2-3-2-7 0-10c-2-3-2-7 0-10c-2-3-2-7 1-9c3-3 7-5 13-5s10 2 13 5c3 2 3 6 1 9c2 3 2 7 0 10c2 3 2 7 0 10V50"/>
+        <path d="M18 50h28"/>
+        <path d="M22 30h20M22 22h20M22 40h20"/>
+        <ellipse cx="32" cy="42" rx="4" ry="3"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-wheat" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="32" y1="56" x2="32" y2="22"/>
+        <path d="M32 42c-6 0-10-4-12-8"/>
+        <path d="M32 38c6 0 10-4 12-8"/>
+        <ellipse cx="26" cy="14" rx="3" ry="5" transform="rotate(-20 26 14)"/>
+        <ellipse cx="38" cy="14" rx="3" ry="5" transform="rotate(20 38 14)"/>
+        <ellipse cx="24" cy="22" rx="3" ry="5" transform="rotate(-20 24 22)"/>
+        <ellipse cx="40" cy="22" rx="3" ry="5" transform="rotate(20 40 22)"/>
+        <ellipse cx="32" cy="10" rx="3" ry="5"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-drop" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32 8C24 22 18 32 18 40a14 14 0 0 0 28 0c0-8-6-18-14-32z"/>
+        <path d="M26 42c0 4 3 7 6 7"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-leaf" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M52 12C32 8 14 22 12 40c-1 8 6 14 14 12c16-4 28-18 26-40z"/>
+        <path d="M50 14 24 48"/>
+        <path d="M42 22l-4 12M34 30l-4 10"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-apple" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32 20c-9 0-14 6-14 14s4 18 14 18s14-10 14-18s-5-14-14-14z"/>
+        <path d="M32 20c0-4 2-7 6-8"/>
+        <path d="M38 12c2 0 4 1 5 3c-2 1-4 1-6 0"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-cloud" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 44c-6 0-10-4-10-9s4-9 9-9c1-6 7-10 13-10s12 4 13 10c5 0 9 4 9 9s-4 9-10 9z"/>
+      </g>
+    </symbol>
+
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-pin-fill" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z" fill="currentColor"/><circle cx="12" cy="10" r="3" fill="#fff"/></symbol>
+    <symbol id="i-chev-r" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chev-d" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow-r" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><polyline points="12 5 19 12 12 19" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><line x1="12" y1="8" x2="12" y2="13" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><line x1="12" y1="16.5" x2="12.01" y2="16.5" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 3v13M7 8l5-5 5 5M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="20" y1="20" x2="16.5" y2="16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 11a7 7 0 0 0 14 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="18" x2="12" y2="21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="i-nav" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11" fill="currentColor"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 12 12 4l9 8M5 10v10h14V10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><polygon points="1 6 8 3 16 6 23 3 23 18 16 21 8 18 1 21 1 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><line x1="8" y1="3" x2="8" y2="18" stroke="currentColor" stroke-width="1.6"/><line x1="16" y1="6" x2="16" y2="21" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-10V3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><polygon points="13 2 4 14 11 14 9 22 20 10 13 10 13 2" fill="currentColor"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-particles" viewBox="0 0 24 24"><circle cx="6" cy="8" r="2.4" fill="currentColor"/><circle cx="14" cy="6" r="1.6" fill="currentColor"/><circle cx="10" cy="14" r="2.8" fill="currentColor"/><circle cx="18" cy="15" r="2" fill="currentColor"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="M3 8l9-5 9 5v8l-9 5-9-5V8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.6"/><line x1="3" y1="8" x2="12" y2="13" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="8" x2="12" y2="13" stroke="currentColor" stroke-width="1.6"/></symbol>
+  </defs>
+</svg>
+
+<div class="header">
+  <div>
+    <h1>Trace<span class="dot"></span></h1>
+    <div class="swatches">
+      <span class="sw" style="background:#34c759"></span>
+      <span class="sw" style="background:#007aff"></span>
+      <span class="sw" style="background:#64d2ff"></span>
+      <span class="sw" style="background:#ff9500"></span>
+      <span class="sw" style="background:#ffcc00"></span>
+      <span class="sw" style="background:#ff3b30"></span>
+    </div>
+  </div>
+  <div class="meta"><b>6 screens · v5</b> &nbsp;·&nbsp; iPhone 15 Pro &nbsp;·&nbsp; 393×852 &nbsp;·&nbsp; <span style="font-style:italic">Apple Health palette — data-only colour</span></div>
+</div>
+
+<div class="stage">
+
+  <!-- ============ 01 Onboarding ============ -->
+  <div class="frame">
+    <div class="label"><span>01</span><b>Onboarding</b> <em>· clean welcome</em></div>
+    <div class="device"><div class="screen s1">
+      <div class="island"></div>
+      <div class="status">
+        <span>9:41</span>
+        <span class="right">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="1" y="8.5" width="3" height="3" rx="1"/><rect x="6" y="6" width="3" height="5.5" rx="1"/><rect x="11" y="3" width="3" height="8.5" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 5C3 3 6 2 8 2s5 1 7 3"/><path d="M3.5 7.5C5 6 6.5 5.5 8 5.5s3 .5 4.5 2"/><circle cx="8" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="1.5" width="22" height="9" rx="2.5" stroke="currentColor" opacity=".5"/><rect x="2" y="3" width="17" height="6" rx="1.2" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor" opacity=".6"/></svg>
+        </span>
+      </div>
+
+      <div class="small-mark">Est. 2026 · Manchester</div>
+
+      <div class="illo">
+        <svg viewBox="0 0 64 64"><use href="#i-apple"/></svg>
+      </div>
+
+      <div class="lockup">
+        <div class="wordmark">Trace<span class="dot"></span></div>
+        <div class="title">Follow your food and water back to its source.</div>
+        <div class="sub">A field guide for what you eat, drink, and breathe — wherever you are.</div>
+      </div>
+
+      <div class="ctas">
+        <div class="cta-btn">Get started</div>
+        <div class="signin">Already with us? Sign in</div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ============ 02 Home / Today ============ -->
+  <div class="frame">
+    <div class="label"><span>02</span><b>Today</b> <em>· environment-first home</em></div>
+    <div class="device"><div class="screen s2">
+      <div class="island"></div>
+      <div class="status">
+        <span>9:41</span>
+        <span class="right">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="1" y="8.5" width="3" height="3" rx="1"/><rect x="6" y="6" width="3" height="5.5" rx="1"/><rect x="11" y="3" width="3" height="8.5" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 5C3 3 6 2 8 2s5 1 7 3"/><path d="M3.5 7.5C5 6 6.5 5.5 8 5.5s3 .5 4.5 2"/><circle cx="8" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="1.5" width="22" height="9" rx="2.5" stroke="currentColor" opacity=".5"/><rect x="2" y="3" width="17" height="6" rx="1.2" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor" opacity=".6"/></svg>
+        </span>
+      </div>
+
+      <div class="scroll">
+        <div class="topbar">
+          <div class="locpill">
+            <span class="pulse"></span>
+            <svg class="pin" viewBox="0 0 24 24"><use href="#i-pin"/></svg>
+            Manchester, UK
+            <span style="color:var(--text-3)">·</span>
+            <span class="post">M21 7BX</span>
+            <svg class="chev" viewBox="0 0 24 24"><use href="#i-chev-d"/></svg>
+          </div>
+          <div class="avatar">S</div>
+        </div>
+
+        <div class="pagehead">
+          <div class="date">Wednesday, 14 May</div>
+          <div class="title">Today</div>
+        </div>
+
+        <div class="sec-h">
+          <div class="title">Around you</div>
+          <div class="more">Last 60 min</div>
+        </div>
+
+        <div class="envgrid">
+          <!-- AIR -->
+          <div class="envcard">
+            <div class="top">
+              <div class="icon" style="color:var(--air)"><svg viewBox="0 0 64 64"><use href="#i-cloud"/></svg></div>
+              <div class="lbl">Air</div>
+            </div>
+            <div class="row">
+              <div>
+                <div class="num">32</div>
+                <div class="verdict good">Good</div>
+              </div>
+              <div class="ring">
+                <svg width="54" height="54" viewBox="0 0 54 54">
+                  <circle cx="27" cy="27" r="22" stroke="#fff" stroke-width="6" fill="none"/>
+                  <circle cx="27" cy="27" r="22" stroke="#64d2ff" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="100"/>
+                </svg>
+              </div>
+            </div>
+            <div class="meta">AQI · PM2.5 ELEVATED</div>
+          </div>
+
+          <!-- WATER -->
+          <div class="envcard">
+            <div class="top">
+              <div class="icon" style="color:var(--water)"><svg viewBox="0 0 64 64"><use href="#i-drop"/></svg></div>
+              <div class="lbl">Water</div>
+            </div>
+            <div class="row">
+              <div>
+                <div class="num">92</div>
+                <div class="verdict good">Excellent</div>
+              </div>
+              <div class="ring">
+                <svg width="54" height="54" viewBox="0 0 54 54">
+                  <circle cx="27" cy="27" r="22" stroke="#fff" stroke-width="6" fill="none"/>
+                  <circle cx="27" cy="27" r="22" stroke="#007aff" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="11"/>
+                </svg>
+              </div>
+            </div>
+            <div class="meta">SEVERN TRENT · B+ GRADE</div>
+          </div>
+
+          <!-- FOOD -->
+          <div class="envcard span2">
+            <div class="body">
+              <div class="top">
+                <div class="icon" style="color:var(--food)"><svg viewBox="0 0 64 64"><use href="#i-leaf"/></svg></div>
+                <div class="lbl">Producers within 30 mi</div>
+              </div>
+              <div class="row" style="margin-top:0">
+                <div>
+                  <div class="num">12</div>
+                  <div class="verdict" style="color:var(--text-2)">Nearest 2.4 mi · Hartley Farm</div>
+                </div>
+              </div>
+              <div class="meta">RAW MILK · CHEESEMAKERS · MARKET GARDENS</div>
+            </div>
+            <div class="preview">
+              <div class="road" style="left:-10%;right:-10%;top:46%;height:2px;transform:rotate(-8deg)"></div>
+              <div class="road" style="left:-10%;right:-10%;top:78%;height:2px;transform:rotate(5deg)"></div>
+              <div class="you" style="left:45%;top:50%"></div>
+              <div class="pin" style="left:22%;top:24%"></div>
+              <div class="pin" style="left:62%;top:30%"></div>
+              <div class="pin" style="left:74%;top:62%"></div>
+              <div class="pin" style="left:18%;top:74%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Check another place -->
+        <div class="actionrow">
+          <div class="lead">
+            <svg viewBox="0 0 24 24"><use href="#i-pin"/></svg>
+            Check another place
+          </div>
+          <svg class="chev" viewBox="0 0 24 24"><use href="#i-chev-r"/></svg>
+        </div>
+
+        <!-- Recent places -->
+        <div class="sec-h">
+          <div class="title">Recently checked</div>
+          <div class="more">See all</div>
+        </div>
+        <div class="hscroll">
+          <div class="pchip">
+            <div class="name">London SW1</div>
+            <div class="post">Westminster · 215 mi</div>
+            <div class="row"><span class="d" style="background:var(--alert)"></span>Air <b>poor</b> · 84</div>
+          </div>
+          <div class="pchip">
+            <div class="name">Cornwall PL10</div>
+            <div class="post">Coast · 354 mi</div>
+            <div class="row"><span class="d" style="background:var(--water)"></span>Water <b>excellent</b></div>
+          </div>
+          <div class="pchip">
+            <div class="name">Bristol BS1</div>
+            <div class="post">Harbourside · 168 mi</div>
+            <div class="row"><span class="d" style="background:var(--producer)"></span><b>8</b> producers · 30 mi</div>
+          </div>
+          <div class="pchip">
+            <div class="name">Sheffield S1</div>
+            <div class="post">Centre · 38 mi</div>
+            <div class="row"><span class="d" style="background:var(--producer)"></span>Air <b>moderate</b></div>
+          </div>
+        </div>
+
+        <!-- Traced to source -->
+        <div class="sec-h">
+          <div class="title">Traced to source</div>
+          <div class="more">See all</div>
+        </div>
+        <div class="pstrip">
+          <div class="prodcard">
+            <div class="photo">
+              <svg viewBox="0 0 64 64"><use href="#i-drop"/></svg>
+              <span class="badge"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Traced</span>
+              <span class="score">95</span>
+            </div>
+            <div class="pinfo">
+              <div class="brand">Hartley Farm</div>
+              <div class="pname">Whole raw milk</div>
+              <div class="meta">Wiltshire · 1 L</div>
+            </div>
+          </div>
+          <div class="prodcard">
+            <div class="photo">
+              <svg viewBox="0 0 64 64"><use href="#i-box"/></svg>
+              <span class="badge"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Traced</span>
+              <span class="score">92</span>
+            </div>
+            <div class="pinfo">
+              <div class="brand">Westcombe Dairy</div>
+              <div class="pname">Cheddar truckle</div>
+              <div class="meta">Somerset · 200 g</div>
+            </div>
+          </div>
+          <div class="prodcard">
+            <div class="photo">
+              <svg viewBox="0 0 64 64"><use href="#i-wheat"/></svg>
+              <span class="badge"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Traced</span>
+              <span class="score">88</span>
+            </div>
+            <div class="pinfo">
+              <div class="brand">Trove Bakery</div>
+              <div class="pname">Sourdough loaf</div>
+              <div class="meta">Levenshulme · 800 g</div>
+            </div>
+          </div>
+          <div class="prodcard">
+            <div class="photo">
+              <svg viewBox="0 0 64 64"><use href="#i-hive"/></svg>
+              <span class="badge"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Traced</span>
+              <span class="score">90</span>
+            </div>
+            <div class="pinfo">
+              <div class="brand">Black Bee Honey</div>
+              <div class="pname">Spring blossom</div>
+              <div class="meta">Somerset · 227 g</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div class="sec-h">
+          <div class="title">Recently scanned</div>
+          <div class="more">All scans</div>
+        </div>
+        <div class="histgroup">
+          <div class="histitem">
+            <div class="thumb" style="color:var(--text-3)"><svg viewBox="0 0 64 64"><use href="#i-box"/></svg></div>
+            <div class="info">
+              <div class="n">Country Life Cheddar</div>
+              <div class="m">9:41 today · Tesco</div>
+            </div>
+            <div class="score">
+              <svg width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" stroke="#f2f2f7" stroke-width="3" fill="none"/>
+                <circle cx="22" cy="22" r="18" stroke="#ff9500" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="18"/>
+              </svg>
+              84
+            </div>
+          </div>
+          <div class="histitem">
+            <div class="thumb" style="color:var(--text-3)"><svg viewBox="0 0 64 64"><use href="#i-wheat"/></svg></div>
+            <div class="info">
+              <div class="n">Hovis Soft White</div>
+              <div class="m">Yesterday 18:20 · Tesco</div>
+            </div>
+            <div class="score">
+              <svg width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" stroke="#f2f2f7" stroke-width="3" fill="none"/>
+                <circle cx="22" cy="22" r="18" stroke="#ff3b30" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="72"/>
+              </svg>
+              36
+            </div>
+          </div>
+          <div class="histitem">
+            <div class="thumb" style="color:var(--text-3)"><svg viewBox="0 0 64 64"><use href="#i-drop"/></svg></div>
+            <div class="info">
+              <div class="n">Innocent Smoothie</div>
+              <div class="m">Yesterday 12:08 · Sainsbury's</div>
+            </div>
+            <div class="score">
+              <svg width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" stroke="#f2f2f7" stroke-width="3" fill="none"/>
+                <circle cx="22" cy="22" r="18" stroke="#ff9500" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="36"/>
+              </svg>
+              68
+            </div>
+          </div>
+          <div class="histitem">
+            <div class="thumb" style="color:var(--text-3)"><svg viewBox="0 0 64 64"><use href="#i-box"/></svg></div>
+            <div class="info">
+              <div class="n">Burford Brown eggs</div>
+              <div class="m">Mon 09:14 · Waitrose</div>
+            </div>
+            <div class="score">
+              <svg width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" stroke="#f2f2f7" stroke-width="3" fill="none"/>
+                <circle cx="22" cy="22" r="18" stroke="#34c759" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="10"/>
+              </svg>
+              91
+            </div>
+          </div>
+        </div>
+
+        <div style="height:120px"></div>
+      </div>
+
+      <div class="tabbar">
+        <div class="tab active">
+          <svg viewBox="0 0 24 24"><use href="#i-home"/></svg>
+          Trace
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24"><use href="#i-map"/></svg>
+          Map
+        </div>
+        <div class="tab scan" style="color:var(--action)">
+          <svg viewBox="0 0 24 24"><use href="#i-scan"/></svg>
+          Scan
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24"><use href="#i-bookmark"/></svg>
+          Saved
+        </div>
+        <div class="tab">
+          <svg viewBox="0 0 24 24"><use href="#i-user"/></svg>
+          Profile
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ============ 03 Map ============ -->
+  <div class="frame">
+    <div class="label"><span>03</span><b>Nearby map</b> <em>· flat pins · frosted sheet</em></div>
+    <div class="device"><div class="screen s3">
+      <div class="island"></div>
+      <div class="status">
+        <span>9:41</span>
+        <span class="right">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="1" y="8.5" width="3" height="3" rx="1"/><rect x="6" y="6" width="3" height="5.5" rx="1"/><rect x="11" y="3" width="3" height="8.5" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 5C3 3 6 2 8 2s5 1 7 3"/><path d="M3.5 7.5C5 6 6.5 5.5 8 5.5s3 .5 4.5 2"/><circle cx="8" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="1.5" width="22" height="9" rx="2.5" stroke="currentColor" opacity=".5"/><rect x="2" y="3" width="17" height="6" rx="1.2" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor" opacity=".6"/></svg>
+        </span>
+      </div>
+
+      <!-- Soft map shapes -->
+      <div class="map">
+        <div class="park" style="left:-30px;top:200px;width:180px;height:140px"></div>
+        <div class="park" style="right:-30px;top:300px;width:140px;height:120px"></div>
+        <div class="park" style="left:120px;top:200px;width:120px;height:90px;opacity:.6"></div>
+        <div class="river" style="left:-30px;top:340px;width:80%;height:16px;transform:rotate(-12deg)"></div>
+        <div class="river" style="left:35%;top:160px;width:50%;transform:rotate(70deg);height:14px"></div>
+        <div class="road" style="left:0;right:0;top:240px;height:5px;transform:rotate(-3deg)"></div>
+        <div class="road" style="left:0;right:0;top:420px;height:4px;transform:rotate(2deg)"></div>
+        <div class="road" style="top:200px;bottom:120px;width:4px;left:55%;transform:rotate(6deg);transform-origin:top"></div>
+      </div>
+
+      <div class="you"></div>
+
+      <!-- Pins -->
+      <div class="pin sel producer" style="left:62%;top:36%">
+        <div class="dot"><svg viewBox="0 0 64 64"><use href="#i-cow"/></svg></div>
+        <div class="lbl">Hartley Farm</div>
+      </div>
+      <div class="pin honey" style="left:24%;top:30%">
+        <div class="dot"><svg viewBox="0 0 64 64"><use href="#i-hive"/></svg></div>
+      </div>
+      <div class="pin water" style="left:32%;top:58%">
+        <div class="dot"><svg viewBox="0 0 64 64"><use href="#i-drop"/></svg></div>
+      </div>
+      <div class="pin food" style="left:80%;top:60%">
+        <div class="dot"><svg viewBox="0 0 64 64"><use href="#i-leaf"/></svg></div>
+      </div>
+      <div class="pin food" style="left:18%;top:48%">
+        <div class="dot"><svg viewBox="0 0 64 64"><use href="#i-wheat"/></svg></div>
+      </div>
+      <div class="pin cluster" style="left:74%;top:18%"><div class="dot">+5</div></div>
+      <div class="pin alert" style="left:48%;top:14%">
+        <div class="dot"><svg viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div>
+      </div>
+
+      <div class="searchpill">
+        <svg viewBox="0 0 24 24"><use href="#i-search"/></svg>
+        <input placeholder="Search farms, water, markets…">
+        <div class="mic"><svg viewBox="0 0 24 24"><use href="#i-mic"/></svg></div>
+      </div>
+
+      <div class="filterrow">
+        <div class="fchip on">All · 12</div>
+        <div class="fchip"><span class="d" style="background:var(--food)"></span>Produce</div>
+        <div class="fchip"><span class="d" style="background:var(--producer)"></span>Dairy</div>
+        <div class="fchip"><span class="d" style="background:var(--water)"></span>Water</div>
+        <div class="fchip"><span class="d" style="background:var(--honey)"></span>Honey</div>
+      </div>
+
+      <div class="zoom">
+        <div class="b"><svg viewBox="0 0 24 24"><use href="#i-plus"/></svg></div>
+        <div class="b"><svg viewBox="0 0 24 24"><use href="#i-minus"/></svg></div>
+        <div class="b"><svg viewBox="0 0 24 24" style="transform:rotate(45deg)"><use href="#i-nav"/></svg></div>
+      </div>
+
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="head">
+          <div class="ttl">3 within walking</div>
+          <div class="ct">By distance</div>
+        </div>
+        <div class="list">
+          <div class="pitem">
+            <div class="iconwrap" style="color:var(--producer)"><svg viewBox="0 0 64 64"><use href="#i-cow"/></svg></div>
+            <div class="body">
+              <div class="name">Hartley Farm</div>
+              <div class="meta">
+                <span class="tg">Raw milk · Dairy</span>
+                <span style="color:var(--text-3)">·</span>
+                <span class="tg">Open till 18:00</span>
+              </div>
+            </div>
+            <div class="dist">2.4 mi</div>
+          </div>
+          <div class="pitem">
+            <div class="iconwrap" style="color:var(--food)"><svg viewBox="0 0 64 64"><use href="#i-leaf"/></svg></div>
+            <div class="body">
+              <div class="name">Levenshulme Market Garden</div>
+              <div class="meta">
+                <span class="tg">Produce</span>
+                <span style="color:var(--text-3)">·</span>
+                <span class="tg">Sat 09–14</span>
+              </div>
+            </div>
+            <div class="dist">0.8 mi</div>
+          </div>
+          <div class="pitem">
+            <div class="iconwrap" style="color:var(--food)"><svg viewBox="0 0 64 64"><use href="#i-wheat"/></svg></div>
+            <div class="body">
+              <div class="name">Trove Bakery &amp; Mill</div>
+              <div class="meta">
+                <span class="tg">Grain · Bread</span>
+                <span style="color:var(--text-3)">·</span>
+                <span class="tg">Stone-ground</span>
+              </div>
+            </div>
+            <div class="dist">1.6 mi</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ============ 04 Producer detail ============ -->
+  <div class="frame">
+    <div class="label"><span>04</span><b>Producer detail</b> <em>· Hartley Farm</em></div>
+    <div class="device"><div class="screen s4">
+      <div class="island"></div>
+      <div class="status">
+        <span style="color:#fff">9:41</span>
+        <span class="right" style="color:#fff">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="1" y="8.5" width="3" height="3" rx="1"/><rect x="6" y="6" width="3" height="5.5" rx="1"/><rect x="11" y="3" width="3" height="8.5" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 5C3 3 6 2 8 2s5 1 7 3"/><path d="M3.5 7.5C5 6 6.5 5.5 8 5.5s3 .5 4.5 2"/><circle cx="8" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="1.5" width="22" height="9" rx="2.5" stroke="currentColor" opacity=".5"/><rect x="2" y="3" width="17" height="6" rx="1.2" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor" opacity=".6"/></svg>
+        </span>
+      </div>
+
+      <div class="scroll">
+        <div class="hero"><div class="hero-stripe"></div></div>
+        <div class="heroactions">
+          <div class="b"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></div>
+          <div class="b"><svg viewBox="0 0 24 24"><use href="#i-bookmark"/></svg></div>
+        </div>
+
+        <div class="body-wrap">
+          <div class="body-top">
+            <div class="name">Hartley Farm &amp; Dairy</div>
+            <div class="typerow">
+              <span class="row-pill honey"><span class="d"></span>Raw milk · Dairy</span>
+              <span class="row-pill">Family-run · 82 yrs</span>
+              <span class="dist"><span class="d"></span>2.4 MI</span>
+            </div>
+          </div>
+
+          <div class="secl">Opening hours</div>
+          <div class="hours">
+            <div class="d"><span class="lbl">Mon</span><span class="hrs">9–6</span></div>
+            <div class="d"><span class="lbl">Tue</span><span class="hrs">9–6</span></div>
+            <div class="d today"><span class="lbl">Wed</span><span class="hrs">9–6</span></div>
+            <div class="d"><span class="lbl">Thu</span><span class="hrs">9–6</span></div>
+            <div class="d"><span class="lbl">Fri</span><span class="hrs">9–6</span></div>
+            <div class="d"><span class="lbl">Sat</span><span class="hrs">9–4</span></div>
+            <div class="d closed"><span class="lbl">Sun</span><span class="hrs">—</span></div>
+          </div>
+
+          <div class="secl">What they sell</div>
+          <div class="sells">
+            <span class="row-pill">Raw milk</span>
+            <span class="row-pill">Butter</span>
+            <span class="row-pill">Yogurt</span>
+            <span class="row-pill">Eggs</span>
+            <span class="row-pill">Cream</span>
+            <span class="row-pill">Cheddar</span>
+          </div>
+
+          <div class="secl">Trace this farm</div>
+          <div class="stats">
+            <div class="stat">
+              <div class="icon"><svg viewBox="0 0 24 24"><use href="#i-info"/></svg></div>
+              <div class="v">82</div>
+              <div class="l">Years operating</div>
+            </div>
+            <div class="stat">
+              <div class="icon"><svg viewBox="0 0 64 64"><use href="#i-cow"/></svg></div>
+              <div class="v">42</div>
+              <div class="l">Jersey herd</div>
+            </div>
+            <div class="stat">
+              <div class="icon" style="color:var(--food)"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></div>
+              <div class="v" style="font-size:14px;line-height:1.2">RDA<br>SoilA</div>
+              <div class="l">Certified</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ctawrap">
+        <div class="cta-btn">
+          Take me there
+          <svg width="18" height="18" viewBox="0 0 24 24"><use href="#i-nav"/></svg>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ============ 05 Scan result ============ -->
+  <div class="frame">
+    <div class="label"><span>05</span><b>Scan result</b> <em>· 84/100 · Apple Health ring</em></div>
+    <div class="device"><div class="screen s5">
+      <div class="island"></div>
+      <div class="status">
+        <span>9:41</span>
+        <span class="right">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="1" y="8.5" width="3" height="3" rx="1"/><rect x="6" y="6" width="3" height="5.5" rx="1"/><rect x="11" y="3" width="3" height="8.5" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 5C3 3 6 2 8 2s5 1 7 3"/><path d="M3.5 7.5C5 6 6.5 5.5 8 5.5s3 .5 4.5 2"/><circle cx="8" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="1.5" width="22" height="9" rx="2.5" stroke="currentColor" opacity=".5"/><rect x="2" y="3" width="17" height="6" rx="1.2" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor" opacity=".6"/></svg>
+        </span>
+      </div>
+
+      <div class="scroll">
+        <div class="nav">
+          <div class="b"><svg viewBox="0 0 24 24"><use href="#i-x"/></svg></div>
+          <div class="crumb"><span class="d"></span>Scanned · 9:41 · 5045123</div>
+          <div class="b"><svg viewBox="0 0 24 24"><use href="#i-info"/></svg></div>
+        </div>
+
+        <div class="heroblock">
+          <div class="kicker">Verdict</div>
+          <div class="verdict">Processed food.</div>
+        </div>
+
+        <div class="heroring">
+          <svg width="220" height="220" viewBox="0 0 220 220">
+            <circle cx="110" cy="110" r="96" stroke="#f2f2f7" stroke-width="14" fill="none"/>
+            <circle cx="110" cy="110" r="96" stroke="#ff9500" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="603" stroke-dashoffset="96"/>
+          </svg>
+          <div class="center">
+            <div class="num">84<span class="of">/100</span></div>
+            <div class="lbl warn">Decent · Trace score</div>
+          </div>
+        </div>
+
+        <div class="source">
+          Scored as bought from <b>Tesco</b>. The same product scores <span class="num">95</span> direct from Hartley Farm. <a href="#">Trace it →</a>
+        </div>
+
+        <div class="plain">
+          <span class="ok">Minimally processed,</span> but contains added <span class="warn">emulsifiers</span> and salt is on the high side.
+        </div>
+
+        <div class="pcard">
+          <div class="thumb"><svg viewBox="0 0 24 24"><use href="#i-box"/></svg></div>
+          <div class="pinfo">
+            <div class="brand">Country Life</div>
+            <div class="pname">Organic Cheddar · 200 g</div>
+            <div class="barcode">5 045 123 419 002</div>
+          </div>
+        </div>
+
+        <div class="secl">Breakdown</div>
+        <div class="attrs">
+          <div class="attr">
+            <div class="ic ok"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></div>
+            <div class="body">
+              <div class="cat">NOVA · Processing</div>
+              <div class="vd">Tier 3 — processed culinary, not ultra.</div>
+            </div>
+            <div class="tail ok">NOVA 3</div>
+          </div>
+          <div class="attr">
+            <div class="ic warn"><svg viewBox="0 0 24 24"><use href="#i-warn"/></svg></div>
+            <div class="body">
+              <div class="cat">Additives</div>
+              <div class="vd">2 emulsifiers — E322, E471. Plant-derived.</div>
+            </div>
+            <div class="tail warn">2 added</div>
+          </div>
+          <div class="attr">
+            <div class="ic ok"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></div>
+            <div class="body">
+              <div class="cat">Provenance</div>
+              <div class="vd">UK milk pool. Hartley Farm, Wiltshire known supplier.</div>
+            </div>
+            <div class="tail ok">UK · 38 mi</div>
+          </div>
+          <div class="attr">
+            <div class="ic warn"><svg viewBox="0 0 24 24"><use href="#i-warn"/></svg></div>
+            <div class="body">
+              <div class="cat">Nutrition</div>
+              <div class="vd">Salt 1.8 g/100g. High for category.</div>
+            </div>
+            <div class="tail warn">Salt high</div>
+          </div>
+          <div class="attr">
+            <div class="ic ok"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg></div>
+            <div class="body">
+              <div class="cat">Certifications</div>
+              <div class="vd">Soil Association Organic. Red Tractor verified.</div>
+            </div>
+            <div class="tail ok">ORG</div>
+          </div>
+        </div>
+
+        <div class="secl">Trace this back</div>
+        <div class="traceback">
+          <div class="icon"><svg viewBox="0 0 64 64"><use href="#i-cow"/></svg></div>
+          <div class="body">
+            <div class="kicker">Source farm</div>
+            <div class="name">Hartley Farm</div>
+            <div class="meta">Wiltshire · 38 mi · Score <span class="num">95</span></div>
+          </div>
+          <div class="arrow"><svg viewBox="0 0 24 24"><use href="#i-arrow-r"/></svg></div>
+        </div>
+
+        <div class="secl">Try these instead</div>
+        <div class="alts">
+          <div class="alt">
+            <div class="th"><svg viewBox="0 0 64 64"><use href="#i-box"/></svg></div>
+            <div class="info">
+              <div class="brand">Neal's Yard</div>
+              <div class="n">Montgomery cheddar</div>
+              <div class="m">Somerset · Raw milk · 240 g</div>
+            </div>
+            <div class="sc">96</div>
+          </div>
+          <div class="alt">
+            <div class="th"><svg viewBox="0 0 64 64"><use href="#i-box"/></svg></div>
+            <div class="info">
+              <div class="brand">Westcombe Dairy</div>
+              <div class="n">Cheddar truckle</div>
+              <div class="m">Evercreech · No emulsifiers · 200 g</div>
+            </div>
+            <div class="sc">92</div>
+          </div>
+        </div>
+
+        <div style="height:100px"></div>
+      </div>
+
+      <div class="actionbar">
+        <div class="a save"><svg viewBox="0 0 24 24"><use href="#i-bookmark"/></svg>Save</div>
+        <div class="a share"><svg viewBox="0 0 24 24"><use href="#i-share"/></svg>Share</div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ============ 06 Water quality ============ -->
+  <div class="frame">
+    <div class="label"><span>06</span><b>Water quality</b> <em>· 92/100 · system blue ring</em></div>
+    <div class="device"><div class="screen s6">
+      <div class="island"></div>
+      <div class="status">
+        <span>9:41</span>
+        <span class="right">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="1" y="8.5" width="3" height="3" rx="1"/><rect x="6" y="6" width="3" height="5.5" rx="1"/><rect x="11" y="3" width="3" height="8.5" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 5C3 3 6 2 8 2s5 1 7 3"/><path d="M3.5 7.5C5 6 6.5 5.5 8 5.5s3 .5 4.5 2"/><circle cx="8" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="1.5" width="22" height="9" rx="2.5" stroke="currentColor" opacity=".5"/><rect x="2" y="3" width="17" height="6" rx="1.2" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor" opacity=".6"/></svg>
+        </span>
+      </div>
+
+      <div class="nav">
+        <div class="b"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></div>
+        <div class="title">Water · House supply</div>
+        <div class="b"><svg viewBox="0 0 24 24"><use href="#i-dots"/></svg></div>
+      </div>
+
+      <div class="intro">
+        <div class="kicker">Your tap water</div>
+        <div class="h">Soft, clean &amp; steady.</div>
+      </div>
+
+      <div class="heroring">
+        <svg width="240" height="240" viewBox="0 0 240 240">
+          <circle cx="120" cy="120" r="104" stroke="#f2f2f7" stroke-width="14" fill="none"/>
+          <circle cx="120" cy="120" r="104" stroke="#007aff" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="654" stroke-dashoffset="52"/>
+        </svg>
+        <div class="center">
+          <div class="big">92<span class="of">/100</span></div>
+          <div class="lbl">Drinking water index</div>
+          <div class="grade"><span style="width:5px;height:5px;border-radius:50%;background:var(--water)"></span>Grade B+</div>
+        </div>
+      </div>
+
+      <div class="auth">
+        <div class="who">Manchester · M21 area</div>
+        <div class="where">Supplier · Severn Trent Water</div>
+      </div>
+
+      <div class="panel">
+        <div class="head">
+          <div class="t">Contaminants tested</div>
+          <div class="ct">4 of 4 within limit</div>
+        </div>
+        <div class="cont">
+          <div class="row">
+            <div class="ic"><svg viewBox="0 0 24 24"><use href="#i-flask"/></svg></div>
+            <div class="meta"><div class="t">Lead</div><div class="val"><b>1.2</b> / 10 µg/L</div></div>
+            <div class="barwrap"><div class="bar"><div class="fill" style="width:12%"></div></div></div>
+          </div>
+          <div class="row">
+            <div class="ic"><svg viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div>
+            <div class="meta"><div class="t">Chlorine</div><div class="val"><b class="warn">0.42</b> / 0.5 mg/L</div></div>
+            <div class="barwrap"><div class="bar"><div class="fill warn" style="width:84%"></div></div></div>
+          </div>
+          <div class="row">
+            <div class="ic"><svg viewBox="0 0 24 24"><use href="#i-grid"/></svg></div>
+            <div class="meta"><div class="t">Nitrates</div><div class="val"><b>14</b> / 50 mg/L</div></div>
+            <div class="barwrap"><div class="bar"><div class="fill" style="width:28%"></div></div></div>
+          </div>
+          <div class="row">
+            <div class="ic"><svg viewBox="0 0 24 24"><use href="#i-particles"/></svg></div>
+            <div class="meta"><div class="t">Microplastics</div><div class="val"><b>3</b> / 20 p/L</div></div>
+            <div class="barwrap"><div class="bar"><div class="fill" style="width:15%"></div></div></div>
+          </div>
+        </div>
+        <div class="foot">Data from DWI · updated 14 days ago</div>
+      </div>
+    </div></div>
+  </div>
+
+</div>
+
+</body>
+</html>
