@@ -5,8 +5,7 @@ module.exports = function (api) {
       ["babel-preset-expo", { jsxImportSource: "nativewind" }],
       "nativewind/babel",
     ],
-    // react-native-reanimated/plugin must be listed last. It's required
-    // by @gorhom/bottom-sheet (used on the Map screen).
-    plugins: ["react-native-reanimated/plugin"],
+    // Note: SDK 50+ auto-includes the react-native-reanimated plugin when
+    // the package is installed, so we don't list it explicitly here.
   };
 };
