@@ -79,7 +79,21 @@ the demo AQI; without R2 the producer photos fall back to a placeholder.
 2. Create an API key, restrict it to the Air Quality API only.
 3. Add to `.env`: `EXPO_PUBLIC_GOOGLE_AIR_QUALITY_KEY=…`
 
-### 4. Seed the database
+### 4. Photo food analysis (Trace+ premium feature)
+
+The photo-scan feature uses Claude Sonnet 4.6 via a Supabase Edge Function. The API key lives server-side as a Supabase secret — **never** in the client.
+
+1. Sign up at [console.anthropic.com](https://console.anthropic.com), create an API key.
+2. Install the Supabase CLI: `npm install -g supabase`
+3. Link your local project: `supabase link --project-ref <your-project-ref>`
+4. Set the secret: `supabase secrets set ANTHROPIC_API_KEY=sk-ant-xxx`
+5. Deploy the function: `supabase functions deploy analyze-food-photo`
+
+Without these, the photo-scan screen still works in **demo mode** (returns a canned cheeseburger result so you can preview the UI).
+
+**Cost:** ~£0.008 per photo with Sonnet 4.6 vision. Set a hard cap in your Anthropic dashboard so a viral moment can't bankrupt you.
+
+### 5. Seed the database
 
 ```bash
 npm run seed
@@ -91,7 +105,7 @@ This:
 3. Uploads to R2 under `producers/{slug}/hero.jpg`.
 4. Upserts the 12 producers into Supabase with R2 URLs in `photo_urls`.
 
-### 5. Run the app
+### 6. Run the app
 
 ```bash
 npm run ios     # iOS simulator

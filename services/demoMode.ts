@@ -6,6 +6,7 @@
 
 import type {
   AirQualityResult,
+  PhotoFoodResult,
   ProducerNearbyRow,
   ProducerRow,
   ScanHistoryRow,
@@ -172,4 +173,38 @@ export const DEMO_TRACE_SCORE: TraceScore = {
     nutrition: { score: 70, notes: "balanced macros" },
     certifications: [],
   },
+};
+
+// Canned photo-analysis result for demo mode (no Anthropic key required).
+export const DEMO_PHOTO_RESULT: PhotoFoodResult = {
+  items: ["beef burger", "fries"],
+  title: "Cheeseburger and fries",
+  verdict: "ultra_processed",
+  score: 38,
+  nova_estimate: 4,
+  calories_estimate: 920,
+  macros: { protein_g: 35, carbs_g: 78, fat_g: 52 },
+  additives_likely: [
+    "Phosphate binders (in patty)",
+    "Emulsifiers (in bun)",
+    "Anti-caking agents (on fries)",
+  ],
+  concerns: [
+    "Likely industrial beef — grain-finished, not grass-fed.",
+    "Fries probably deep-fried in seed oil (rapeseed or sunflower).",
+    "Bun is ultra-processed bread with added emulsifiers.",
+  ],
+  alternatives: [
+    {
+      title: "Home-cook with grass-fed beef from Hartley Farm",
+      score: 82,
+      rationale: "Whole-ingredient beef, oven-baked fries, sourdough bun would put this in NOVA 1-2.",
+    },
+    {
+      title: "Build it at a market — Borough or Heaton Moor",
+      score: 75,
+      rationale: "Pick beef from a local butcher and bake fries at home.",
+    },
+  ],
+  confidence: "medium",
 };

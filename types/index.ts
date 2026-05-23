@@ -96,6 +96,29 @@ export interface PostcodeLookup {
   adminDistrict: string;
 }
 
+// ─── Photo food analysis (Trace+) ────────────────────────────────────
+export interface PhotoFoodResult {
+  items: string[];
+  title: string;
+  verdict: Verdict;
+  score: number;
+  nova_estimate: 1 | 2 | 3 | 4;
+  calories_estimate: number;
+  macros: {
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+  };
+  additives_likely: string[];
+  concerns: string[];
+  alternatives: Array<{
+    title: string;
+    score: number;
+    rationale: string;
+  }>;
+  confidence: "low" | "medium" | "high";
+}
+
 // ─── Category helpers ─────────────────────────────────────────────────
 export const PRODUCER_CATEGORY_COLOUR: Record<ProducerType, string> = {
   raw_milk: "#ffcc00", // dairy/honey

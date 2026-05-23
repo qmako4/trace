@@ -79,10 +79,24 @@ export default function Scan() {
 }
 
 function ScanOverlay({ onClose }: { onClose: () => void }) {
+  const router = useRouter();
   return (
-    <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "box-none" }}>
-      <SafeAreaView edges={["top", "bottom"]} className="flex-1" style={{ pointerEvents: "box-none" }}>
-        <View className="flex-row justify-between px-5 pt-3">
+    <View
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        pointerEvents: "box-none",
+      }}
+    >
+      <SafeAreaView
+        edges={["top", "bottom"]}
+        className="flex-1"
+        style={{ pointerEvents: "box-none" }}
+      >
+        <View className="flex-row justify-between items-center px-5 pt-3">
           <Pressable
             onPress={onClose}
             className="rounded-full items-center justify-center"
@@ -90,6 +104,31 @@ function ScanOverlay({ onClose }: { onClose: () => void }) {
           >
             <Icon name="close" size={18} color="#fff" strokeWidth={2} />
           </Pressable>
+
+          {/* Mode toggle — current screen is Barcode; tap Photo to switch */}
+          <View
+            className="flex-row rounded-pill p-1"
+            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          >
+            <View
+              className="rounded-pill"
+              style={{ backgroundColor: "rgba(255,255,255,0.95)", paddingVertical: 6, paddingHorizontal: 14 }}
+            >
+              <AppText className="text-text-1 font-sans-semibold" style={{ fontSize: 12 }}>
+                Barcode
+              </AppText>
+            </View>
+            <Pressable
+              onPress={() => router.replace("/photo-scan")}
+              style={{ paddingVertical: 6, paddingHorizontal: 14 }}
+            >
+              <AppText className="text-white font-sans-semibold" style={{ fontSize: 12 }}>
+                Photo
+              </AppText>
+            </Pressable>
+          </View>
+
+          <View style={{ width: 36 }} />
         </View>
 
         <View className="flex-1 items-center justify-center" style={{ pointerEvents: "none" }}>
