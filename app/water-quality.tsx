@@ -190,6 +190,43 @@ function WaterBody({ data, city }: { data: WaterQualityResult; city: string | nu
         </>
       ) : null}
 
+      {data.scope === "uk_supplier" ? (
+        <>
+          <SectionLabel text="WORTH FILTERING?" />
+          <View className="px-5" style={{ paddingBottom: 10, marginTop: -4 }}>
+            <AppText className="text-footnote text-text-3">
+              Tap is safe to drink. Filters are optional — they improve taste and cut limescale.
+            </AppText>
+          </View>
+          <View className="px-4" style={{ gap: 8 }}>
+            <FilterTip
+              iconName="drop"
+              iconColor="#007aff"
+              title="Jug filter for the kitchen"
+              body="Brita Marella, ZeroWater, or similar. Cuts chlorine taste and limescale from your drinking water. Change cartridges every 4 weeks."
+              cost="£20-50"
+              impact={2}
+            />
+            <FilterTip
+              iconName="drop"
+              iconColor="#007aff"
+              title="Showerhead filter"
+              body="Softer skin, less chlorine smell, better for sensitive scalps. Screws onto your existing shower. Replace every 6 months."
+              cost="£20-40"
+              impact={2}
+            />
+            <FilterTip
+              iconName="house"
+              iconColor="#007aff"
+              title="Under-sink reverse osmosis"
+              body="The deepest filter: removes microplastics, lead, trihalomethanes, and most PFAS. Genuine upgrade if you live somewhere with older pipes."
+              cost="£150-400"
+              impact={3}
+            />
+          </View>
+        </>
+      ) : null}
+
       {data.contaminants.length > 0 ? (
         <>
           <SectionLabel text="CONTAMINANTS TESTED" />
@@ -451,6 +488,44 @@ function SectionLegend() {
         <AppText className="text-footnote text-text-3">
           = bigger impact · free fixes first
         </AppText>
+      </View>
+    </View>
+  );
+}
+
+interface FilterTipProps {
+  iconName: "drop" | "house";
+  iconColor: string;
+  title: string;
+  body: string;
+  cost: string;
+  impact: 1 | 2 | 3;
+}
+
+function FilterTip({ iconName, iconColor, title, body, cost, impact }: FilterTipProps) {
+  return (
+    <View className="bg-grey6 rounded-card px-4 py-3">
+      <View className="flex-row items-start" style={{ gap: 12 }}>
+        <View
+          className="bg-white rounded-full items-center justify-center"
+          style={{ width: 34, height: 34 }}
+        >
+          <Icon name={iconName} size={18} color={iconColor} strokeWidth={1.8} />
+        </View>
+        <View className="flex-1 min-w-0">
+          <View className="flex-row items-center justify-between" style={{ gap: 8 }}>
+            <AppText className="text-sub font-sans-semibold text-text-1 flex-1">
+              {title}
+            </AppText>
+            <View className="flex-row items-center" style={{ gap: 6 }}>
+              <ImpactDots impact={impact} />
+              <Pill label={cost} />
+            </View>
+          </View>
+          <AppText className="text-caption text-text-2" style={{ marginTop: 4 }}>
+            {body}
+          </AppText>
+        </View>
       </View>
     </View>
   );
