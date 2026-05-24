@@ -1,6 +1,7 @@
 // 2+1 environment grid — Air, Water, then Food full-width.
 
 import { View } from "react-native";
+import { useRouter } from "expo-router";
 import { EnvCard } from "./EnvCard";
 import { FoodEnvCard } from "./FoodEnvCard";
 import { useAirQuality } from "@/hooks/useAirQuality";
@@ -9,7 +10,6 @@ import { useProducersNearby } from "@/hooks/useProducers";
 import type { WaterQualityResult } from "@/types";
 
 function waterVerdict(w: WaterQualityResult): { verdict: string; band: "good" | "warn" | "bad" } {
-  // UK detailed result has a DWI grade. Outside UK we use tap_safety.
   if (w.scope === "uk_supplier") {
     if (w.scoreOutOf100 >= 90) return { verdict: "Excellent", band: "good" };
     if (w.scoreOutOf100 >= 80) return { verdict: "Good", band: "good" };
@@ -37,6 +37,7 @@ function waterMeta(w: WaterQualityResult): string {
 }
 
 export function EnvGrid() {
+  const router = useRouter();
   const air = useAirQuality();
   const water = useWaterQuality();
   const producers = useProducersNearby(48);
@@ -69,6 +70,7 @@ export function EnvGrid() {
               meta={`AQI · ${air.data.dominantPollutant?.toUpperCase() ?? ""}`.trim()}
               ringValue={Math.max(0, Math.min(100, 100 - air.data.aqi))}
               ringColor="#64d2ff"
+              onPress={() => router.push("/air-quality")}
             />
           ) : (
             <EnvCard
@@ -95,6 +97,7 @@ export function EnvGrid() {
                 meta={waterMeta(water.data)}
                 ringValue={water.data.scoreOutOf100}
                 ringColor="#007aff"
+                onPress={() => router.push("/water-quality")}
               />
             );
           })() : (
