@@ -197,8 +197,8 @@ function AirBody({
             <AirTip
               iconName="map"
               iconColor="#34c759"
-              title="Walk one street back from main roads"
-              body="Pollution drops by half just a block away from traffic. Side streets are your friend."
+              title="Walk on quieter side streets"
+              body="Pollution is much higher right next to traffic. Just one block over, on a quiet street, it drops by half. Pick the side street when you can."
               cost="Free"
               impact={3}
             />
