@@ -192,6 +192,31 @@ function WaterBody({ data, city }: { data: WaterQualityResult; city: string | nu
 
       {data.scope === "uk_supplier" ? (
         <>
+          <SectionLabel text="WHAT'S REALLY IN IT" />
+          <View className="px-5" style={{ paddingBottom: 10, marginTop: -4 }}>
+            <AppText className="text-footnote text-text-3">
+              Honest facts. UK tap is regulated and safe — but no water is perfect.
+            </AppText>
+          </View>
+          <View className="px-4" style={{ gap: 8 }}>
+            <ExposureCard
+              title="Microplastics: ~100-1,000 particles per litre"
+              body="Mostly nanoplastics. Bottled water has ~10x more. Health effects are still emerging — no proven disease links yet, but particles can cross into tissue. Removed by reverse osmosis (90%+) or boiling in hard water (~80%)."
+            />
+            <ExposureCard
+              title="Chlorine byproducts (THMs): low but present"
+              body="UK levels are 5-10x below the safety limit. Long-term high exposure has been linked to small increases in bladder cancer risk; UK levels carry only a fractional increase. Activated carbon (jug filter) removes most of it."
+            />
+            <ExposureCard
+              title="Lead: only if your building is old"
+              body="Pre-1970 buildings may still have lead service pipes from street to home. Run the tap for 30s before drinking, especially first thing. RO or a NSF-53 certified filter removes lead. Babies and pregnant women should filter."
+            />
+            <ExposureCard
+              title="PFAS ('forever chemicals'): trace amounts"
+              body="Detected in some UK supplies, all below action thresholds. They accumulate in your body over decades. RO is the only home filter that meaningfully removes them. Activated carbon helps a bit."
+            />
+          </View>
+
           <SectionLabel text="WORTH FILTERING?" />
           <View className="px-5" style={{ paddingBottom: 10, marginTop: -4 }}>
             <AppText className="text-footnote text-text-3">
@@ -488,6 +513,27 @@ function SectionLegend() {
         <AppText className="text-footnote text-text-3">
           = bigger impact · free fixes first
         </AppText>
+      </View>
+    </View>
+  );
+}
+
+function ExposureCard({ title, body }: { title: string; body: string }) {
+  return (
+    <View className="bg-grey6 rounded-card px-4 py-3">
+      <View className="flex-row items-start" style={{ gap: 12 }}>
+        <View
+          className="bg-white rounded-full items-center justify-center"
+          style={{ width: 34, height: 34 }}
+        >
+          <Icon name="info" size={18} color="#007aff" strokeWidth={1.8} />
+        </View>
+        <View className="flex-1 min-w-0">
+          <AppText className="text-sub font-sans-semibold text-text-1">{title}</AppText>
+          <AppText className="text-caption text-text-2" style={{ marginTop: 4 }}>
+            {body}
+          </AppText>
+        </View>
       </View>
     </View>
   );
