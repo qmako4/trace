@@ -192,6 +192,30 @@ function UvBody({
         </View>
       </View>
 
+      {data.uvBand !== "low" ? (
+        <>
+          <SectionLabel text="WHY THIS MATTERS" />
+          <View className="px-4" style={{ gap: 8 }}>
+            <FactCard
+              title="Damage adds up over your life"
+              body="Just 5 bad sunburns before age 20 doubles your skin cancer risk later. Childhood burns matter most — every burn after that adds to the total."
+            />
+            <FactCard
+              title="Most skin aging is sun damage"
+              body="Up to 90% of wrinkles, age spots, and texture changes come from UV — not just getting older. Sunscreen is the cheapest anti-aging product on the market."
+            />
+            <FactCard
+              title="Your eyes get damaged too"
+              body="UV builds up in your eyes over decades. Cataracts and vision loss are directly linked to lifelong sun exposure. Wraparound sunglasses help most."
+            />
+            <FactCard
+              title="A tan is also damage"
+              body="There's no such thing as a 'healthy tan.' Your skin only goes brown when its DNA has been hit by UV. The colour is the bruise."
+            />
+          </View>
+        </>
+      ) : null}
+
       <SectionLabel text="WHAT YOU CAN DO" />
       <SunSectionLegend />
       <View className="px-4" style={{ gap: 8 }}>
@@ -323,6 +347,27 @@ function SunTip({ iconName, iconColor, title, body, cost, impact }: SunTipProps)
               <Pill label={cost} />
             </View>
           </View>
+          <AppText className="text-caption text-text-2" style={{ marginTop: 4 }}>
+            {body}
+          </AppText>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function FactCard({ title, body }: { title: string; body: string }) {
+  return (
+    <View className="bg-grey6 rounded-card px-4 py-3">
+      <View className="flex-row items-start" style={{ gap: 12 }}>
+        <View
+          className="bg-white rounded-full items-center justify-center"
+          style={{ width: 34, height: 34 }}
+        >
+          <Icon name="info" size={18} color="#ff9500" strokeWidth={1.8} />
+        </View>
+        <View className="flex-1 min-w-0">
+          <AppText className="text-sub font-sans-semibold text-text-1">{title}</AppText>
           <AppText className="text-caption text-text-2" style={{ marginTop: 4 }}>
             {body}
           </AppText>
