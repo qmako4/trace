@@ -87,9 +87,31 @@ export default function WaterQualityDetail() {
   );
 }
 
+function urgentWaterTip(
+  safety: TapSafety,
+): { title: string; body: string; urgency: "warn" | "bad" } | null {
+  switch (safety) {
+    case "bottled_only":
+      return {
+        title: "Don't put tap water near your mouth",
+        body: "Brushing teeth, washing fruit, ice cubes — all need bottled. Even tiny amounts can make you ill.",
+        urgency: "bad",
+      };
+    case "unknown":
+      return {
+        title: "Treat tap as unsafe until you check",
+        body: "No verified data here. Ask your accommodation what locals do, or stick with bottled to be safe.",
+        urgency: "warn",
+      };
+    default:
+      return null;
+  }
+}
+
 function WaterBody({ data, city }: { data: WaterQualityResult; city: string | null }) {
   const copy = SAFETY_COPY[data.tap_safety];
   const ringColor = copy.band === "good" ? "#007aff" : copy.band === "warn" ? "#ff9500" : "#ff3b30";
+  const urgent = urgentWaterTip(data.tap_safety);
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
@@ -200,6 +222,12 @@ function WaterBody({ data, city }: { data: WaterQualityResult; city: string | nu
 
       {data.recommendations ? (
         <>
+          {urgent ? (
+            <View className="px-4 pt-3">
+              <UrgentTip {...urgent} />
+            </View>
+          ) : null}
+
           <SectionLabel text="DRINKING" />
           <View className="px-4">
             <View className="bg-grey6 rounded-card px-4 py-3" style={{ gap: 12 }}>
@@ -405,6 +433,42 @@ function SectionLegend() {
         <AppText className="text-footnote text-text-3">
           = bigger impact · free fixes first
         </AppText>
+      </View>
+    </View>
+  );
+}
+
+function UrgentTip({
+  title,
+  body,
+  urgency,
+}: {
+  title: string;
+  body: string;
+  urgency: "warn" | "bad";
+}) {
+  const bg = urgency === "bad" ? "rgba(255,59,48,0.08)" : "rgba(255,149,0,0.10)";
+  const color = urgency === "bad" ? "#ff3b30" : "#ff9500";
+  return (
+    <View className="rounded-card px-4 py-3" style={{ backgroundColor: bg }}>
+      <View className="flex-row items-start" style={{ gap: 12 }}>
+        <View
+          className="rounded-full items-center justify-center"
+          style={{ width: 34, height: 34, backgroundColor: "#fff" }}
+        >
+          <Icon name="warning" size={18} color={color} strokeWidth={2} />
+        </View>
+        <View className="flex-1 min-w-0">
+          <AppText
+            className="text-sub font-sans-semibold"
+            style={{ color }}
+          >
+            {title}
+          </AppText>
+          <AppText className="text-caption text-text-1" style={{ marginTop: 4 }}>
+            {body}
+          </AppText>
+        </View>
       </View>
     </View>
   );

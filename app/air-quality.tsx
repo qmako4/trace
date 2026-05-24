@@ -113,6 +113,33 @@ export default function AirQualityDetail() {
   );
 }
 
+function urgentAirTip(
+  category: AirQualityResult["category"],
+): { title: string; body: string; urgency: "warn" | "bad" } | null {
+  switch (category) {
+    case "poor":
+      return {
+        title: "Take it easy outside today",
+        body: "Don't push hard outside. Walking is fine — skip the run or hard bike ride.",
+        urgency: "warn",
+      };
+    case "unhealthy":
+      return {
+        title: "Stay indoors when you can",
+        body: "Run errands tomorrow if they can wait. Kids, elderly, and anyone with asthma especially.",
+        urgency: "warn",
+      };
+    case "hazardous":
+      return {
+        title: "Don't go outside without a mask",
+        body: "Air is dangerous today. If you must go out, wear an N95 or KN95. Vulnerable people stay home.",
+        urgency: "bad",
+      };
+    default:
+      return null;
+  }
+}
+
 function AirBody({
   data,
   city,
@@ -125,6 +152,7 @@ function AirBody({
   const copy = CATEGORY_COPY[data.category];
   const ringValue = Math.max(0, Math.min(100, 100 - data.aqi));
   const ringColor = copy.band === "good" ? "#64d2ff" : copy.band === "warn" ? "#ff9500" : "#ff3b30";
+  const urgent = urgentAirTip(data.category);
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
@@ -194,6 +222,7 @@ function AirBody({
           <SectionLabel text="WHAT YOU CAN DO" />
           <AirSectionLegend />
           <View className="px-4" style={{ gap: 8 }}>
+            {urgent ? <UrgentTip {...urgent} /> : null}
             <AirTip
               iconName="map"
               iconColor="#34c759"
@@ -356,6 +385,42 @@ function AirSectionLegend() {
         <AppText className="text-footnote text-text-3">
           = bigger impact · free fixes first
         </AppText>
+      </View>
+    </View>
+  );
+}
+
+function UrgentTip({
+  title,
+  body,
+  urgency,
+}: {
+  title: string;
+  body: string;
+  urgency: "warn" | "bad";
+}) {
+  const bg = urgency === "bad" ? "rgba(255,59,48,0.08)" : "rgba(255,149,0,0.10)";
+  const color = urgency === "bad" ? "#ff3b30" : "#ff9500";
+  return (
+    <View className="rounded-card px-4 py-3" style={{ backgroundColor: bg }}>
+      <View className="flex-row items-start" style={{ gap: 12 }}>
+        <View
+          className="rounded-full items-center justify-center"
+          style={{ width: 34, height: 34, backgroundColor: "#fff" }}
+        >
+          <Icon name="warning" size={18} color={color} strokeWidth={2} />
+        </View>
+        <View className="flex-1 min-w-0">
+          <AppText
+            className="text-sub font-sans-semibold"
+            style={{ color }}
+          >
+            {title}
+          </AppText>
+          <AppText className="text-caption text-text-1" style={{ marginTop: 4 }}>
+            {body}
+          </AppText>
+        </View>
       </View>
     </View>
   );
