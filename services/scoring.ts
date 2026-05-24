@@ -37,6 +37,21 @@ const HIGH_RISK_ADDITIVES = new Set([
   "en:e951", // Aspartame (IARC class 2B, 2023)
 ]);
 
+// Cosmetic ingredients of concern — EWG / Hawaii reef-safe regulations /
+// EU 1223/2009 endocrine-disruption flags. Strings are matched as
+// substrings against ingredients_text (case-insensitive).
+const COSMETIC_CONCERNS = [
+  "oxybenzone", // Hormone disruption, banned for reef damage (HI, palau)
+  "octinoxate", // Banned in Hawaii reefs
+  "homosalate", // Hormone disruption flagged by EU SCCS
+  "octocrylene", // Breaks down into benzophenone (possible carcinogen)
+  "retinyl palmitate", // Vit A — may speed UV skin damage
+  "parabens", // Methyl/ethyl/butyl/propyl-paraben — endocrine
+  "formaldehyde",
+  "phthalate",
+  "triclosan",
+];
+
 function scoreFromNova(nova: 1 | 2 | 3 | 4 | null): number {
   // Linear scale: NOVA 1 = 100, NOVA 4 = 25.
   // If unknown, treat as middling.
@@ -53,8 +68,17 @@ function scoreFromAdditives(product: OFFProduct): {
   const tags = product.additives_tags ?? [];
   const highRiskHits = tags.filter((t) => HIGH_RISK_ADDITIVES.has(t)).length;
 
+  // For cosmetics, ingredient string is the better signal (additives_n
+  // mostly empty). Scan for flagged ingredients in plain text.
+  const ingredientsLower = (product.ingredients_text ?? "").toLowerCase();
+  const cosmeticHits = COSMETIC_CONCERNS.filter((c) =>
+    ingredientsLower.includes(c),
+  ).length;
+
+  const totalHits = highRiskHits + cosmeticHits;
+
   let risk: "low" | "medium" | "high";
-  if (highRiskHits > 0 || count >= 5) {
+  if (totalHits > 0 || count >= 5) {
     risk = "high";
   } else if (count >= 2) {
     risk = "medium";
@@ -63,9 +87,9 @@ function scoreFromAdditives(product: OFFProduct): {
   }
 
   const score =
-    risk === "low" ? 95 : risk === "medium" ? 65 : Math.max(15, 50 - highRiskHits * 10);
+    risk === "low" ? 95 : risk === "medium" ? 65 : Math.max(15, 50 - totalHits * 10);
 
-  return { score, risk, count };
+  return { score, risk, count: count + cosmeticHits };
 }
 
 function scoreFromProvenance(

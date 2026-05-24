@@ -245,11 +245,27 @@ function UvBody({
           impact={3}
         />
         <SunTip
+          iconName="scan"
+          iconColor="#ff9500"
+          title="Scan your sunscreen before you buy"
+          body="Many sunscreens contain oxybenzone, octinoxate, or other ingredients flagged as hormone disruptors or coral-reef harmful. Use the Scan tab on the bottle in the shop to see what's in it."
+          cost="Free"
+          impact={2}
+        />
+        <SunTip
           iconName="info"
           iconColor="#34c759"
           title="Reapply sunscreen every 2 hours"
           body="One morning application isn't enough — sunscreen rubs off, sweats off, and breaks down in the sun. Set a phone timer."
           cost="Free if you have it"
+          impact={2}
+        />
+        <SunTip
+          iconName="leaf"
+          iconColor="#34c759"
+          title="Want colour? Use fake tan instead"
+          body="A 'real' tan is your skin's DNA being damaged. Self-tanner gives you the same look without the damage. Good brands look natural — no orange palms."
+          cost="£8-20"
           impact={2}
         />
       </View>
