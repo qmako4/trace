@@ -72,9 +72,10 @@ export type WaterGrade = "A+" | "A" | "B+" | "B" | "C" | "D";
 export type TapSafety = "safe" | "filtered_ok" | "boil_or_bottled" | "bottled_only" | "unknown";
 
 export interface WaterRecommendations {
-  primary: string;
+  drinking: string;
   bottled_brands: string[];
-  avoid: string[];
+  showering: string;
+  watch_out: string[];
   travel_filter: string[];
 }
 
