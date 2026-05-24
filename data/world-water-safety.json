@@ -9,11 +9,11 @@
     { "code": "IE", "name": "Ireland", "tap_safety": "safe", "score": 88, "notes": "Safe to drink. Some rural areas use group water schemes — check locally." },
     { "code": "US", "name": "United States", "tap_safety": "safe", "score": 84, "notes": "EPA-regulated, generally safe. Lead concerns in some older buildings." },
     { "code": "CA", "name": "Canada", "tap_safety": "safe", "score": 90, "notes": "Generally safe across most of the country." },
-    { "code": "MX", "name": "Mexico", "tap_safety": "boil_or_bottled", "score": 35, "notes": "Tap water not recommended for drinking. Use bottled or boiled. Mexico City and resort areas often have filtered systems, but variability is high.", "recommendations": {
-      "primary": "Refill a 20L garrafón at a local purificadora — Mexicans' standard. RO + UV treated, ~$10-15 MXN per refill, far fewer microplastics than individual bottles.",
-      "bottled_brands": ["Bonafont (Danone, RO-treated)", "Ciel (Coca-Cola, RO-treated)", "Epura (PepsiCo, RO-treated)", "Santa María (spring water)"],
-      "avoid": ["Unmarked street stalls", "Mineral water (Peñafiel) for daily drinking — too mineral-heavy"],
-      "travel_filter": ["LifeStraw Go water bottle (£35)", "GRAYL Ultrapress (£90)"]
+    { "code": "MX", "name": "Mexico", "tap_safety": "boil_or_bottled", "score": 35, "notes": "Tap water not recommended for drinking. Use bottled water. Mexico City and resort areas often have filtered systems, but variability is high.", "recommendations": {
+      "primary": "Buy sealed bottled water from any convenience store (OXXO is everywhere) or supermarket. Bigger 1.5L or 5L bottles work out cheaper and use less plastic than small ones. Use it for drinking AND brushing your teeth.",
+      "bottled_brands": ["Bonafont", "Ciel", "Epura", "Santa María", "Evian (imported)"],
+      "avoid": ["Ice cubes from street stalls", "Tap water for brushing teeth", "Raw salads / unpeeled fruit washed in tap water", "Drinks topped up with tap water"],
+      "travel_filter": ["LifeStraw Go bottle (£35) — fill from any tap, drink instantly", "GRAYL Ultrapress (£90) — premium, faster filtering"]
     } },
     { "code": "FR", "name": "France", "tap_safety": "safe", "score": 87, "notes": "Safe to drink across most of the country, including Paris." },
     { "code": "DE", "name": "Germany", "tap_safety": "safe", "score": 92, "notes": "Strictly regulated; one of the most-tested water supplies in Europe." },
@@ -35,9 +35,54 @@
     { "code": "JP", "name": "Japan", "tap_safety": "safe", "score": 89, "notes": "Strictly regulated and tested. Safe nationwide." },
     { "code": "KR", "name": "South Korea", "tap_safety": "safe", "score": 82, "notes": "Treated to high standards. Many locals prefer bottled out of taste preference." },
     { "code": "SG", "name": "Singapore", "tap_safety": "safe", "score": 90, "notes": "PUB-managed, fully potable." },
-    { "code": "TH", "name": "Thailand", "tap_safety": "boil_or_bottled", "score": 40, "notes": "Tap water not recommended. Bottled or boiled water for drinking." },
-    { "code": "VN", "name": "Vietnam", "tap_safety": "boil_or_bottled", "score": 35, "notes": "Tap water not recommended. Bottled or boiled." },
-    { "code": "ID", "name": "Indonesia", "tap_safety": "boil_or_bottled", "score": 30, "notes": "Tap water not safe to drink. Use bottled or boil for 1 min+." },
+    { "code": "TH", "name": "Thailand", "tap_safety": "boil_or_bottled", "score": 40, "notes": "Tap water not recommended. Bottled or boiled water for drinking.", "recommendations": {
+      "primary": "Sealed bottled water from any 7-Eleven (they're everywhere). Most hotels leave free bottled water in your room — top up from there.",
+      "bottled_brands": ["Singha", "Crystal", "Minéré", "Aura"],
+      "avoid": ["Bag ice from carts (cubes in restaurants are usually fine)", "Tap water for brushing teeth", "Drinks topped up with tap water"],
+      "travel_filter": ["LifeStraw Go bottle (£35)", "GRAYL Ultrapress (£90)"]
+    } },
+    { "code": "VN", "name": "Vietnam", "tap_safety": "boil_or_bottled", "score": 35, "notes": "Tap water not recommended. Bottled or boiled.", "recommendations": {
+      "primary": "Sealed bottled water from any convenience store. Hotels usually leave free bottles in your room. Sealed cans of soft drinks and beer are safe.",
+      "bottled_brands": ["Lavie", "Aquafina", "Vihawa", "Dasani"],
+      "avoid": ["Ice in rural areas", "Tap water for brushing teeth", "Salads washed in tap water"],
+      "travel_filter": ["LifeStraw Go bottle (£35)"]
+    } },
+    { "code": "ID", "name": "Indonesia", "tap_safety": "boil_or_bottled", "score": 30, "notes": "Tap water not safe to drink. Use bottled or boil for 1 min+.", "recommendations": {
+      "primary": "Sealed bottled water from any Indomaret or Alfamart store. Bali especially needs care — tap is not safe even in good hotels.",
+      "bottled_brands": ["Aqua", "Le Minerale", "Pristine", "VIT"],
+      "avoid": ["Ice in warungs (street stalls)", "Tap water for brushing teeth", "Salads / fresh juices unless from clean tourist spots"],
+      "travel_filter": ["LifeStraw Go bottle (£35)"]
+    } },
+    { "code": "IN", "name": "India", "tap_safety": "boil_or_bottled", "score": 25, "notes": "Tap water not safe. Use sealed bottled or filtered water.", "recommendations": {
+      "primary": "Sealed bottled water only. Always check the cap is intact — refilled bottles are a common scam. Big brands are most reliable.",
+      "bottled_brands": ["Bisleri", "Aquafina", "Kinley", "Bailey"],
+      "avoid": ["Ice anywhere except top hotels", "Tap water for brushing teeth", "Fresh juice / lassi from street stalls", "Raw salads, unpeeled fruit"],
+      "travel_filter": ["GRAYL Ultrapress (£90) — basically essential for India", "LifeStraw Go bottle (£35)"]
+    } },
+    { "code": "EG", "name": "Egypt", "tap_safety": "boil_or_bottled", "score": 30, "notes": "Tap water not safe. Bottled water only.", "recommendations": {
+      "primary": "Sealed bottled water from supermarkets — Carrefour, Spinneys, or hotel shops. Check the cap is intact.",
+      "bottled_brands": ["Hayat", "Aquafina", "Nestlé Pure Life", "Baraka"],
+      "avoid": ["Ice, including in mixed drinks", "Tap water for brushing teeth", "Raw vegetables / unpeeled fruit", "Fresh juices from street stalls"],
+      "travel_filter": ["LifeStraw Go bottle (£35)"]
+    } },
+    { "code": "PE", "name": "Peru", "tap_safety": "boil_or_bottled", "score": 35, "notes": "Tap water not recommended. Bottled only.", "recommendations": {
+      "primary": "Sealed bottled water. Coca tea (mate de coca, boiled) is safe everywhere and helps with altitude in Cusco / Sacred Valley.",
+      "bottled_brands": ["San Mateo", "Cielo", "San Luis", "San Carlos"],
+      "avoid": ["Ice in cheap restaurants", "Tap water for brushing teeth", "Salads / ceviche from informal places"],
+      "travel_filter": ["LifeStraw Go bottle (£35)"]
+    } },
+    { "code": "MA", "name": "Morocco", "tap_safety": "filtered_ok", "score": 55, "notes": "Cities have treated water; visitors usually drink bottled.", "recommendations": {
+      "primary": "Sealed bottled water from any épicerie (corner shop). Mint tea is everywhere and boiled — safe.",
+      "bottled_brands": ["Sidi Ali", "Aïn Saïss", "Oulmès (sparkling)"],
+      "avoid": ["Ice from informal places", "Tap water for brushing teeth (in older buildings)"],
+      "travel_filter": ["LifeStraw Go bottle (£35)"]
+    } },
+    { "code": "TR", "name": "Turkey", "tap_safety": "filtered_ok", "score": 55, "notes": "Chlorinated and treated but locals nearly all drink bottled.", "recommendations": {
+      "primary": "Sealed bottled water from any market or convenience store. Locals drink bottled too — tap water tastes heavily chlorinated.",
+      "bottled_brands": ["Erikli", "Hayat", "Damla", "Saka"],
+      "avoid": ["Tap water for drinking and brushing", "Ice from street stalls"],
+      "travel_filter": ["LifeStraw Go bottle (£35)"]
+    } },
     { "code": "PH", "name": "Philippines", "tap_safety": "boil_or_bottled", "score": 35, "notes": "Tap water not recommended outside of major hotels." },
     { "code": "MY", "name": "Malaysia", "tap_safety": "boil_or_bottled", "score": 45, "notes": "Generally needs boiling. Some KL districts have safe tap water." },
     { "code": "IN", "name": "India", "tap_safety": "boil_or_bottled", "score": 25, "notes": "Tap water not safe. Use sealed bottled or filtered water." },
