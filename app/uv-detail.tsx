@@ -222,9 +222,9 @@ function UvBody({
         />
         <SunTip
           iconName="info"
-          iconColor="#64d2ff"
-          title="Drink more water than you think"
-          body="Hot, sunny weather quietly dehydrates you. Aim for a glass of water every hour you're outside."
+          iconColor="#34c759"
+          title="Reapply sunscreen every 2 hours"
+          body="One morning application isn't enough — sunscreen rubs off, sweats off, and breaks down in the sun. Set a timer."
           cost="Free"
           impact={2}
         />
