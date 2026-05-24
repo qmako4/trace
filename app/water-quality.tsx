@@ -235,6 +235,31 @@ function WaterBody({ data, city }: { data: WaterQualityResult; city: string | nu
             </View>
           </View>
 
+          <SectionLabel text="PROTECT YOUR SKIN & HAIR" />
+          <View className="px-4" style={{ gap: 8 }}>
+            <ShowerTip
+              iconName="drop"
+              iconColor="#007aff"
+              title="Filter your showerhead"
+              body="A small filter screws onto your shower. Catches most of the chemicals before water hits your skin. Easiest fix by far."
+              cost="£20-40"
+            />
+            <ShowerTip
+              iconName="info"
+              iconColor="#34c759"
+              title="Shorter, cooler showers"
+              body="Hot water turns chemicals into steam you breathe in. Quick, cooler showers cut that right down."
+              cost="Free"
+            />
+            <ShowerTip
+              iconName="leaf"
+              iconColor="#34c759"
+              title="Moisturise right after"
+              body="Tap water dries your skin out. Put body lotion on within 3 minutes of getting out — it locks the moisture in."
+              cost="Cheap"
+            />
+          </View>
+
           {data.recommendations.watch_out.length > 0 ? (
             <>
               <SectionLabel text="ALSO WATCH OUT FOR" />
@@ -309,5 +334,39 @@ function SectionLabel({ text }: { text: string }) {
     >
       {text}
     </AppText>
+  );
+}
+
+interface ShowerTipProps {
+  iconName: "drop" | "info" | "leaf";
+  iconColor: string;
+  title: string;
+  body: string;
+  cost: string;
+}
+
+function ShowerTip({ iconName, iconColor, title, body, cost }: ShowerTipProps) {
+  return (
+    <View className="bg-grey6 rounded-card px-4 py-3">
+      <View className="flex-row items-start" style={{ gap: 12 }}>
+        <View
+          className="bg-white rounded-full items-center justify-center"
+          style={{ width: 34, height: 34 }}
+        >
+          <Icon name={iconName} size={18} color={iconColor} strokeWidth={1.8} />
+        </View>
+        <View className="flex-1 min-w-0">
+          <View className="flex-row items-center justify-between" style={{ gap: 8 }}>
+            <AppText className="text-sub font-sans-semibold text-text-1 flex-1">
+              {title}
+            </AppText>
+            <Pill label={cost} />
+          </View>
+          <AppText className="text-caption text-text-2" style={{ marginTop: 4 }}>
+            {body}
+          </AppText>
+        </View>
+      </View>
+    </View>
   );
 }
