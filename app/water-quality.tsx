@@ -236,20 +236,15 @@ function WaterBody({ data, city }: { data: WaterQualityResult; city: string | nu
           </View>
 
           <SectionLabel text="PROTECT YOUR SKIN & HAIR" />
+          <SectionLegend />
           <View className="px-4" style={{ gap: 8 }}>
-            <ShowerTip
-              iconName="drop"
-              iconColor="#007aff"
-              title="Filter your showerhead"
-              body="A small filter screws onto your shower. Catches most of the chemicals before water hits your skin. Easiest fix by far."
-              cost="£20-40"
-            />
             <ShowerTip
               iconName="info"
               iconColor="#34c759"
               title="Shorter, cooler showers"
               body="Hot water turns chemicals into steam you breathe in. Quick, cooler showers cut that right down."
               cost="Free"
+              impact={1}
             />
             <ShowerTip
               iconName="leaf"
@@ -257,6 +252,15 @@ function WaterBody({ data, city }: { data: WaterQualityResult; city: string | nu
               title="Moisturise right after"
               body="Tap water dries your skin out. Put body lotion on within 3 minutes of getting out — it locks the moisture in."
               cost="Cheap"
+              impact={2}
+            />
+            <ShowerTip
+              iconName="drop"
+              iconColor="#007aff"
+              title="Filter your showerhead"
+              body="A small filter screws onto your shower. Catches most of the chemicals before water hits your skin. Easiest fix by far."
+              cost="£20-40"
+              impact={3}
             />
           </View>
 
@@ -343,9 +347,10 @@ interface ShowerTipProps {
   title: string;
   body: string;
   cost: string;
+  impact: 1 | 2 | 3;
 }
 
-function ShowerTip({ iconName, iconColor, title, body, cost }: ShowerTipProps) {
+function ShowerTip({ iconName, iconColor, title, body, cost, impact }: ShowerTipProps) {
   return (
     <View className="bg-grey6 rounded-card px-4 py-3">
       <View className="flex-row items-start" style={{ gap: 12 }}>
@@ -360,12 +365,46 @@ function ShowerTip({ iconName, iconColor, title, body, cost }: ShowerTipProps) {
             <AppText className="text-sub font-sans-semibold text-text-1 flex-1">
               {title}
             </AppText>
-            <Pill label={cost} />
+            <View className="flex-row items-center" style={{ gap: 6 }}>
+              <ImpactDots impact={impact} />
+              <Pill label={cost} />
+            </View>
           </View>
           <AppText className="text-caption text-text-2" style={{ marginTop: 4 }}>
             {body}
           </AppText>
         </View>
+      </View>
+    </View>
+  );
+}
+
+export function ImpactDots({ impact }: { impact: 1 | 2 | 3 }) {
+  return (
+    <View className="flex-row" style={{ gap: 3 }}>
+      {[1, 2, 3].map((n) => (
+        <View
+          key={n}
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 3,
+            backgroundColor: n <= impact ? "#34c759" : "rgba(60,60,67,0.18)",
+          }}
+        />
+      ))}
+    </View>
+  );
+}
+
+function SectionLegend() {
+  return (
+    <View className="px-5" style={{ paddingBottom: 10, marginTop: -4 }}>
+      <View className="flex-row items-center" style={{ gap: 6 }}>
+        <ImpactDots impact={3} />
+        <AppText className="text-footnote text-text-3">
+          = bigger impact · free fixes first
+        </AppText>
       </View>
     </View>
   );

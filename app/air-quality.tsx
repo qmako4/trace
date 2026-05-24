@@ -192,13 +192,15 @@ function AirBody({
       {data.category !== "good" ? (
         <>
           <SectionLabel text="WHAT YOU CAN DO" />
+          <AirSectionLegend />
           <View className="px-4" style={{ gap: 8 }}>
             <AirTip
-              iconName="user"
-              iconColor="#64d2ff"
-              title="Wear an N95 or KN95 mask outside"
-              body="On bad-air days these block 95% of pollution. Thin paper or cloth masks don't help — make sure it says N95 or KN95."
-              cost="£1-5"
+              iconName="map"
+              iconColor="#34c759"
+              title="Walk one street back from main roads"
+              body="Pollution drops by half just a block away from traffic. Side streets are your friend."
+              cost="Free"
+              impact={3}
             />
             <AirTip
               iconName="house"
@@ -206,13 +208,7 @@ function AirBody({
               title="Keep windows closed in the late afternoon"
               body="Pollution peaks 4-9pm from rush hour and cooking. Open them in the morning instead, then shut them as the day warms up."
               cost="Free"
-            />
-            <AirTip
-              iconName="map"
-              iconColor="#34c759"
-              title="Walk one street back from main roads"
-              body="Pollution drops by half just a block away from traffic. Side streets are your friend."
-              cost="Free"
+              impact={2}
             />
             <AirTip
               iconName="bolt"
@@ -220,6 +216,15 @@ function AirBody({
               title="Exercise early in the morning"
               body="Air is cleanest from 5-9am, before rush hour and cooking peaks. Move outdoor workouts to the morning."
               cost="Free"
+              impact={1}
+            />
+            <AirTip
+              iconName="user"
+              iconColor="#64d2ff"
+              title="Wear an N95 or KN95 mask outside"
+              body="On bad-air days these block 95% of pollution. Thin paper or cloth masks don't help — make sure it says N95 or KN95."
+              cost="£1-5"
+              impact={3}
             />
           </View>
         </>
@@ -293,9 +298,10 @@ interface AirTipProps {
   title: string;
   body: string;
   cost: string;
+  impact: 1 | 2 | 3;
 }
 
-function AirTip({ iconName, iconColor, title, body, cost }: AirTipProps) {
+function AirTip({ iconName, iconColor, title, body, cost, impact }: AirTipProps) {
   return (
     <View className="bg-grey6 rounded-card px-4 py-3">
       <View className="flex-row items-start" style={{ gap: 12 }}>
@@ -310,12 +316,46 @@ function AirTip({ iconName, iconColor, title, body, cost }: AirTipProps) {
             <AppText className="text-sub font-sans-semibold text-text-1 flex-1">
               {title}
             </AppText>
-            <Pill label={cost} />
+            <View className="flex-row items-center" style={{ gap: 6 }}>
+              <ImpactDots impact={impact} />
+              <Pill label={cost} />
+            </View>
           </View>
           <AppText className="text-caption text-text-2" style={{ marginTop: 4 }}>
             {body}
           </AppText>
         </View>
+      </View>
+    </View>
+  );
+}
+
+function ImpactDots({ impact }: { impact: 1 | 2 | 3 }) {
+  return (
+    <View className="flex-row" style={{ gap: 3 }}>
+      {[1, 2, 3].map((n) => (
+        <View
+          key={n}
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 3,
+            backgroundColor: n <= impact ? "#34c759" : "rgba(60,60,67,0.18)",
+          }}
+        />
+      ))}
+    </View>
+  );
+}
+
+function AirSectionLegend() {
+  return (
+    <View className="px-5" style={{ paddingBottom: 10, marginTop: -4 }}>
+      <View className="flex-row items-center" style={{ gap: 6 }}>
+        <ImpactDots impact={3} />
+        <AppText className="text-footnote text-text-3">
+          = bigger impact · free fixes first
+        </AppText>
       </View>
     </View>
   );
