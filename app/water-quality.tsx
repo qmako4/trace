@@ -169,6 +169,95 @@ function WaterBody({ data, city }: { data: WaterQualityResult; city: string | nu
         </>
       ) : null}
 
+      {data.recommendations ? (
+        <>
+          <SectionLabel text="WHAT TO DRINK INSTEAD" />
+          <View className="px-4">
+            <View className="bg-grey6 rounded-card px-4 py-3" style={{ gap: 12 }}>
+              <View>
+                <AppText
+                  className="font-sans-semibold uppercase text-water"
+                  style={{ fontSize: 11, letterSpacing: 0.6 }}
+                >
+                  Best option
+                </AppText>
+                <AppText className="text-sub text-text-1" style={{ marginTop: 4 }}>
+                  {data.recommendations.primary}
+                </AppText>
+              </View>
+
+              <View
+                className="bg-divider"
+                style={{ height: 1, marginVertical: 4 }}
+              />
+
+              <View>
+                <AppText
+                  className="font-sans-semibold uppercase text-text-2"
+                  style={{ fontSize: 11, letterSpacing: 0.6 }}
+                >
+                  Trusted bottled brands
+                </AppText>
+                <View className="flex-row flex-wrap" style={{ gap: 6, marginTop: 6 }}>
+                  {data.recommendations.bottled_brands.map((b) => (
+                    <Pill key={b} label={b} />
+                  ))}
+                </View>
+              </View>
+
+              {data.recommendations.travel_filter.length > 0 ? (
+                <View>
+                  <AppText
+                    className="font-sans-semibold uppercase text-text-2"
+                    style={{ fontSize: 11, letterSpacing: 0.6 }}
+                  >
+                    Travel filter (cuts microplastics)
+                  </AppText>
+                  <View className="flex-row flex-wrap" style={{ gap: 6, marginTop: 6 }}>
+                    {data.recommendations.travel_filter.map((f) => (
+                      <Pill key={f} label={f} />
+                    ))}
+                  </View>
+                </View>
+              ) : null}
+
+              {data.recommendations.avoid.length > 0 ? (
+                <View>
+                  <AppText
+                    className="font-sans-semibold uppercase text-alert"
+                    style={{ fontSize: 11, letterSpacing: 0.6 }}
+                  >
+                    Avoid
+                  </AppText>
+                  <View className="flex-row flex-wrap" style={{ gap: 6, marginTop: 6 }}>
+                    {data.recommendations.avoid.map((a) => (
+                      <Pill key={a} label={a} variant="bad" />
+                    ))}
+                  </View>
+                </View>
+              ) : null}
+            </View>
+          </View>
+
+          <View className="px-4 mt-3">
+            <View
+              className="rounded-card px-4 py-3"
+              style={{ backgroundColor: "rgba(255,149,0,0.08)" }}
+            >
+              <AppText
+                className="font-sans-semibold uppercase text-producer"
+                style={{ fontSize: 11, letterSpacing: 0.6 }}
+              >
+                Note on microplastics
+              </AppText>
+              <AppText className="text-sub text-text-1" style={{ marginTop: 4 }}>
+                2024 studies found nanoplastics in ~90% of bottled water tested, including premium brands. Glass bottles, refilled garrafones, and home filtration (reverse osmosis or activated carbon) all reduce exposure significantly.
+              </AppText>
+            </View>
+          </View>
+        </>
+      ) : null}
+
       <View className="px-5 mt-4">
         <AppText
           className="font-mono text-text-3"

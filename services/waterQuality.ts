@@ -8,7 +8,13 @@
 // v0.1 ships with a hardcoded snapshot. Future: automated DWI report
 // scraping when they publish their next annual compliance report.
 
-import type { PostcodeLookup, WaterQualityResult, WaterGrade, TapSafety } from "@/types";
+import type {
+  PostcodeLookup,
+  WaterQualityResult,
+  WaterGrade,
+  TapSafety,
+  WaterRecommendations,
+} from "@/types";
 import waterCompanies from "@/data/uk-water-companies.json";
 import worldWaterSafety from "@/data/world-water-safety.json";
 
@@ -92,6 +98,7 @@ export async function getWaterQualityByPostcode(postcode: string): Promise<Water
       ...c,
       withinLimit: c.value <= c.limit,
     })),
+    recommendations: null,
     source: `Drinking Water Inspectorate (dwi.gov.uk), published ${company.lastPublished}`,
     lastPublished: company.lastPublished,
   };
@@ -107,6 +114,7 @@ interface CountryWaterEntry {
   tap_safety: TapSafety;
   score: number;
   notes: string;
+  recommendations?: WaterRecommendations;
 }
 
 export function getWaterQualityByCountry(countryCode: string): WaterQualityResult {
@@ -126,6 +134,7 @@ export function getWaterQualityByCountry(countryCode: string): WaterQualityResul
       scoreOutOf100: 50,
       notes: "No water safety data for this country yet.",
       contaminants: [],
+      recommendations: null,
       source: "Country-level lookup",
       lastPublished: worldWaterSafety._meta.snapshot_taken,
     };
@@ -141,6 +150,7 @@ export function getWaterQualityByCountry(countryCode: string): WaterQualityResul
     scoreOutOf100: entry.score,
     notes: entry.notes,
     contaminants: [],
+    recommendations: entry.recommendations ?? null,
     source: worldWaterSafety._meta.source,
     lastPublished: worldWaterSafety._meta.snapshot_taken,
   };

@@ -9,7 +9,12 @@
     { "code": "IE", "name": "Ireland", "tap_safety": "safe", "score": 88, "notes": "Safe to drink. Some rural areas use group water schemes — check locally." },
     { "code": "US", "name": "United States", "tap_safety": "safe", "score": 84, "notes": "EPA-regulated, generally safe. Lead concerns in some older buildings." },
     { "code": "CA", "name": "Canada", "tap_safety": "safe", "score": 90, "notes": "Generally safe across most of the country." },
-    { "code": "MX", "name": "Mexico", "tap_safety": "boil_or_bottled", "score": 35, "notes": "Tap water not recommended for drinking. Use bottled or boiled. Mexico City and resort areas often have filtered systems, but variability is high." },
+    { "code": "MX", "name": "Mexico", "tap_safety": "boil_or_bottled", "score": 35, "notes": "Tap water not recommended for drinking. Use bottled or boiled. Mexico City and resort areas often have filtered systems, but variability is high.", "recommendations": {
+      "primary": "Refill a 20L garrafón at a local purificadora — Mexicans' standard. RO + UV treated, ~$10-15 MXN per refill, far fewer microplastics than individual bottles.",
+      "bottled_brands": ["Bonafont (Danone, RO-treated)", "Ciel (Coca-Cola, RO-treated)", "Epura (PepsiCo, RO-treated)", "Santa María (spring water)"],
+      "avoid": ["Unmarked street stalls", "Mineral water (Peñafiel) for daily drinking — too mineral-heavy"],
+      "travel_filter": ["LifeStraw Go water bottle (£35)", "GRAYL Ultrapress (£90)"]
+    } },
     { "code": "FR", "name": "France", "tap_safety": "safe", "score": 87, "notes": "Safe to drink across most of the country, including Paris." },
     { "code": "DE", "name": "Germany", "tap_safety": "safe", "score": 92, "notes": "Strictly regulated; one of the most-tested water supplies in Europe." },
     { "code": "ES", "name": "Spain", "tap_safety": "safe", "score": 82, "notes": "Safe in cities. Taste varies; bottled water common at restaurants." },

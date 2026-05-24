@@ -71,6 +71,13 @@ export interface AirQualityResult {
 export type WaterGrade = "A+" | "A" | "B+" | "B" | "C" | "D";
 export type TapSafety = "safe" | "filtered_ok" | "boil_or_bottled" | "bottled_only" | "unknown";
 
+export interface WaterRecommendations {
+  primary: string;
+  bottled_brands: string[];
+  avoid: string[];
+  travel_filter: string[];
+}
+
 export interface WaterQualityResult {
   // For UK: postcode-specific. For other countries: country-level.
   scope: "uk_supplier" | "country";
@@ -88,6 +95,7 @@ export interface WaterQualityResult {
     unit: string;
     withinLimit: boolean;
   }>;
+  recommendations: WaterRecommendations | null;
   source: string;
   lastPublished: string;
 }
