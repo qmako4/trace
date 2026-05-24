@@ -12,12 +12,38 @@ import { AppText } from "@/components/ui/Text";
 import { Pill } from "@/components/ui/Pill";
 import type { WaterQualityResult, TapSafety } from "@/types";
 
-const SAFETY_COPY: Record<TapSafety, { title: string; band: "good" | "warn" | "bad" }> = {
-  safe: { title: "Safe to drink.", band: "good" },
-  filtered_ok: { title: "Filter recommended.", band: "warn" },
-  boil_or_bottled: { title: "Don't drink the tap.", band: "bad" },
-  bottled_only: { title: "Bottled only.", band: "bad" },
-  unknown: { title: "Quality unknown.", band: "warn" },
+const SAFETY_COPY: Record<
+  TapSafety,
+  { title: string; subtitle: string; band: "good" | "warn" | "bad" }
+> = {
+  safe: {
+    title: "Safe to drink.",
+    subtitle: "Drink it, brush your teeth, cook with it, shower in it — all fine.",
+    band: "good",
+  },
+  filtered_ok: {
+    title: "Treat tap with care.",
+    subtitle:
+      "Drinkable in a pinch, but most people here filter or buy bottled. Showering and washing are fine.",
+    band: "warn",
+  },
+  boil_or_bottled: {
+    title: "Tap isn't safe.",
+    subtitle:
+      "Skip it for drinking, brushing teeth, and washing raw food. Showering is fine — just don't swallow.",
+    band: "bad",
+  },
+  bottled_only: {
+    title: "Stick to bottled.",
+    subtitle:
+      "Don't use the tap for drinking or brushing teeth. Showering is OK with mouth closed.",
+    band: "bad",
+  },
+  unknown: {
+    title: "Quality unknown.",
+    subtitle: "No verified data for this country yet — bottled is the safe default.",
+    band: "warn",
+  },
 };
 
 export default function WaterQualityDetail() {
@@ -76,6 +102,9 @@ function WaterBody({ data, city }: { data: WaterQualityResult; city: string | nu
         </AppText>
         <AppText variant="largeTitle" style={{ marginTop: 4 }}>
           {copy.title}
+        </AppText>
+        <AppText className="text-sub text-text-2" style={{ marginTop: 8 }}>
+          {copy.subtitle}
         </AppText>
       </View>
 
