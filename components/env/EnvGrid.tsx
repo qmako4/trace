@@ -118,13 +118,22 @@ export function EnvGrid() {
 
       {weather.data ? (
         <UvEnvCard data={weather.data} onPress={() => router.push("/uv-detail")} />
+      ) : weather.isError ? (
+        <EnvCard
+          icon="sun"
+          iconColor="#ff9500"
+          label="UV today"
+          value="—"
+          verdict="Unavailable"
+          band="warn"
+        />
       ) : (
         <EnvCard
           icon="sun"
           iconColor="#ff9500"
           label="UV today"
           value="—"
-          verdict={weather.isLoading ? "Loading" : "Unavailable"}
+          verdict="Loading"
           band="warn"
         />
       )}

@@ -15,10 +15,13 @@ interface OpenMeteoResponse {
     weather_code: number;
     uv_index: number;
   };
+  hourly: {
+    time: string[];
+    uv_index: number[];
+  };
   daily: {
     time: string[];
     uv_index_max: number[];
-    uv_index_max_time: string[];
   };
 }
 
@@ -52,7 +55,9 @@ export async function getWeather(lat: number, lng: number): Promise<WeatherResul
     longitude: String(lng),
     current:
       "temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,uv_index",
-    daily: "uv_index_max,uv_index_max_time",
+    hourly: "uv_index",
+    daily: "uv_index_max",
+    forecast_days: "1",
     timezone: "auto",
     wind_speed_unit: "kmh",
   });
@@ -64,8 +69,22 @@ export async function getWeather(lat: number, lng: number): Promise<WeatherResul
 
   const uv = json.current.uv_index ?? 0;
   const uvMaxToday = json.daily.uv_index_max?.[0] ?? uv;
-  const uvPeakTimeISO = json.daily.uv_index_max_time?.[0];
-  const peakHour = uvPeakTimeISO ? new Date(uvPeakTimeISO).getHours() : 13;
+
+  // Compute the hour with the highest UV today from the hourly array.
+  let peakHour = 13;
+  if (json.hourly?.uv_index?.length) {
+    let bestIdx = 0;
+    let best = -1;
+    for (let i = 0; i < json.hourly.uv_index.length; i++) {
+      const v = json.hourly.uv_index[i] ?? 0;
+      if (v > best) {
+        best = v;
+        bestIdx = i;
+      }
+    }
+    const peakISO = json.hourly.time[bestIdx];
+    if (peakISO) peakHour = new Date(peakISO).getHours();
+  }
 
   return {
     uv,
