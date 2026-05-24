@@ -189,6 +189,42 @@ function AirBody({
         </View>
       </View>
 
+      {data.category !== "good" ? (
+        <>
+          <SectionLabel text="WHAT YOU CAN DO" />
+          <View className="px-4" style={{ gap: 8 }}>
+            <AirTip
+              iconName="house"
+              iconColor="#64d2ff"
+              title="Run an air purifier indoors"
+              body="A purifier with a HEPA filter catches most pollution particles. Best fix for indoors — where you spend most of your time."
+              cost="£100-300"
+            />
+            <AirTip
+              iconName="user"
+              iconColor="#64d2ff"
+              title="Wear an N95 or KN95 mask outside"
+              body="On bad-air days these block 95% of pollution. Thin paper or cloth masks don't help — make sure it says N95 or KN95."
+              cost="£1-5"
+            />
+            <AirTip
+              iconName="map"
+              iconColor="#34c759"
+              title="Walk one street back from main roads"
+              body="Pollution drops by half just a block away from traffic. Side streets are your friend."
+              cost="Free"
+            />
+            <AirTip
+              iconName="bolt"
+              iconColor="#34c759"
+              title="Exercise early in the morning"
+              body="Air is cleanest from 5-9am, before rush hour and cooking peaks. Move outdoor workouts to the morning."
+              cost="Free"
+            />
+          </View>
+        </>
+      ) : null}
+
       <SectionLabel text="POLLUTANTS" />
       {data.pollutants.length > 0 ? (
         <GroupedList>
@@ -248,5 +284,39 @@ function SectionLabel({ text }: { text: string }) {
     >
       {text}
     </AppText>
+  );
+}
+
+interface AirTipProps {
+  iconName: "house" | "user" | "map" | "bolt";
+  iconColor: string;
+  title: string;
+  body: string;
+  cost: string;
+}
+
+function AirTip({ iconName, iconColor, title, body, cost }: AirTipProps) {
+  return (
+    <View className="bg-grey6 rounded-card px-4 py-3">
+      <View className="flex-row items-start" style={{ gap: 12 }}>
+        <View
+          className="bg-white rounded-full items-center justify-center"
+          style={{ width: 34, height: 34 }}
+        >
+          <Icon name={iconName} size={18} color={iconColor} strokeWidth={1.8} />
+        </View>
+        <View className="flex-1 min-w-0">
+          <View className="flex-row items-center justify-between" style={{ gap: 8 }}>
+            <AppText className="text-sub font-sans-semibold text-text-1 flex-1">
+              {title}
+            </AppText>
+            <Pill label={cost} />
+          </View>
+          <AppText className="text-caption text-text-2" style={{ marginTop: 4 }}>
+            {body}
+          </AppText>
+        </View>
+      </View>
+    </View>
   );
 }
