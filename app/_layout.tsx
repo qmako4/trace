@@ -63,6 +63,7 @@ export default function RootLayout() {
             <Stack.Screen name="air-quality" options={{ presentation: "modal" }} />
             <Stack.Screen name="water-quality" options={{ presentation: "modal" }} />
             <Stack.Screen name="uv-detail" options={{ presentation: "modal" }} />
+            <Stack.Screen name="location-picker" options={{ presentation: "modal" }} />
           </Stack>
         </QueryClientProvider>
       </SafeAreaProvider>

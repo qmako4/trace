@@ -41,7 +41,11 @@ export const useLocation = create<LocationState>((set) => ({
   region: null,
   country: null,
   isOverride: false,
-  setCurrent: (loc) => set({ ...loc, isOverride: false }),
+  // Device-location updates skip the write if the user has manually
+  // overridden their location — otherwise an override would get
+  // clobbered on next foreground.
+  setCurrent: (loc) =>
+    set((state) => (state.isOverride ? state : { ...loc, isOverride: false })),
   setOverride: (loc) => set({ ...loc, isOverride: true }),
   clearOverride: () => set({ isOverride: false }),
 }));

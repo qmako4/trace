@@ -54,7 +54,7 @@ export default function TraceHome() {
           <LocationPill
             city={city ?? "Set location"}
             postcode={pillRight}
-            onPress={() => router.push("/(tabs)/map")}
+            onPress={() => router.push("/location-picker")}
           />
           <Pressable
             onPress={() => router.push("/(tabs)/profile")}
@@ -78,7 +78,7 @@ export default function TraceHome() {
         <EnvGrid />
 
         <View style={{ height: 14 }} />
-        <CheckAnotherPlace onPress={() => router.push("/(tabs)/map")} />
+        <CheckAnotherPlace onPress={() => router.push("/location-picker")} />
 
         <SectionHeader title="Recently checked" actionLabel="See all" />
         <RecentlyChecked items={[]} />
