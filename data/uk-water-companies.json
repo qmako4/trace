@@ -26,6 +26,12 @@
         { "name": "Nitrate", "value": 28, "limit": 50, "unit": "mg/L" },
         { "name": "Trihalomethanes", "value": 42, "limit": 100, "unit": "μg/L" },
         { "name": "Pesticides", "value": 0.03, "limit": 0.1, "unit": "μg/L" }
+      ],
+      "issues": [
+        "Some Victorian-era pipes still in use across central London",
+        "Higher trihalomethanes — from chlorinating Thames river water",
+        "Lead-pipe concerns in pre-1970 buildings",
+        "Limescale / hard water (cosmetic, harmless to health)"
       ]
     },
     {
@@ -46,6 +52,10 @@
         { "name": "Nitrate", "value": 18, "limit": 50, "unit": "mg/L" },
         { "name": "Trihalomethanes", "value": 28, "limit": 100, "unit": "μg/L" },
         { "name": "Pesticides", "value": 0.01, "limit": 0.1, "unit": "μg/L" }
+      ],
+      "issues": [
+        "Hard water across much of the region — limescale build-up",
+        "Some nitrate from agricultural runoff"
       ]
     },
     {
@@ -67,6 +77,10 @@
         { "name": "Nitrate", "value": 8, "limit": 50, "unit": "mg/L" },
         { "name": "Trihalomethanes", "value": 22, "limit": 100, "unit": "μg/L" },
         { "name": "Pesticides", "value": 0.01, "limit": 0.1, "unit": "μg/L" }
+      ],
+      "issues": [
+        "Soft water — gentle on skin and hair",
+        "Sourced from upland reservoirs in the Lake District"
       ]
     },
     {
@@ -86,6 +100,10 @@
         { "name": "Nitrate", "value": 12, "limit": 50, "unit": "mg/L" },
         { "name": "Trihalomethanes", "value": 30, "limit": 100, "unit": "μg/L" },
         { "name": "Pesticides", "value": 0.02, "limit": 0.1, "unit": "μg/L" }
+      ],
+      "issues": [
+        "Mostly drawn from moorland reservoirs — naturally soft",
+        "Some older lead pipes in Leeds and Sheffield Victorian housing"
       ]
     },
     {
@@ -106,6 +124,11 @@
         { "name": "Nitrate", "value": 38, "limit": 50, "unit": "mg/L" },
         { "name": "Trihalomethanes", "value": 48, "limit": 100, "unit": "μg/L" },
         { "name": "Pesticides", "value": 0.04, "limit": 0.1, "unit": "μg/L" }
+      ],
+      "issues": [
+        "Hard, mineral-rich water (limescale common)",
+        "Higher nitrate from intensive agriculture in the region",
+        "Drawn partly from chalk aquifers"
       ]
     },
     {
@@ -124,6 +147,11 @@
         { "name": "Nitrate", "value": 32, "limit": 50, "unit": "mg/L" },
         { "name": "Trihalomethanes", "value": 55, "limit": 100, "unit": "μg/L" },
         { "name": "Pesticides", "value": 0.03, "limit": 0.1, "unit": "μg/L" }
+      ],
+      "issues": [
+        "Hard water from coastal chalk aquifers",
+        "Higher trihalomethanes than the UK average",
+        "Some sewage-spill concerns on the south coast (not in your tap water — but worth knowing for swimming)"
       ]
     },
     {

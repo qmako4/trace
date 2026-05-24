@@ -172,6 +172,24 @@ function WaterBody({ data, city }: { data: WaterQualityResult; city: string | nu
         </View>
       </View>
 
+      {data.issues.length > 0 ? (
+        <>
+          <SectionLabel text="WHY THIS SCORE" />
+          <View className="px-4" style={{ gap: 8 }}>
+            {data.issues.map((issue, i) => (
+              <View
+                key={i}
+                className="bg-grey6 rounded-card px-4 py-3 flex-row"
+                style={{ gap: 10 }}
+              >
+                <Icon name="info" size={16} color="#ff9500" strokeWidth={1.8} />
+                <AppText className="text-sub text-text-1 flex-1">{issue}</AppText>
+              </View>
+            ))}
+          </View>
+        </>
+      ) : null}
+
       {data.contaminants.length > 0 ? (
         <>
           <SectionLabel text="CONTAMINANTS TESTED" />

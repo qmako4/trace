@@ -96,6 +96,9 @@ export interface WaterQualityResult {
     unit: string;
     withinLimit: boolean;
   }>;
+  // Supplier-specific facts (UK detailed flow). Why the score is what
+  // it is. Empty for country-level results.
+  issues: string[];
   recommendations: WaterRecommendations | null;
   source: string;
   lastPublished: string;

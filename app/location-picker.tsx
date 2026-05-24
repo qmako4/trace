@@ -46,11 +46,30 @@ export default function LocationPicker() {
   }, [query]);
 
   const onSelect = useCallback(
-    (p: PlaceResult) => {
+    async (p: PlaceResult) => {
+      // For UK places, look up the nearest postcode via postcodes.io
+      // so the app routes through the detailed Thames/Severn-Trent/etc.
+      // supplier flow instead of the country average.
+      let postcode: string | null = null;
+      if (p.country_code === "GB") {
+        try {
+          const res = await fetch(
+            `https://api.postcodes.io/postcodes?lon=${p.lng}&lat=${p.lat}&limit=1&radius=10000`,
+          );
+          if (res.ok) {
+            const json = (await res.json()) as {
+              result: Array<{ postcode: string }> | null;
+            };
+            postcode = json.result?.[0]?.postcode ?? null;
+          }
+        } catch {
+          // ignore — fall back to country-level
+        }
+      }
       setOverride({
         lat: p.lat,
         lng: p.lng,
-        postcode: null,
+        postcode,
         city: p.name,
         region: p.admin1 ?? p.country,
         country: p.country_code,

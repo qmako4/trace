@@ -118,7 +118,16 @@ export function EnvGrid() {
 
       {weather.data ? (
         <UvEnvCard data={weather.data} onPress={() => router.push("/uv-detail")} />
-      ) : null}
+      ) : (
+        <EnvCard
+          icon="sun"
+          iconColor="#ff9500"
+          label="UV today"
+          value="—"
+          verdict={weather.isLoading ? "Loading" : "Unavailable"}
+          band="warn"
+        />
+      )}
 
       <FoodEnvCard
         count={producers.data?.length ?? 0}

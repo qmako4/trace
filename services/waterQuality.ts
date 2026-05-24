@@ -44,6 +44,7 @@ interface WaterCompany {
     limit: number;
     unit: string;
   }>;
+  issues?: string[];
 }
 
 export async function lookupPostcode(postcode: string): Promise<PostcodeLookup> {
@@ -98,6 +99,7 @@ export async function getWaterQualityByPostcode(postcode: string): Promise<Water
       ...c,
       withinLimit: c.value <= c.limit,
     })),
+    issues: company.issues ?? [],
     recommendations: null,
     source: `Drinking Water Inspectorate (dwi.gov.uk), published ${company.lastPublished}`,
     lastPublished: company.lastPublished,
@@ -134,6 +136,7 @@ export function getWaterQualityByCountry(countryCode: string): WaterQualityResul
       scoreOutOf100: 50,
       notes: "No water safety data for this country yet.",
       contaminants: [],
+      issues: [],
       recommendations: null,
       source: "Country-level lookup",
       lastPublished: worldWaterSafety._meta.snapshot_taken,
@@ -150,6 +153,7 @@ export function getWaterQualityByCountry(countryCode: string): WaterQualityResul
     scoreOutOf100: entry.score,
     notes: entry.notes,
     contaminants: [],
+    issues: [],
     recommendations: entry.recommendations ?? null,
     source: worldWaterSafety._meta.source,
     lastPublished: worldWaterSafety._meta.snapshot_taken,
