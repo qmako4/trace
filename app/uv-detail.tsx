@@ -224,8 +224,8 @@ function UvBody({
           iconName="info"
           iconColor="#34c759"
           title="Reapply sunscreen every 2 hours"
-          body="One morning application isn't enough — sunscreen rubs off, sweats off, and breaks down in the sun. Set a timer."
-          cost="Free"
+          body="One morning application isn't enough — sunscreen rubs off, sweats off, and breaks down in the sun. Set a phone timer."
+          cost="Free if you have it"
           impact={2}
         />
       </View>
