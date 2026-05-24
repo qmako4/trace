@@ -194,18 +194,18 @@ function AirBody({
           <SectionLabel text="WHAT YOU CAN DO" />
           <View className="px-4" style={{ gap: 8 }}>
             <AirTip
-              iconName="house"
-              iconColor="#64d2ff"
-              title="Run an air purifier indoors"
-              body="A purifier with a HEPA filter catches most pollution particles. Best fix for indoors — where you spend most of your time."
-              cost="£100-300"
-            />
-            <AirTip
               iconName="user"
               iconColor="#64d2ff"
               title="Wear an N95 or KN95 mask outside"
               body="On bad-air days these block 95% of pollution. Thin paper or cloth masks don't help — make sure it says N95 or KN95."
               cost="£1-5"
+            />
+            <AirTip
+              iconName="house"
+              iconColor="#64d2ff"
+              title="Keep windows closed in the late afternoon"
+              body="Pollution peaks 4-9pm from rush hour and cooking. Open them in the morning instead, then shut them as the day warms up."
+              cost="Free"
             />
             <AirTip
               iconName="map"
