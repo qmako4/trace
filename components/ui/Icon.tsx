@@ -31,7 +31,8 @@ export type IconName =
   | "plus"
   | "minus"
   | "locate"
-  | "bolt";
+  | "bolt"
+  | "sun";
 
 interface IconProps {
   name: IconName;
@@ -225,6 +226,20 @@ function render(name: IconName, p: CommonProps, color: string) {
       );
     case "bolt":
       return <Path d="M13 2 4 14h6l-1 8 9-12h-6z" {...p} fill={color} />;
+    case "sun":
+      return (
+        <>
+          <Circle cx="12" cy="12" r="4" {...p} />
+          <Line x1="12" y1="2" x2="12" y2="5" {...p} />
+          <Line x1="12" y1="19" x2="12" y2="22" {...p} />
+          <Line x1="2" y1="12" x2="5" y2="12" {...p} />
+          <Line x1="19" y1="12" x2="22" y2="12" {...p} />
+          <Line x1="4.5" y1="4.5" x2="6.5" y2="6.5" {...p} />
+          <Line x1="17.5" y1="4.5" x2="15.5" y2="6.5" {...p} />
+          <Line x1="4.5" y1="19.5" x2="6.5" y2="17.5" {...p} />
+          <Line x1="17.5" y1="19.5" x2="15.5" y2="17.5" {...p} />
+        </>
+      );
     default:
       return <Rect x="2" y="2" width="20" height="20" {...p} />;
   }

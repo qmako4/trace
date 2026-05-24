@@ -11,6 +11,7 @@ import type {
   ProducerRow,
   ScanHistoryRow,
   TraceScore,
+  WeatherResult,
 } from "@/types";
 import { SEED_PRODUCERS } from "@/data/seed-producers";
 
@@ -48,6 +49,21 @@ export const DEMO_AIR_QUALITY: AirQualityResult = {
     { code: "no2", name: "NO₂", value: 22, unit: "µg/m³" },
     { code: "o3", name: "O₃", value: 48, unit: "µg/m³" },
   ],
+  source: "Demo data",
+  timestamp: new Date().toISOString(),
+};
+
+export const DEMO_WEATHER: WeatherResult = {
+  uv: 7,
+  uvBand: "high",
+  tempC: 22,
+  feelsLikeC: 21,
+  humidity: 58,
+  windKph: 12,
+  conditionCode: 1,
+  conditionLabel: "Mainly clear",
+  uvMaxToday: 8,
+  uvPeakHour: 13,
   source: "Demo data",
   timestamp: new Date().toISOString(),
 };

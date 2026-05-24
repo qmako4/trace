@@ -110,6 +110,26 @@ export interface PostcodeLookup {
   adminDistrict: string;
 }
 
+// ─── Weather + UV ─────────────────────────────────────────────────────
+export type UVBand = "low" | "moderate" | "high" | "very_high" | "extreme";
+
+export interface WeatherResult {
+  // Current
+  uv: number;
+  uvBand: UVBand;
+  tempC: number;
+  feelsLikeC: number;
+  humidity: number; // %
+  windKph: number;
+  conditionCode: number; // WMO code
+  conditionLabel: string; // "Clear", "Cloudy", "Light rain", etc.
+  // Today
+  uvMaxToday: number;
+  uvPeakHour: number; // 0-23 local time
+  source: string;
+  timestamp: string;
+}
+
 // ─── Photo food analysis (Trace+) ────────────────────────────────────
 export interface PhotoFoodResult {
   items: string[];

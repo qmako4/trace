@@ -1,12 +1,14 @@
-// 2+1 environment grid — Air, Water, then Food full-width.
+// Environment grid — Air, Water (top), UV (mid), Food (bottom).
 
 import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { EnvCard } from "./EnvCard";
 import { FoodEnvCard } from "./FoodEnvCard";
+import { UvEnvCard } from "./UvEnvCard";
 import { useAirQuality } from "@/hooks/useAirQuality";
 import { useWaterQuality } from "@/hooks/useWaterQuality";
 import { useProducersNearby } from "@/hooks/useProducers";
+import { useWeather } from "@/hooks/useWeather";
 import type { WaterQualityResult } from "@/types";
 
 function waterVerdict(w: WaterQualityResult): { verdict: string; band: "good" | "warn" | "bad" } {
@@ -40,6 +42,7 @@ export function EnvGrid() {
   const router = useRouter();
   const air = useAirQuality();
   const water = useWaterQuality();
+  const weather = useWeather();
   const producers = useProducersNearby(48);
   const nearest = producers.data?.[0];
 
@@ -112,6 +115,10 @@ export function EnvGrid() {
           )}
         </View>
       </View>
+
+      {weather.data ? (
+        <UvEnvCard data={weather.data} onPress={() => router.push("/uv-detail")} />
+      ) : null}
 
       <FoodEnvCard
         count={producers.data?.length ?? 0}
