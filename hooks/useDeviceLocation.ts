@@ -1,41 +1,20 @@
+// Global location detection. Uses expo-location's built-in
+// reverseGeocodeAsync (Apple in iOS / Google in Android — no extra
+// API key needed). Falls back to UK postcodes.io for UK postcodes
+// only, because that's the input for the detailed water quality flow.
+
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { useLocation } from "@/store/location";
 import { lookupPostcode } from "@/services/waterQuality";
 import { DEMO_LOCATION, isDemoMode } from "@/services/demoMode";
 
-interface ReverseGeocode {
-  postcode: string;
-  city: string;
-  region: string;
-  adminDistrict: string;
-}
-
-async function reverseToPostcode(lat: number, lng: number): Promise<ReverseGeocode | null> {
-  const res = await fetch(
-    `https://api.postcodes.io/postcodes?lon=${lng}&lat=${lat}&limit=1&radius=2000`,
-  );
-  if (!res.ok) return null;
-  const json = (await res.json()) as {
-    status: number;
-    result: Array<{
-      postcode: string;
-      admin_district: string;
-      region: string;
-      parish: string | null;
-    }> | null;
-  };
-  const first = json.result?.[0];
-  if (!first) return null;
-  return {
-    postcode: first.postcode,
-    city: first.admin_district,
-    region: first.region,
-    adminDistrict: first.admin_district,
-  };
-}
-
 export type LocationStatus = "idle" | "requesting" | "denied" | "ready" | "error";
+
+async function reverseGeocode(lat: number, lng: number) {
+  const results = await Location.reverseGeocodeAsync({ latitude: lat, longitude: lng });
+  return results[0] ?? null;
+}
 
 export function useDeviceLocation(): { status: LocationStatus; error: string | null } {
   const [status, setStatus] = useState<LocationStatus>("idle");
@@ -58,25 +37,50 @@ export function useDeviceLocation(): { status: LocationStatus; error: string | n
           }
           return;
         }
+
         const pos = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
         });
-        const rev = await reverseToPostcode(pos.coords.latitude, pos.coords.longitude);
-        if (!rev) throw new Error("Couldn't resolve postcode from coordinates.");
-        const canonical = await lookupPostcode(rev.postcode);
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        const rev = await reverseGeocode(lat, lng);
+        if (!rev) throw new Error("Reverse geocoding returned no result.");
+
+        const country = rev.isoCountryCode ?? "??";
+        const city = rev.city ?? rev.subregion ?? rev.region ?? "Unknown";
+        const region = rev.region ?? rev.country ?? "Unknown";
+        // Postcode only used for UK detailed water flow. Outside UK we
+        // skip the postcode lookup and fall through to country-level.
+        let postcode: string | null = rev.postalCode ?? null;
+
+        if (country === "GB" && postcode) {
+          // Canonicalise via postcodes.io so the water company match
+          // sees the exact district string.
+          try {
+            const canonical = await lookupPostcode(postcode);
+            if (cancelled) return;
+            setCurrent({
+              lat: canonical.lat,
+              lng: canonical.lng,
+              postcode: canonical.postcode,
+              city: rev.city ?? canonical.adminDistrict,
+              region: canonical.region,
+              country: "GB",
+            });
+            setStatus("ready");
+            return;
+          } catch {
+            // Fall through to non-UK path if postcodes.io errors
+            postcode = null;
+          }
+        }
+
         if (cancelled) return;
-        setCurrent({
-          lat: canonical.lat,
-          lng: canonical.lng,
-          postcode: canonical.postcode,
-          city: rev.city,
-          region: canonical.region,
-        });
+        setCurrent({ lat, lng, postcode, city, region, country });
         setStatus("ready");
       } catch (e) {
         if (cancelled) return;
-        // In demo mode, fall back to Manchester so the home screen has
-        // something to render.
         if (isDemoMode) {
           setCurrent(DEMO_LOCATION);
           setStatus("ready");

@@ -8,8 +8,9 @@
 // v0.1 ships with a hardcoded snapshot. Future: automated DWI report
 // scraping when they publish their next annual compliance report.
 
-import type { PostcodeLookup, WaterQualityResult, WaterGrade } from "@/types";
+import type { PostcodeLookup, WaterQualityResult, WaterGrade, TapSafety } from "@/types";
 import waterCompanies from "@/data/uk-water-companies.json";
+import worldWaterSafety from "@/data/world-water-safety.json";
 
 interface PostcodesIoResponse {
   status: number;
@@ -79,16 +80,68 @@ export async function getWaterQualityByPostcode(postcode: string): Promise<Water
   }
 
   return {
+    scope: "uk_supplier",
     postcode: lookup.postcode,
     region: lookup.region,
     supplier: company.name,
     grade: company.grade,
+    tap_safety: "safe",
     scoreOutOf100: company.scoreOutOf100,
+    notes: "Regulated by DWI. Safe to drink across the supply area.",
     contaminants: company.contaminants.map((c) => ({
       ...c,
       withinLimit: c.value <= c.limit,
     })),
     source: `Drinking Water Inspectorate (dwi.gov.uk), published ${company.lastPublished}`,
     lastPublished: company.lastPublished,
+  };
+}
+
+// ─── Global (country-level) water safety ──────────────────────────────
+// For non-UK locations. Returns a coarser "country level" result based
+// on CDC + WHO guidance.
+
+interface CountryWaterEntry {
+  code: string;
+  name: string;
+  tap_safety: TapSafety;
+  score: number;
+  notes: string;
+}
+
+export function getWaterQualityByCountry(countryCode: string): WaterQualityResult {
+  const upper = countryCode.toUpperCase();
+  const entry = (worldWaterSafety.countries as CountryWaterEntry[]).find(
+    (c) => c.code === upper,
+  );
+
+  if (!entry) {
+    return {
+      scope: "country",
+      postcode: null,
+      region: upper,
+      supplier: upper,
+      grade: null,
+      tap_safety: "unknown",
+      scoreOutOf100: 50,
+      notes: "No water safety data for this country yet.",
+      contaminants: [],
+      source: "Country-level lookup",
+      lastPublished: worldWaterSafety._meta.snapshot_taken,
+    };
+  }
+
+  return {
+    scope: "country",
+    postcode: null,
+    region: entry.name,
+    supplier: entry.name,
+    grade: null,
+    tap_safety: entry.tap_safety,
+    scoreOutOf100: entry.score,
+    notes: entry.notes,
+    contaminants: [],
+    source: worldWaterSafety._meta.source,
+    lastPublished: worldWaterSafety._meta.snapshot_taken,
   };
 }

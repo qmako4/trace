@@ -29,8 +29,10 @@ export default function TraceHome() {
   useDeviceLocation();
   const city = useLocation((s) => s.city);
   const postcode = useLocation((s) => s.postcode);
+  const country = useLocation((s) => s.country);
   const user = useAuth((s) => s.user);
   const scans = useScanHistory(20);
+  const pillRight = postcode ?? country ?? "—";
 
   const now = new Date();
   const dateLabel = now.toLocaleDateString("en-GB", {
@@ -51,7 +53,7 @@ export default function TraceHome() {
         <View className="px-5 pt-3 flex-row items-center justify-between">
           <LocationPill
             city={city ?? "Set location"}
-            postcode={postcode ?? "—"}
+            postcode={pillRight}
             onPress={() => router.push("/(tabs)/map")}
           />
           <Pressable

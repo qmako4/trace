@@ -10,21 +10,25 @@ interface LocationState {
   postcode: string | null;
   city: string | null;
   region: string | null;
+  // ISO 3166-1 alpha-2 country code (e.g. "GB", "MX"). null when unknown.
+  country: string | null;
   // True when the user has overridden their device location.
   isOverride: boolean;
   setCurrent: (loc: {
     lat: number;
     lng: number;
-    postcode: string;
+    postcode: string | null;
     city: string;
     region: string;
+    country: string;
   }) => void;
   setOverride: (loc: {
     lat: number;
     lng: number;
-    postcode: string;
+    postcode: string | null;
     city: string;
     region: string;
+    country: string;
   }) => void;
   clearOverride: () => void;
 }
@@ -35,6 +39,7 @@ export const useLocation = create<LocationState>((set) => ({
   postcode: null,
   city: null,
   region: null,
+  country: null,
   isOverride: false,
   setCurrent: (loc) => set({ ...loc, isOverride: false }),
   setOverride: (loc) => set({ ...loc, isOverride: true }),

@@ -69,13 +69,18 @@ export interface AirQualityResult {
 
 // ─── Water quality ────────────────────────────────────────────────────
 export type WaterGrade = "A+" | "A" | "B+" | "B" | "C" | "D";
+export type TapSafety = "safe" | "filtered_ok" | "boil_or_bottled" | "bottled_only" | "unknown";
 
 export interface WaterQualityResult {
-  postcode: string;
+  // For UK: postcode-specific. For other countries: country-level.
+  scope: "uk_supplier" | "country";
+  postcode: string | null;
   region: string;
   supplier: string;
-  grade: WaterGrade;
+  grade: WaterGrade | null; // null for country-level results
+  tap_safety: TapSafety;
   scoreOutOf100: number;
+  notes: string;
   contaminants: Array<{
     name: string;
     value: number;

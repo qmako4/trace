@@ -6,11 +6,40 @@ import { FoodEnvCard } from "./FoodEnvCard";
 import { useAirQuality } from "@/hooks/useAirQuality";
 import { useWaterQuality } from "@/hooks/useWaterQuality";
 import { useProducersNearby } from "@/hooks/useProducers";
+import type { WaterQualityResult } from "@/types";
+
+function waterVerdict(w: WaterQualityResult): { verdict: string; band: "good" | "warn" | "bad" } {
+  // UK detailed result has a DWI grade. Outside UK we use tap_safety.
+  if (w.scope === "uk_supplier") {
+    if (w.scoreOutOf100 >= 90) return { verdict: "Excellent", band: "good" };
+    if (w.scoreOutOf100 >= 80) return { verdict: "Good", band: "good" };
+    return { verdict: "Moderate", band: "warn" };
+  }
+  switch (w.tap_safety) {
+    case "safe":
+      return { verdict: "Safe", band: "good" };
+    case "filtered_ok":
+      return { verdict: "Filter ok", band: "warn" };
+    case "boil_or_bottled":
+      return { verdict: "Bottled", band: "bad" };
+    case "bottled_only":
+      return { verdict: "Bottled only", band: "bad" };
+    default:
+      return { verdict: "Unknown", band: "warn" };
+  }
+}
+
+function waterMeta(w: WaterQualityResult): string {
+  if (w.scope === "uk_supplier" && w.grade) {
+    return `${w.supplier.toUpperCase()} · ${w.grade}`;
+  }
+  return `${w.region.toUpperCase()} · TAP`;
+}
 
 export function EnvGrid() {
   const air = useAirQuality();
   const water = useWaterQuality();
-  const producers = useProducersNearby(48); // ~30 mi
+  const producers = useProducersNearby(48);
   const nearest = producers.data?.[0];
 
   return (
@@ -23,8 +52,20 @@ export function EnvGrid() {
               iconColor="#64d2ff"
               label="Air"
               value={String(air.data.aqi)}
-              verdict={air.data.category === "good" ? "Good" : air.data.category === "moderate" ? "Moderate" : "Poor"}
-              band={air.data.category === "good" ? "good" : air.data.category === "moderate" ? "warn" : "bad"}
+              verdict={
+                air.data.category === "good"
+                  ? "Good"
+                  : air.data.category === "moderate"
+                    ? "Moderate"
+                    : "Poor"
+              }
+              band={
+                air.data.category === "good"
+                  ? "good"
+                  : air.data.category === "moderate"
+                    ? "warn"
+                    : "bad"
+              }
               meta={`AQI · ${air.data.dominantPollutant?.toUpperCase() ?? ""}`.trim()}
               ringValue={Math.max(0, Math.min(100, 100 - air.data.aqi))}
               ringColor="#64d2ff"
@@ -41,19 +82,22 @@ export function EnvGrid() {
           )}
         </View>
         <View className="flex-1">
-          {water.data ? (
-            <EnvCard
-              icon="drop"
-              iconColor="#007aff"
-              label="Water"
-              value={String(water.data.scoreOutOf100)}
-              verdict={water.data.scoreOutOf100 >= 90 ? "Excellent" : water.data.scoreOutOf100 >= 80 ? "Good" : "Moderate"}
-              band={water.data.scoreOutOf100 >= 80 ? "good" : "warn"}
-              meta={`${water.data.supplier.toUpperCase()} · ${water.data.grade}`}
-              ringValue={water.data.scoreOutOf100}
-              ringColor="#007aff"
-            />
-          ) : (
+          {water.data ? (() => {
+            const { verdict, band } = waterVerdict(water.data);
+            return (
+              <EnvCard
+                icon="drop"
+                iconColor="#007aff"
+                label="Water"
+                value={String(water.data.scoreOutOf100)}
+                verdict={verdict}
+                band={band}
+                meta={waterMeta(water.data)}
+                ringValue={water.data.scoreOutOf100}
+                ringColor="#007aff"
+              />
+            );
+          })() : (
             <EnvCard
               icon="drop"
               iconColor="#007aff"

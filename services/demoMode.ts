@@ -32,9 +32,10 @@ export const isDemoMode = !hasSupabase;
 export const DEMO_LOCATION = {
   lat: 53.4419,
   lng: -2.2401,
-  postcode: "M21 7BX",
+  postcode: "M21 7BX" as string | null,
   city: "Manchester",
   region: "North West",
+  country: "GB",
 };
 
 export const DEMO_AIR_QUALITY: AirQualityResult = {
