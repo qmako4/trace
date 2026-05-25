@@ -5,6 +5,7 @@ import {
   getSavedProducers,
   toggleSaveProducer,
 } from "@/services/producers";
+import { getOsmProducersNearby, mergeProducers } from "@/services/osmProducers";
 import { isDemoMode, demoNearbyProducers, demoProducer } from "@/services/demoMode";
 import { useLocation } from "@/store/location";
 import { useAuth } from "@/store/auth";
@@ -32,12 +33,19 @@ export function useProducersNearby(radiusKm = 50) {
 
   return useQuery({
     queryKey: ["producers", "nearby", lat, lng, radiusKm, isDemoMode],
-    queryFn: () => {
+    queryFn: async () => {
       if (lat === null || lng === null) throw new Error("No location set");
       if (isDemoMode) {
         return demoNearbyProducers(lat, lng).filter((p) => p.distance_km <= radiusKm);
       }
-      return getProducersNearby(lat, lng, radiusKm);
+      // Fetch verified producers from Supabase AND OSM-mapped ones in
+      // parallel. Supabase results are authoritative; OSM fills the gaps
+      // and is what makes the count > 0 outside the UK seed area.
+      const [verified, osm] = await Promise.all([
+        getProducersNearby(lat, lng, radiusKm),
+        getOsmProducersNearby(lat, lng, radiusKm),
+      ]);
+      return mergeProducers(verified, osm).filter((p) => p.distance_km <= radiusKm);
     },
     enabled: lat !== null && lng !== null,
     staleTime: 60 * 60 * 1000,
