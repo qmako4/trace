@@ -1,14 +1,14 @@
 // OpenStreetMap Overpass — free, global, no API key. Queries for
 // food-related amenities near a location: markets, farm shops,
 // greengrocers, dairies, bakeries, cheesemakers.
-//
-// Surfaced alongside Supabase verified producers in useProducersNearby.
-// OSM results are marked verified=false; Supabase rows take priority
-// when both sources have the same producer (matched by name + coords).
 
 import type { ProducerNearbyRow, ProducerType } from "@/types";
 
-const OVERPASS_ENDPOINT = "https://overpass-api.de/api/interpreter";
+const OVERPASS_ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+  "https://overpass.osm.ch/api/interpreter",
+];
 
 interface OverpassNode {
   type: "node" | "way";
@@ -73,45 +73,53 @@ export async function getOsmProducersNearby(
   ];
   const data = `[out:json][timeout:15];(${queries.join("")});out body center 60;`;
 
-  try {
-    const res = await fetch(OVERPASS_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `data=${encodeURIComponent(data)}`,
-    });
-    if (!res.ok) return [];
-    const json = (await res.json()) as OverpassResponse;
-
-    return json.elements
-      .map((el): ProducerNearbyRow | null => {
-        const tags = el.tags ?? {};
-        const type = typeFromTags(tags);
-        if (!type) return null;
-        const name = tags.name ?? tags["name:en"] ?? tags.brand ?? null;
-        if (!name) return null;
-        const elementLat = el.lat ?? el.center?.lat;
-        const elementLng = el.lon ?? el.center?.lon;
-        if (elementLat === undefined || elementLng === undefined) return null;
-        const distance_km = haversineKm(lat, lng, elementLat, elementLng);
-        return {
-          id: `osm-${el.type}-${el.id}`,
-          name,
-          producer_type: type,
-          lat: elementLat,
-          lng: elementLng,
-          postcode: tags["addr:postcode"] ?? null,
-          address: tags["addr:street"] ?? tags["addr:city"] ?? null,
-          photo_urls: null,
-          verified: false,
-          distance_km,
-        };
-      })
-      .filter((p): p is ProducerNearbyRow => p !== null)
-      .sort((a, b) => a.distance_km - b.distance_km);
-  } catch {
-    // Network or parse failure — return empty rather than crash the home screen.
-    return [];
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `data=${encodeURIComponent(data)}`,
+      });
+      if (!res.ok) {
+        console.warn(`[osm] ${endpoint} returned ${res.status}`);
+        continue;
+      }
+      const json = (await res.json()) as OverpassResponse;
+      const rows = json.elements
+        .map((el): ProducerNearbyRow | null => {
+          const tags = el.tags ?? {};
+          const type = typeFromTags(tags);
+          if (!type) return null;
+          const name = tags.name ?? tags["name:en"] ?? tags.brand ?? null;
+          if (!name) return null;
+          const elementLat = el.lat ?? el.center?.lat;
+          const elementLng = el.lon ?? el.center?.lon;
+          if (elementLat === undefined || elementLng === undefined) return null;
+          const distance_km = haversineKm(lat, lng, elementLat, elementLng);
+          return {
+            id: `osm-${el.type}-${el.id}`,
+            name,
+            producer_type: type,
+            lat: elementLat,
+            lng: elementLng,
+            postcode: tags["addr:postcode"] ?? null,
+            address: tags["addr:street"] ?? tags["addr:city"] ?? null,
+            photo_urls: null,
+            verified: false,
+            distance_km,
+          };
+        })
+        .filter((p): p is ProducerNearbyRow => p !== null)
+        .sort((a, b) => a.distance_km - b.distance_km);
+      console.log(`[osm] ${endpoint} returned ${rows.length} producers near ${lat},${lng}`);
+      return rows;
+    } catch (e) {
+      console.warn(`[osm] ${endpoint} threw:`, e instanceof Error ? e.message : String(e));
+      continue;
+    }
   }
+  console.warn("[osm] all Overpass endpoints failed");
+  return [];
 }
 
 // Merge two producer lists, de-duping by (name + coarse coords). Supabase
