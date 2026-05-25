@@ -23,6 +23,17 @@ export default function PhotoScan() {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const scan = usePhotoScan();
 
+  // Always-safe dismiss — pops the modal if there's history, otherwise
+  // hard-routes back to the home tab. Prevents 'nothing to go back to'
+  // errors when the screen was opened via replace().
+  const dismiss = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/(tabs)/trace");
+    }
+  }, [router]);
+
   const onCapture = useCallback(async () => {
     if (!cameraRef.current) return;
     const photo = await cameraRef.current.takePictureAsync({
@@ -58,7 +69,7 @@ export default function PhotoScan() {
       <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-white">
         <View className="flex-row justify-end px-5 pt-2">
           <Pressable
-            onPress={() => router.back()}
+            onPress={dismiss}
             className="bg-grey6 rounded-full items-center justify-center"
             style={{ width: 36, height: 36 }}
           >
@@ -93,7 +104,7 @@ export default function PhotoScan() {
     return (
       <View className="flex-1 bg-white">
         <Stack.Screen options={{ presentation: "modal", headerShown: false }} />
-        <ScanResultHeader barcode={undefined} onClose={() => router.back()} />
+        <ScanResultHeader barcode={undefined} onClose={dismiss} />
         {scan.isPending || !scan.data ? (
           <View className="flex-1 items-center justify-center px-7" style={{ gap: 10 }}>
             <AppText className="text-title-3 font-sans-semibold">
@@ -130,7 +141,7 @@ export default function PhotoScan() {
       >
         <View className="flex-row justify-between px-5 pt-3">
           <Pressable
-            onPress={() => router.back()}
+            onPress={dismiss}
             className="rounded-full items-center justify-center"
             style={{ width: 44, height: 44, backgroundColor: "rgba(0,0,0,0.5)" }}
           >

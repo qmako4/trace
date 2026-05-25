@@ -119,7 +119,7 @@ function ScanOverlay({ onClose }: { onClose: () => void }) {
               </AppText>
             </View>
             <Pressable
-              onPress={() => router.replace("/photo-scan")}
+              onPress={() => router.push("/photo-scan")}
               style={{ paddingVertical: 6, paddingHorizontal: 14 }}
             >
               <AppText className="text-white font-sans-semibold" style={{ fontSize: 12 }}>
