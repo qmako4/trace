@@ -1,11 +1,12 @@
-// Photo scan modal — full-screen camera, capture button, on-tap takes
-// a photo, sends to Claude via the analyze-food-photo Edge Function,
-// then renders the result inline (no second modal hop).
+// Photo scan modal — full-screen camera, capture button, OR upload
+// from photo library. On either path, sends the photo to Claude via
+// the analyze-food-photo Edge Function and renders the result inline.
 
 import { useCallback, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CameraView, useCameraPermissions } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
 import { useRouter, Stack } from "expo-router";
 import { usePhotoScan } from "@/hooks/usePhotoScan";
 import { Icon } from "@/components/ui/Icon";
@@ -34,11 +35,36 @@ export default function PhotoScan() {
     scan.mutate({ imageBase64: photo.base64, imageUri: photo.uri });
   }, [scan]);
 
+  const onUpload = useCallback(async () => {
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!perm.granted) return;
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: "images",
+      allowsEditing: false,
+      quality: 0.5,
+      base64: true,
+    });
+    if (result.canceled) return;
+    const asset = result.assets[0];
+    if (!asset?.base64) return;
+    setImageUri(asset.uri);
+    scan.mutate({ imageBase64: asset.base64, imageUri: asset.uri });
+  }, [scan]);
+
   if (!permission) return <View className="flex-1 bg-black" />;
 
   if (!permission.granted) {
     return (
       <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-white">
+        <View className="flex-row justify-end px-5 pt-2">
+          <Pressable
+            onPress={() => router.back()}
+            className="bg-grey6 rounded-full items-center justify-center"
+            style={{ width: 36, height: 36 }}
+          >
+            <Icon name="close" size={16} color="#000" strokeWidth={2.2} />
+          </Pressable>
+        </View>
         <View className="flex-1 items-center justify-center px-7" style={{ gap: 14 }}>
           <View
             className="rounded-full bg-grey6 items-center justify-center"
@@ -53,12 +79,16 @@ export default function PhotoScan() {
             Trace uses the camera to photograph food and analyze what's in it.
           </AppText>
           <Button label="Allow camera" onPress={() => requestPermission().catch(() => undefined)} />
+          <Pressable onPress={onUpload} hitSlop={8}>
+            <AppText className="text-action font-sans-semibold" style={{ fontSize: 15 }}>
+              Or upload from your library
+            </AppText>
+          </Pressable>
         </View>
       </SafeAreaView>
     );
   }
 
-  // After capture: show the result UI (loading or final).
   if (imageUri) {
     return (
       <View className="flex-1 bg-white">
@@ -90,7 +120,6 @@ export default function PhotoScan() {
     );
   }
 
-  // Camera mode: viewfinder + capture button.
   return (
     <View className="flex-1 bg-black">
       <Stack.Screen options={{ presentation: "modal", headerShown: false }} />
@@ -103,13 +132,13 @@ export default function PhotoScan() {
           <Pressable
             onPress={() => router.back()}
             className="rounded-full items-center justify-center"
-            style={{ width: 36, height: 36, backgroundColor: "rgba(0,0,0,0.4)" }}
+            style={{ width: 44, height: 44, backgroundColor: "rgba(0,0,0,0.5)" }}
           >
-            <Icon name="close" size={18} color="#fff" strokeWidth={2} />
+            <Icon name="close" size={20} color="#fff" strokeWidth={2} />
           </Pressable>
           <View
             className="rounded-pill px-3 py-1 flex-row items-center"
-            style={{ backgroundColor: "rgba(0,0,0,0.4)", gap: 6 }}
+            style={{ backgroundColor: "rgba(0,0,0,0.5)", gap: 6 }}
           >
             <AppText className="text-white font-sans-semibold" style={{ fontSize: 12 }}>
               PHOTO MODE
@@ -119,21 +148,34 @@ export default function PhotoScan() {
 
         <View className="flex-1" style={{ pointerEvents: "none" }} />
 
-        <View className="items-center pb-6" style={{ pointerEvents: "box-none" }}>
-          <AppText className="text-white text-center mb-3" style={{ fontSize: 14 }}>
+        <View className="items-center pb-6" style={{ pointerEvents: "box-none", gap: 14 }}>
+          <AppText className="text-white text-center" style={{ fontSize: 14 }}>
             Frame the whole dish
           </AppText>
-          <Pressable
-            onPress={onCapture}
-            className="rounded-full items-center justify-center"
-            style={{
-              width: 76,
-              height: 76,
-              backgroundColor: "#fff",
-              borderWidth: 4,
-              borderColor: "rgba(255,255,255,0.3)",
-            }}
-          />
+          <View className="flex-row items-center" style={{ gap: 28 }}>
+            <View style={{ width: 50, height: 50 }} />
+            <Pressable
+              onPress={onCapture}
+              className="rounded-full items-center justify-center"
+              style={{
+                width: 76,
+                height: 76,
+                backgroundColor: "#fff",
+                borderWidth: 4,
+                borderColor: "rgba(255,255,255,0.3)",
+              }}
+            />
+            <Pressable
+              onPress={onUpload}
+              className="rounded-full items-center justify-center"
+              style={{ width: 50, height: 50, backgroundColor: "rgba(255,255,255,0.18)" }}
+            >
+              <Icon name="bookmark" size={22} color="#fff" strokeWidth={1.8} />
+            </Pressable>
+          </View>
+          <AppText className="text-white/70 text-center" style={{ fontSize: 12 }}>
+            Tap circle to capture · folder icon to upload
+          </AppText>
         </View>
       </SafeAreaView>
     </View>

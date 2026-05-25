@@ -12,6 +12,7 @@
       "bundleIdentifier": "app.trace.client",
       "infoPlist": {
         "NSCameraUsageDescription": "Trace uses the camera to scan product barcodes so we can show you how processed it is and trace it back to source.",
+        "NSPhotoLibraryUsageDescription": "Trace lets you analyze food photos from your library.",
         "NSLocationWhenInUseUsageDescription": "Trace uses your location to show the air, water and food around you, and the producers within reach.",
         "ITSAppUsesNonExemptEncryption": false
       },
@@ -33,6 +34,12 @@
         "expo-camera",
         {
           "cameraPermission": "Trace uses the camera to scan product barcodes."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Trace needs access to your photos so you can analyze food pictures from your library."
         }
       ],
       [
