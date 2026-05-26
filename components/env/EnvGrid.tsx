@@ -142,6 +142,7 @@ export function EnvGrid() {
         count={producers.data?.length ?? 0}
         nearestMiles={nearest ? nearest.distance_km * 0.621371 : undefined}
         nearestName={nearest?.name}
+        onPress={() => router.push("/(tabs)/map")}
       />
     </View>
   );
