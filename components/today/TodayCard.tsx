@@ -52,6 +52,7 @@ export function TodayCard({ onPress }: TodayCardProps) {
           ringPct={kcalPct}
           ringColor="#007aff"
           label="CALORIES"
+          delayMs={0}
         />
         <RingStat
           value={wholePct}
@@ -60,6 +61,7 @@ export function TodayCard({ onPress }: TodayCardProps) {
           ringPct={wholePct}
           ringColor="#34c759"
           label="WHOLE"
+          delayMs={120}
         />
         <RingStat
           value={verifiedPct}
@@ -68,6 +70,7 @@ export function TodayCard({ onPress }: TodayCardProps) {
           ringPct={verifiedPct}
           ringColor="#ff9500"
           label="LOCAL"
+          delayMs={240}
         />
       </View>
 
@@ -101,12 +104,13 @@ interface RingStatProps {
   ringPct: number;
   ringColor: string;
   label: string;
+  delayMs?: number;
 }
 
-function RingStat({ value, suffix, subtitle, ringPct, ringColor, label }: RingStatProps) {
+function RingStat({ value, suffix, subtitle, ringPct, ringColor, label, delayMs }: RingStatProps) {
   return (
     <View className="items-center" style={{ gap: 6 }}>
-      <Ring size={64} stroke={6} value={ringPct} color={ringColor}>
+      <Ring size={64} stroke={6} value={ringPct} color={ringColor} delayMs={delayMs}>
         <View className="items-center">
           <AppText className="text-text-1 font-sans-bold" style={{ fontSize: 16, lineHeight: 16 }}>
             {Math.round(value)}
