@@ -65,6 +65,7 @@ export default function RootLayout() {
             <Stack.Screen name="uv-detail" options={{ presentation: "modal" }} />
             <Stack.Screen name="location-picker" options={{ presentation: "modal" }} />
             <Stack.Screen name="targets" options={{ presentation: "modal" }} />
+            <Stack.Screen name="photo-result" options={{ presentation: "modal" }} />
           </Stack>
         </QueryClientProvider>
       </SafeAreaProvider>

@@ -17,6 +17,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { EnvGrid } from "@/components/env/EnvGrid";
 import { CheckAnotherPlace } from "@/components/history/CheckAnotherPlace";
 import { TodayCard } from "@/components/today/TodayCard";
+import { PendingScansBanner } from "@/components/today/PendingScansBanner";
 import { RecentlyChecked } from "@/components/history/RecentlyChecked";
 import { TracedToSource } from "@/components/history/TracedToSource";
 import { RecentScans } from "@/components/history/RecentScans";
@@ -50,6 +51,8 @@ export default function TraceHome() {
         contentContainerStyle={{ paddingBottom: 110 }}
       >
         <DemoBanner />
+
+        <PendingScansBanner />
 
         <View className="px-5 pt-3 flex-row items-center justify-between">
           <LocationPill
