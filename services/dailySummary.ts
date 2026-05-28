@@ -23,6 +23,10 @@ export async function getTodaySummary(userId: string): Promise<TodaySummary> {
 }
 
 export function aggregate(rows: ScanHistoryRow[]): TodaySummary {
+  // Only count rows the user explicitly logged. Scans without logged=true
+  // are 'analysed but not eaten' — they don't roll into today's totals.
+  const counted = rows.filter((r) => r.logged);
+
   let kcal = 0;
   let protein_g = 0;
   let carbs_g = 0;
@@ -31,7 +35,7 @@ export function aggregate(rows: ScanHistoryRow[]): TodaySummary {
   let whole_count = 0;
   let verified_count = 0;
 
-  for (const r of rows) {
+  for (const r of counted) {
     const portions = r.portions ?? 1;
     kcal += (r.kcal ?? 0) * portions;
     protein_g += (r.protein_g ?? 0) * portions;
@@ -39,12 +43,10 @@ export function aggregate(rows: ScanHistoryRow[]): TodaySummary {
     fat_g += (r.fat_g ?? 0) * portions;
     if (r.nova_classification === 4) upf_count++;
     if (r.nova_classification === 1 || r.nova_classification === 2) whole_count++;
-    // verified = scan resolved to a producer (heuristic: bought_from set
-    // AND we have a positive score, future-proofed for explicit linkage).
     if (r.bought_from && (r.score ?? 0) >= 70) verified_count++;
   }
 
-  const scan_count = rows.length;
+  const scan_count = counted.length;
   const upf_percent = scan_count > 0 ? Math.round((upf_count / scan_count) * 100) : 0;
   const whole_percent = scan_count > 0 ? Math.round((whole_count / scan_count) * 100) : 0;
   const verified_percent =

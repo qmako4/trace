@@ -78,6 +78,7 @@ export interface ScanHistoryRow {
   fat_g: number | null;
   portions: number | null;
   meal: Meal | null;
+  logged: boolean;
 }
 
 export interface DailyTargetsRow {

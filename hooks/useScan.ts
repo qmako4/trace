@@ -10,6 +10,7 @@ import type { OFFProduct, ScanHistoryRow, TraceScore } from "@/types";
 export interface ScanResult {
   product: OFFProduct;
   score: TraceScore;
+  scanId: string | null;
 }
 
 // In-memory scan history for demo mode. Real mode goes to Supabase.
@@ -75,9 +76,13 @@ export function useScan() {
       const carbs_g = null; // OFF doesn't have a single carbs field
       const fat_g = product.nutriments["saturated-fat_100g"] ?? null;
 
+      let scanId: string | null = null;
+
       if (isDemoMode) {
+        const id = `scan-${Date.now()}`;
+        scanId = id;
         pushDemo({
-          id: `scan-${Date.now()}`,
+          id,
           user_id: "demo-user",
           barcode,
           product_name: product.product_name,
@@ -93,29 +98,38 @@ export function useScan() {
           fat_g,
           portions: 1,
           meal: null,
+          logged: false,
         });
       } else if (userId) {
-        await supabase.from("scan_history").insert({
-          user_id: userId,
-          barcode,
-          product_name: product.product_name,
-          brand: product.brands,
-          score: score.score,
-          nova_classification: product.nova_group,
-          product_image_url: product.image_front_url ?? product.image_url,
-          bought_from: boughtFrom ?? null,
-          kcal,
-          protein_g,
-          carbs_g,
-          fat_g,
-          portions: 1,
-        });
+        const { data, error } = await supabase
+          .from("scan_history")
+          .insert({
+            user_id: userId,
+            barcode,
+            product_name: product.product_name,
+            brand: product.brands,
+            score: score.score,
+            nova_classification: product.nova_group,
+            product_image_url: product.image_front_url ?? product.image_url,
+            bought_from: boughtFrom ?? null,
+            kcal,
+            protein_g,
+            carbs_g,
+            fat_g,
+            portions: 1,
+            logged: false,
+          })
+          .select("id")
+          .single();
+        if (error) throw error;
+        scanId = (data as { id: string } | null)?.id ?? null;
       }
 
-      return { product, score };
+      return { product, score, scanId };
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["scan-history"] });
+      qc.invalidateQueries({ queryKey: ["today-summary"] });
     },
   });
 }

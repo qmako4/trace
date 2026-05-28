@@ -1,11 +1,12 @@
 // Scan result modal — looks up product in OFF, scores it, persists to
-// scan_history, then renders the verdict. Header, body and bottom bar
-// live in components/scan/.
+// scan_history (unlogged), then renders the verdict. The user explicitly
+// taps 'Log to today' to count it toward daily totals.
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { useScan } from "@/hooks/useScan";
+import { useLogScan } from "@/hooks/useLogScan";
 import { AppText } from "@/components/ui/Text";
 import { ScanResultHeader } from "@/components/scan/ScanResultHeader";
 import { ScanResultBody } from "@/components/scan/ScanResultBody";
@@ -15,6 +16,8 @@ export default function ScanResult() {
   const router = useRouter();
   const { barcode } = useLocalSearchParams<{ barcode: string }>();
   const scan = useScan();
+  const log = useLogScan();
+  const [logged, setLogged] = useState(false);
   const fired = useRef(false);
   const { mutate } = scan;
 
@@ -23,6 +26,12 @@ export default function ScanResult() {
     fired.current = true;
     mutate({ barcode });
   }, [barcode, mutate]);
+
+  async function onLog() {
+    if (!scan.data?.scanId || logged) return;
+    await log.mutateAsync(scan.data.scanId);
+    setLogged(true);
+  }
 
   return (
     <View className="flex-1 bg-white">
@@ -53,8 +62,10 @@ export default function ScanResult() {
 
       <ScanResultBottomBar
         onSave={() => undefined}
-        onShare={() => undefined}
+        onLog={onLog}
         disabled={!scan.data}
+        logged={logged}
+        loggingNow={log.isPending}
       />
     </View>
   );

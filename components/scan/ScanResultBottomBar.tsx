@@ -5,11 +5,19 @@ import { AppText } from "@/components/ui/Text";
 
 interface ScanResultBottomBarProps {
   onSave: () => void;
-  onShare: () => void;
+  onLog: () => void;
   disabled?: boolean;
+  logged?: boolean;
+  loggingNow?: boolean;
 }
 
-export function ScanResultBottomBar({ onSave, onShare, disabled }: ScanResultBottomBarProps) {
+export function ScanResultBottomBar({
+  onSave,
+  onLog,
+  disabled,
+  logged,
+  loggingNow,
+}: ScanResultBottomBarProps) {
   return (
     <SafeAreaView
       edges={["bottom"]}
@@ -29,20 +37,29 @@ export function ScanResultBottomBar({ onSave, onShare, disabled }: ScanResultBot
         <Pressable
           onPress={onSave}
           disabled={disabled}
-          className="flex-1 bg-grey6 rounded-button items-center justify-center flex-row active:opacity-80"
-          style={{ height: 50, gap: 6, opacity: disabled ? 0.5 : 1 }}
+          className="bg-grey6 rounded-button items-center justify-center flex-row active:opacity-80"
+          style={{ height: 50, gap: 6, opacity: disabled ? 0.5 : 1, width: 90 }}
         >
           <Icon name="bookmark" size={18} color="#000" strokeWidth={1.8} />
           <AppText className="text-headline font-sans-semibold">Save</AppText>
         </Pressable>
         <Pressable
-          onPress={onShare}
-          disabled={disabled}
-          className="flex-1 bg-action rounded-button items-center justify-center flex-row active:opacity-80"
-          style={{ height: 50, gap: 6, opacity: disabled ? 0.5 : 1 }}
+          onPress={onLog}
+          disabled={disabled || loggingNow || logged}
+          className={`flex-1 rounded-button items-center justify-center flex-row active:opacity-80 ${
+            logged ? "bg-food" : "bg-action"
+          }`}
+          style={{ height: 50, gap: 8, opacity: disabled ? 0.5 : 1 }}
         >
-          <Icon name="share" size={18} color="#fff" strokeWidth={1.8} />
-          <AppText className="text-headline font-sans-semibold text-white">Share</AppText>
+          <Icon
+            name={logged ? "check" : "plus"}
+            size={18}
+            color="#fff"
+            strokeWidth={logged ? 2.6 : 2.2}
+          />
+          <AppText className="text-headline font-sans-semibold text-white">
+            {logged ? "Logged today" : loggingNow ? "Logging…" : "Log to today"}
+          </AppText>
         </Pressable>
       </View>
     </SafeAreaView>

@@ -9,6 +9,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter, Stack } from "expo-router";
 import { usePhotoScan } from "@/hooks/usePhotoScan";
+import { useLogScan } from "@/hooks/useLogScan";
 import { Icon } from "@/components/ui/Icon";
 import { AppText } from "@/components/ui/Text";
 import { Button } from "@/components/ui/Button";
@@ -21,7 +22,15 @@ export default function PhotoScan() {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [logged, setLogged] = useState(false);
   const scan = usePhotoScan();
+  const log = useLogScan();
+
+  async function onLog() {
+    if (!scan.data?.scanId || logged) return;
+    await log.mutateAsync(scan.data.scanId);
+    setLogged(true);
+  }
 
   // Always-safe dismiss — pops the modal if there's history, otherwise
   // hard-routes back to the home tab. Prevents 'nothing to go back to'
@@ -120,12 +129,14 @@ export default function PhotoScan() {
             ) : null}
           </View>
         ) : (
-          <PhotoResultBody imageUri={imageUri} result={scan.data} />
+          <PhotoResultBody imageUri={imageUri} result={scan.data.result} />
         )}
         <ScanResultBottomBar
           onSave={() => undefined}
-          onShare={() => undefined}
+          onLog={onLog}
           disabled={!scan.data}
+          logged={logged}
+          loggingNow={log.isPending}
         />
       </View>
     );
