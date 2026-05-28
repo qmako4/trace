@@ -180,11 +180,13 @@ export interface TodaySummary {
   carbs_g: number;
   fat_g: number;
   scan_count: number;
-  upf_count: number; // NOVA 4 scans
-  whole_count: number; // NOVA 1-2 scans
+  upf_count: number; // NOVA 4 scans (ultra-processed)
+  processed_count: number; // NOVA 3 + NOVA 4 combined (any processing)
+  whole_count: number; // NOVA 1-2 scans (real food)
   verified_count: number; // scans from verified Supabase producers
-  upf_percent: number; // 0-100
-  whole_percent: number; // 0-100
+  upf_percent: number; // 0-100, NOVA 4 only
+  processed_percent: number; // 0-100, NOVA 3 + NOVA 4 combined
+  whole_percent: number; // 0-100, NOVA 1-2
   verified_percent: number; // 0-100 of all scans
 }
 

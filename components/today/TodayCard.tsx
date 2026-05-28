@@ -21,7 +21,7 @@ export function TodayCard({ onPress }: TodayCardProps) {
   const targetKcal = targets.data?.kcal ?? 2000;
   const kcalPct = Math.min(100, Math.round((kcal / targetKcal) * 100));
   const wholePct = summary.data?.whole_percent ?? 0;
-  const verifiedPct = summary.data?.verified_percent ?? 0;
+  const processedPct = summary.data?.processed_percent ?? 0;
   const upfPct = summary.data?.upf_percent ?? 0;
   const maxUpfPct = targets.data?.max_upf_pct ?? 30;
   const overUpf = upfPct > maxUpfPct;
@@ -64,12 +64,12 @@ export function TodayCard({ onPress }: TodayCardProps) {
           delayMs={120}
         />
         <RingStat
-          value={verifiedPct}
+          value={processedPct}
           suffix="%"
-          subtitle="Traced source"
-          ringPct={verifiedPct}
-          ringColor="#ff9500"
-          label="LOCAL"
+          subtitle="Processed"
+          ringPct={processedPct}
+          ringColor="#ff3b30"
+          label="PROCESSED"
           delayMs={240}
         />
       </View>

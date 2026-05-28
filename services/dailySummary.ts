@@ -32,6 +32,7 @@ export function aggregate(rows: ScanHistoryRow[]): TodaySummary {
   let carbs_g = 0;
   let fat_g = 0;
   let upf_count = 0;
+  let processed_count = 0;
   let whole_count = 0;
   let verified_count = 0;
 
@@ -41,13 +42,21 @@ export function aggregate(rows: ScanHistoryRow[]): TodaySummary {
     protein_g += (r.protein_g ?? 0) * portions;
     carbs_g += (r.carbs_g ?? 0) * portions;
     fat_g += (r.fat_g ?? 0) * portions;
-    if (r.nova_classification === 4) upf_count++;
-    if (r.nova_classification === 1 || r.nova_classification === 2) whole_count++;
+    if (r.nova_classification === 4) {
+      upf_count++;
+      processed_count++;
+    } else if (r.nova_classification === 3) {
+      processed_count++;
+    } else if (r.nova_classification === 1 || r.nova_classification === 2) {
+      whole_count++;
+    }
     if (r.bought_from && (r.score ?? 0) >= 70) verified_count++;
   }
 
   const scan_count = counted.length;
   const upf_percent = scan_count > 0 ? Math.round((upf_count / scan_count) * 100) : 0;
+  const processed_percent =
+    scan_count > 0 ? Math.round((processed_count / scan_count) * 100) : 0;
   const whole_percent = scan_count > 0 ? Math.round((whole_count / scan_count) * 100) : 0;
   const verified_percent =
     scan_count > 0 ? Math.round((verified_count / scan_count) * 100) : 0;
@@ -59,9 +68,11 @@ export function aggregate(rows: ScanHistoryRow[]): TodaySummary {
     fat_g: Math.round(fat_g),
     scan_count,
     upf_count,
+    processed_count,
     whole_count,
     verified_count,
     upf_percent,
+    processed_percent,
     whole_percent,
     verified_percent,
   };
