@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { EnvCard } from "./EnvCard";
 import { FoodEnvCard } from "./FoodEnvCard";
 import { UvEnvCard } from "./UvEnvCard";
+import { BeachCard } from "./BeachCard";
 import { useAirQuality } from "@/hooks/useAirQuality";
 import { useWaterQuality } from "@/hooks/useWaterQuality";
 import { useProducersNearby } from "@/hooks/useProducers";
@@ -144,6 +145,8 @@ export function EnvGrid() {
         nearestName={nearest?.name}
         onPress={() => router.push("/(tabs)/map")}
       />
+
+      <BeachCard onPress={() => router.push("/beach-quality")} />
     </View>
   );
 }

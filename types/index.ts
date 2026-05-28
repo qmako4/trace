@@ -156,6 +156,23 @@ export interface PhotoFoodResult {
   confidence: "low" | "medium" | "high";
 }
 
+// ─── Beach / bathing water ────────────────────────────────────────────
+export type BathingWaterClassification = "excellent" | "good" | "sufficient" | "poor" | "unknown";
+
+export interface BathingWater {
+  id: string;
+  name: string;
+  region: string; // e.g. "South West", "Wales"
+  countryCode: string; // "GB" only for v1
+  lat: number;
+  lng: number;
+  classification: BathingWaterClassification;
+  classificationYear: number | null;
+  distance_km: number;
+  // Recent sewage / pollution-incident flag if available. Null = unknown.
+  recentIncident: boolean | null;
+}
+
 // ─── Daily tracking ────────────────────────────────────────────────────
 export interface TodaySummary {
   kcal: number;
