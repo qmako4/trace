@@ -1,7 +1,7 @@
 // Full-bleed map with custom category pins, search pill, filter chips,
 // zoom controls and a Gorhom bottom sheet listing nearby producers.
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MapView, { Marker, type Region } from "react-native-maps";
@@ -57,6 +57,17 @@ export default function MapTab() {
       );
     }
   };
+
+  // Re-centre the map whenever the user changes location (picker or GPS).
+  // initialRegion only applies once on mount, so without this the map
+  // stays stuck on the first location it saw.
+  useEffect(() => {
+    if (lat === null || lng === null) return;
+    mapRef.current?.animateToRegion(
+      { latitude: lat, longitude: lng, latitudeDelta: 0.18, longitudeDelta: 0.18 },
+      500,
+    );
+  }, [lat, lng]);
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-white">
