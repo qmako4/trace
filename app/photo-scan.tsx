@@ -1,46 +1,30 @@
-// Photo scan modal — full-screen camera, capture button, OR upload
-// from photo library. On either path, sends the photo to Claude via
-// the analyze-food-photo Edge Function and renders the result inline.
+// Photo scan modal — capture or upload, then dismiss IMMEDIATELY.
+// Analysis runs in the background via usePendingScans. The user sees
+// a banner on the home screen showing progress and can take more
+// photos in the meantime.
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter, Stack } from "expo-router";
-import { usePhotoScan } from "@/hooks/usePhotoScan";
-import { useLogScan } from "@/hooks/useLogScan";
+import { usePendingScans } from "@/store/pendingScans";
+import { useAuth } from "@/store/auth";
 import { Icon } from "@/components/ui/Icon";
 import { AppText } from "@/components/ui/Text";
 import { Button } from "@/components/ui/Button";
-import { ScanResultHeader } from "@/components/scan/ScanResultHeader";
-import { PhotoResultBody } from "@/components/scan/PhotoResultBody";
-import { ScanResultBottomBar } from "@/components/scan/ScanResultBottomBar";
 
 export default function PhotoScan() {
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
-  const [imageUri, setImageUri] = useState<string | null>(null);
-  const [logged, setLogged] = useState(false);
-  const scan = usePhotoScan();
-  const log = useLogScan();
+  const userId = useAuth((s) => s.user?.id ?? null);
+  const startScan = usePendingScans((s) => s.startScan);
 
-  async function onLog() {
-    if (!scan.data?.scanId || logged) return;
-    await log.mutateAsync(scan.data.scanId);
-    setLogged(true);
-  }
-
-  // Always-safe dismiss — pops the modal if there's history, otherwise
-  // hard-routes back to the home tab. Prevents 'nothing to go back to'
-  // errors when the screen was opened via replace().
   const dismiss = useCallback(() => {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace("/(tabs)/trace");
-    }
+    if (router.canGoBack()) router.back();
+    else router.replace("/(tabs)/trace");
   }, [router]);
 
   const onCapture = useCallback(async () => {
@@ -50,10 +34,10 @@ export default function PhotoScan() {
       base64: true,
       skipProcessing: false,
     });
-    if (!photo?.base64) return;
-    setImageUri(photo.uri);
-    scan.mutate({ imageBase64: photo.base64, imageUri: photo.uri });
-  }, [scan]);
+    if (!photo?.base64 || !photo.uri) return;
+    startScan(photo.uri, photo.base64, userId);
+    dismiss();
+  }, [startScan, userId, dismiss]);
 
   const onUpload = useCallback(async () => {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -67,9 +51,9 @@ export default function PhotoScan() {
     if (result.canceled) return;
     const asset = result.assets[0];
     if (!asset?.base64) return;
-    setImageUri(asset.uri);
-    scan.mutate({ imageBase64: asset.base64, imageUri: asset.uri });
-  }, [scan]);
+    startScan(asset.uri, asset.base64, userId);
+    dismiss();
+  }, [startScan, userId, dismiss]);
 
   if (!permission) return <View className="flex-1 bg-black" />;
 
@@ -109,39 +93,6 @@ export default function PhotoScan() {
     );
   }
 
-  if (imageUri) {
-    return (
-      <View className="flex-1 bg-white">
-        <Stack.Screen options={{ presentation: "modal", headerShown: false }} />
-        <ScanResultHeader barcode={undefined} onClose={dismiss} />
-        {scan.isPending || !scan.data ? (
-          <View className="flex-1 items-center justify-center px-7" style={{ gap: 10 }}>
-            <AppText className="text-title-3 font-sans-semibold">
-              {scan.isError ? "Couldn't analyze that photo" : "Tracing…"}
-            </AppText>
-            <AppText className="text-sub text-text-2 text-center">
-              {scan.isError
-                ? (scan.error?.message ?? "Try again with a clearer shot.")
-                : "Looking at what's in the dish, where it likely came from, and better options."}
-            </AppText>
-            {scan.isError ? (
-              <Button label="Try again" onPress={() => setImageUri(null)} />
-            ) : null}
-          </View>
-        ) : (
-          <PhotoResultBody imageUri={imageUri} result={scan.data.result} />
-        )}
-        <ScanResultBottomBar
-          onSave={() => undefined}
-          onLog={onLog}
-          disabled={!scan.data}
-          logged={logged}
-          loggingNow={log.isPending}
-        />
-      </View>
-    );
-  }
-
   return (
     <View className="flex-1 bg-black">
       <Stack.Screen options={{ presentation: "modal", headerShown: false }} />
@@ -172,7 +123,7 @@ export default function PhotoScan() {
 
         <View className="items-center pb-6" style={{ pointerEvents: "box-none", gap: 14 }}>
           <AppText className="text-white text-center" style={{ fontSize: 14 }}>
-            Frame the whole dish
+            Capture, keep going — we'll analyze in the background
           </AppText>
           <View className="flex-row items-center" style={{ gap: 28 }}>
             <View style={{ width: 50, height: 50 }} />
