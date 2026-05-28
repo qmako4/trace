@@ -150,6 +150,12 @@ export const DEMO_SCAN_HISTORY: ScanHistoryRow[] = [
     product_image_url: null,
     scored_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
     bought_from: "Tesco",
+    kcal: 416,
+    protein_g: 25.4,
+    carbs_g: 0.1,
+    fat_g: 21.7,
+    portions: 1,
+    meal: null,
   },
   {
     id: "scan-demo-2",
@@ -162,6 +168,12 @@ export const DEMO_SCAN_HISTORY: ScanHistoryRow[] = [
     product_image_url: null,
     scored_at: new Date(Date.now() - 1000 * 60 * 60 * 22).toISOString(),
     bought_from: "Tesco",
+    kcal: 235,
+    protein_g: 8.5,
+    carbs_g: 45.0,
+    fat_g: 0.9,
+    portions: 1,
+    meal: null,
   },
   {
     id: "scan-demo-3",
@@ -174,6 +186,12 @@ export const DEMO_SCAN_HISTORY: ScanHistoryRow[] = [
     product_image_url: null,
     scored_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
     bought_from: "Waitrose",
+    kcal: 155,
+    protein_g: 12.6,
+    carbs_g: 1.1,
+    fat_g: 4.3,
+    portions: 1,
+    meal: null,
   },
 ];
 

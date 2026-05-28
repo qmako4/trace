@@ -51,6 +51,17 @@ export default function Profile() {
         </View>
 
         <View className="pt-2" style={{ gap: 16 }}>
+          <SectionLabel text="TRACKING" />
+          <GroupedList>
+            <Pressable onPress={() => router.push("/targets")} className="active:bg-grey5">
+              <Row
+                title="Daily targets"
+                subtitle="Calories, macros, max UPF %"
+                showChevron
+              />
+            </Pressable>
+          </GroupedList>
+
           <SectionLabel text="PREFERENCES" />
           <GroupedList>
             <Pressable

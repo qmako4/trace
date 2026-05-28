@@ -156,6 +156,21 @@ export interface PhotoFoodResult {
   confidence: "low" | "medium" | "high";
 }
 
+// ─── Daily tracking ────────────────────────────────────────────────────
+export interface TodaySummary {
+  kcal: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+  scan_count: number;
+  upf_count: number; // NOVA 4 scans
+  whole_count: number; // NOVA 1-2 scans
+  verified_count: number; // scans from verified Supabase producers
+  upf_percent: number; // 0-100
+  whole_percent: number; // 0-100
+  verified_percent: number; // 0-100 of all scans
+}
+
 // ─── Category helpers ─────────────────────────────────────────────────
 export const PRODUCER_CATEGORY_COLOUR: Record<ProducerType, string> = {
   raw_milk: "#ffcc00", // dairy/honey

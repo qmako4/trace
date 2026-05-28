@@ -19,7 +19,8 @@ export function usePhotoScan() {
     mutationFn: async ({ imageBase64, mediaType = "image/jpeg" }) => {
       const result = await analyzeFoodPhoto(imageBase64, mediaType);
 
-      // Persist as a scan-history row so it shows up in the home feed.
+      // Persist as a scan-history row so it shows up in the home feed
+      // AND contributes to today's calorie/macro/UPF totals.
       if (!isDemoMode && userId) {
         await supabase.from("scan_history").insert({
           user_id: userId,
@@ -30,6 +31,11 @@ export function usePhotoScan() {
           nova_classification: result.nova_estimate,
           product_image_url: null,
           bought_from: null,
+          kcal: Math.round(result.calories_estimate),
+          protein_g: result.macros.protein_g,
+          carbs_g: result.macros.carbs_g,
+          fat_g: result.macros.fat_g,
+          portions: 1,
         });
       }
 

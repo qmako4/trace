@@ -69,6 +69,12 @@ export function useScan() {
         }
       }
 
+      // Pull nutrition from the OFF product nutriments (per 100g).
+      const kcal = product.nutriments["energy-kcal_100g"] ?? null;
+      const protein_g = product.nutriments.proteins_100g ?? null;
+      const carbs_g = null; // OFF doesn't have a single carbs field
+      const fat_g = product.nutriments["saturated-fat_100g"] ?? null;
+
       if (isDemoMode) {
         pushDemo({
           id: `scan-${Date.now()}`,
@@ -81,6 +87,12 @@ export function useScan() {
           product_image_url: product.image_front_url ?? product.image_url,
           scored_at: new Date().toISOString(),
           bought_from: boughtFrom ?? null,
+          kcal,
+          protein_g,
+          carbs_g,
+          fat_g,
+          portions: 1,
+          meal: null,
         });
       } else if (userId) {
         await supabase.from("scan_history").insert({
@@ -92,6 +104,11 @@ export function useScan() {
           nova_classification: product.nova_group,
           product_image_url: product.image_front_url ?? product.image_url,
           bought_from: boughtFrom ?? null,
+          kcal,
+          protein_g,
+          carbs_g,
+          fat_g,
+          portions: 1,
         });
       }
 

@@ -16,6 +16,7 @@ import { DemoBanner } from "@/components/ui/DemoBanner";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { EnvGrid } from "@/components/env/EnvGrid";
 import { CheckAnotherPlace } from "@/components/history/CheckAnotherPlace";
+import { TodayCard } from "@/components/today/TodayCard";
 import { RecentlyChecked } from "@/components/history/RecentlyChecked";
 import { TracedToSource } from "@/components/history/TracedToSource";
 import { RecentScans } from "@/components/history/RecentScans";
@@ -73,6 +74,9 @@ export default function TraceHome() {
             Today
           </AppText>
         </View>
+
+        <SectionHeader title="Today" actionLabel="Edit targets" onActionPress={() => router.push("/targets")} />
+        <TodayCard onPress={() => router.push("/targets")} />
 
         <SectionHeader title="Around you" actionLabel="Last 60 min" />
         <EnvGrid />

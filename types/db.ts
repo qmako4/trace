@@ -59,6 +59,8 @@ export interface ProducerHours {
   sun: { open: string; close: string } | null;
 }
 
+export type Meal = "breakfast" | "lunch" | "dinner" | "snack";
+
 export interface ScanHistoryRow {
   id: string;
   user_id: string;
@@ -70,6 +72,22 @@ export interface ScanHistoryRow {
   product_image_url: string | null;
   scored_at: string;
   bought_from: string | null;
+  kcal: number | null;
+  protein_g: number | null;
+  carbs_g: number | null;
+  fat_g: number | null;
+  portions: number | null;
+  meal: Meal | null;
+}
+
+export interface DailyTargetsRow {
+  user_id: string;
+  kcal: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+  max_upf_pct: number;
+  updated_at: string;
 }
 
 export interface SavedProducerRow {
