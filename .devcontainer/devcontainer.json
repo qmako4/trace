@@ -1,0 +1,22 @@
+{
+  "name": "TRACE Expo preview",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "postCreateCommand": "test -f .env || cp .env.example .env; npm install && npm install -g @expo/ngrok",
+  "postStartCommand": "bash -c 'if ! pgrep -f \"[e]xpo start --tunnel\" >/dev/null; then nohup env CI=1 npx expo start --tunnel > /tmp/trace-expo.log 2>&1 < /dev/null & fi'",
+  "forwardPorts": [
+    8081
+  ],
+  "portsAttributes": {
+    "8081": {
+      "label": "Expo Metro",
+      "onAutoForward": "silent"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}
